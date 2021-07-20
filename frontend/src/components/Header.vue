@@ -11,16 +11,14 @@
       <v-app-bar-nav-icon color="secondary" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-spacer></v-spacer>
-
-      <div style="position: absolute; left: 45%;">
-
+      <v-layout align-center class="logo">
         <img
           src="../assets/logo.png"
           class="my-auto"
-          height="100px"
+          height="100vh"
           
         />
-      </div>
+      </v-layout>
 
       <v-spacer></v-spacer>
 
@@ -101,6 +99,11 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style scoped>
+.logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+</style>>
