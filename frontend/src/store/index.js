@@ -8,7 +8,7 @@ import mutations from './mutations'
 Vue.use(Vuex)
 
 // axios 설정
-axios.defaults.baseURL = 'http://localhost:9991'
+axios.defaults.baseURL = 'http://localhost:9990'
 
 const state = {
   
