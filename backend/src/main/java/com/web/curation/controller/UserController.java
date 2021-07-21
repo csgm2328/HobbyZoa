@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
+@ApiResponses(value = { @ApiResponse(code = 400, message = "Bad Request", response = BasicResponse.class),
 		@ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
 		@ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
 		@ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
@@ -56,7 +56,7 @@ public class UserController {
 			result.object = userOpt.get();
 			response = new ResponseEntity<>(result, HttpStatus.OK);
 		} else {
-			response = new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+			response = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		}
 		System.out.println(response);
 		return response;
@@ -68,8 +68,7 @@ public class UserController {
 	public Object signup(@Valid @RequestBody SignupRequest request) {
 		ResponseEntity response = null;
 		final BasicResponse result = new BasicResponse();
-		if (!userService.findById(request.getEmail()).isPresent()) { // 이메일, 닉네임 중복처리 필수
-			// 회원가입단을 생성해 보세요.
+		if (!userService.findById(request.getEmail()).isPresent()) { //이메일 중복검사
 			User user = new User();
 			user.setNickname(request.getNickname());
 			user.setEmail(request.getEmail());
@@ -79,7 +78,6 @@ public class UserController {
 
 			userService.save(user);
 			System.out.println("[ " + user.getNickname() + " ] 님 등록 성공");
-			// 결과 리턴
 			result.status = true;
 			result.data = "success";
 			response = new ResponseEntity<>(result, HttpStatus.OK);
@@ -89,8 +87,8 @@ public class UserController {
 			confirmationTokenService.createEmailConfirmationToken(request.getEmail(), request.getEmail());
 		} else {
 			result.status = true;
-			result.data = "Fail: 이미 존재하는 이메일이거나 DB 처리중 오류가 발생했습니다.";
-			response = new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
+			result.data = "Fail: 이미 존재하는 이메일입니다.";
+			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
 		return response;
 	}
@@ -107,7 +105,7 @@ public class UserController {
 		} else {
 			result.status = true;
 			result.data = "Fail: 이메일 인증 오류";
-			response = new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
+			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
 		return response;
 	}
