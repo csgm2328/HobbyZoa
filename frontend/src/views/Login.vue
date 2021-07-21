@@ -2,11 +2,10 @@
   <div style="height: 100%">
     <v-container fluid fill-height>
       <v-layout column align-center justify-center>
-          <v-form ref="form" lazy-vaildation>
+          <v-form ref="form" lazy-validation>
             <v-text-field
               v-model="email"
               label="Email"
-              placeholder=""
               outlined
               :rules="[rules.required, rules.email]"
             >
@@ -14,10 +13,9 @@
             <v-text-field
               v-model="password"
               label="password"
-              placeholder=""
               type="password"
               outlined
-              :rules="[rules.required, rules.password_confirm]"
+              :rules="[rules.required]"
             >
             </v-text-field>
           </v-form>
@@ -43,7 +41,6 @@ export default {
       password: '',
       rules: {
           required: value => !!value || 'Required.',
-          counter: value => value.length <= 20 || 'Max 20 characters',
           email: value => {
             const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             return pattern.test(value) || 'Invalid e-mail.'
@@ -58,7 +55,14 @@ export default {
     async Login() {
       const validate = this.$refs.form.validate()
       if (validate) {
-        confirm('저장')
+        const userinfo = {
+          email: this.email,
+          password: this.password
+        }
+        this.$store.dispatch('AUTH_USER', userinfo)
+          .then(() => {
+            this.$router.push('/main')
+          })
       }
     }
   },
@@ -71,5 +75,7 @@ export default {
 </script>
 
 <style scoped>
-
+.v-input {
+  width: 80vw;
+}
 </style>

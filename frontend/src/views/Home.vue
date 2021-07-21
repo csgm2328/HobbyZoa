@@ -2,7 +2,13 @@
   <div style="height: 100%">
     <v-container fluid fill-height>
       <v-layout column align-center justify-center>
-
+        <router-link to='/main'>
+          <v-img
+            src="@/assets/logo.png"
+            max-height="200"
+            max-width="200"
+          ></v-img>
+        </router-link>
         <v-btn
           rounded
           class="ma-3"

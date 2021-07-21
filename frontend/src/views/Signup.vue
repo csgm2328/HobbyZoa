@@ -2,11 +2,10 @@
   <div style="height: 100%">
     <v-container fluid fill-height>
       <v-layout column align-center justify-center>
-          <v-form ref="form" lazy-vaildation>
+          <v-form ref="form" lazy-validation>
             <v-text-field
               v-model="email"
               label="Email"
-              placeholder=""
               outlined
               :rules="[rules.required, rules.email]"
             >
@@ -14,7 +13,6 @@
             <v-text-field
               v-model="password"
               label="password"
-              placeholder=""
               type="password"
               outlined
               :rules="[rules.required, rules.password]"
@@ -23,7 +21,6 @@
             <v-text-field
               v-model="password_confirm"
               label="password confirm"
-              placeholder=""
               type="password"
               outlined
               :rules="[rules.required, rules.password_confirm]"
@@ -32,7 +29,6 @@
             <v-text-field
               v-model="nickname"
               label="Nickname"
-              placeholder=""
               outlined
               :rules="[rules.required, rules.counter]"
             >
@@ -40,7 +36,6 @@
             <v-text-field
               v-model="phone"
               label="Phone Number"
-              placeholder=""
               outlined
               :rules="[rules.required, rules.phone]"
             >
@@ -121,5 +116,7 @@ export default {
 </script>
 
 <style scoped>
-
+.v-input {
+  width: 80vw;
+}
 </style>
