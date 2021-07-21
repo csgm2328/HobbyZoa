@@ -15,8 +15,7 @@
         <img
           src="../assets/logo.png"
           class="my-auto"
-          height="100vh"
-          
+          height="65vh"        
         />
       </v-layout>
 
@@ -47,19 +46,29 @@
           active-class="deep-purple--text text--accent-4"
         >
           <v-img
-            :src="require('../assets/logo.png')"
+            :src="require('@/assets/logo.png')"
             class="my-auto"
             contain
             height="10vh"
           />
 
           <div class="d-flex justify-space-around mb-3">
-            <v-btn depressed>
-              로그인
-            </v-btn>
-            <v-btn depressed color="yellow">
-              회원가입
-            </v-btn>
+            <router-link
+              :to="{name: 'Login'}"
+              style=" text-decoration: none;"
+            >      
+              <v-btn depressed>
+                로그인
+              </v-btn>
+            </router-link>
+            <router-link
+              :to="{name: 'Signup'}"
+              style=" text-decoration: none;"
+            >      
+              <v-btn depressed color="yellow darken-2">
+                회원가입
+              </v-btn>
+            </router-link>
           </div>
 
           <v-list-item>
