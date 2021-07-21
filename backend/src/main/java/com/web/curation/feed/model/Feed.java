@@ -6,12 +6,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-
 @Data
-@DynamicInsert
-@DynamicUpdate
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity(name ="feed")
@@ -35,6 +30,19 @@ public class Feed {
 	private Integer likes; //좋아요 수
 	private Integer scrap; //스크랩 수
 	
+	//기본 생성자
+	public Feed() {	}
+	
+	//likes, scrap 없는 생성자
+	public Feed(String email, int feedcode, String nickname, String comment, String metadata) {
+		super();
+		this.email = email;
+		this.feedcode = feedcode;
+		this.nickname = nickname;
+		this.comment = comment;
+		this.metadata = metadata;
+	}
+
 	//regtime 없는 생성자
 	public Feed(String email, String nickname, String comment, String metadata, int likes, int scrap) {
 		super();
@@ -47,7 +55,6 @@ public class Feed {
 	}
 	
 	
-	//regtime
 //	@PrePersist
 //    public void regtime() {
 //        this.regtime = LocalDateTime.now();
