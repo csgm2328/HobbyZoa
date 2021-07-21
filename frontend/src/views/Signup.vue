@@ -12,20 +12,12 @@
             >
             </v-text-field>
             <v-text-field
-              v-model="nickname"
-              label="Nickname"
-              placeholder=""
-              outlined
-              :rules="[rules.required, rules.counter]"
-            >
-            </v-text-field>
-            <v-text-field
               v-model="password"
               label="password"
               placeholder=""
               type="password"
               outlined
-              :rules="[rules.required, rules.password_confirm]"
+              :rules="[rules.required, rules.password]"
             >
             </v-text-field>
             <v-text-field
@@ -37,8 +29,25 @@
               :rules="[rules.required, rules.password_confirm]"
             >
             </v-text-field>
+            <v-text-field
+              v-model="nickname"
+              label="Nickname"
+              placeholder=""
+              outlined
+              :rules="[rules.required, rules.counter]"
+            >
+            </v-text-field>
+            <v-text-field
+              v-model="phone"
+              label="Phone Number"
+              placeholder=""
+              outlined
+              :rules="[rules.required, rules.phone]"
+            >
+            </v-text-field>
           </v-form>
           <v-btn
+            :loading="loading"
             rounded
             class="ma-3"
             max-width="400"
@@ -60,14 +69,24 @@ export default {
       nickname: '',
       password: '',
       password_confirm: '',
+      phone: '',
+      loading: false,
       rules: {
-          required: value => !!value || 'Required.',
-          counter: value => value.length <= 20 || 'Max 20 characters',
+          required: value => !!value || '필수입력항목',
+          counter: value => value.length <= 20 || '20글자까지 입력가능합니다.',
           email: value => {
             const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            return pattern.test(value) || 'Invalid e-mail.'
+            return pattern.test(value) || '올바른 e-mail형식이 아닙니다. '
           },
-          password_confirm: value => value === this.password || '패스워드가 일치하지 않습니다.'
+          password: value => {
+            const pattern = /^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[$@$!%*#?&]).{8,}$/
+            return pattern.test(value) || '비밀번호는 문자, 숫자, 특수문자를 포함해서 8자리 이상 입력해주세요.'
+          },
+          password_confirm: value => value === this.password || '패스워드가 일치하지 않습니다.',
+          phone: value => {
+            const pattern = /^[0-9]*$/g
+            return pattern.test(value) || '숫자만 입력해주세요'
+          },
         },
     }
   },
@@ -78,7 +97,18 @@ export default {
     async Signup() {
       const validate = this.$refs.form.validate()
       if (validate) {
-        confirm('저장')
+        this.loading = true
+        const userinfo = {
+          email: this.email,
+          password: this.password,
+          nickname: this.nickname,
+          phone: this.phone,
+        }
+        
+        this.$store.dispatch('CREATE_USER', userinfo)
+          .then(() => {
+            this.$router.push('/main')
+          })
       }
     }
   },
@@ -91,7 +121,5 @@ export default {
 </script>
 
 <style scoped>
-.v-text-field {
-  width: 30em;
-}
+
 </style>

@@ -71,7 +71,5 @@ export default {
 </script>
 
 <style scoped>
-.v-text-field {
-  width: 30em;
-}
+
 </style>
