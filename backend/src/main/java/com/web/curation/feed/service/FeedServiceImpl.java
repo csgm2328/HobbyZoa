@@ -14,35 +14,35 @@ import com.web.curation.feed.repo.FeedRepo;
 public class FeedServiceImpl implements FeedService{
 
 	@Autowired
-	private FeedRepo feed_repo;
+	private FeedRepo feedRepo;
 	
 	@Override
 	public List<Feed> findAll() { //전체 레코드 불러오기 findAll()
 		List<Feed> feeds = new ArrayList<Feed>();
-		feed_repo.findAll().forEach(e -> feeds.add(e));
+		feedRepo.findAll().forEach(e -> feeds.add(e));
 		return feeds;
 	}
 
 	@Override
 	public Optional<Feed> findByFeedcode(Integer feedcode) { //일단 보류
-		Optional<Feed> feed = feed_repo.findById(feedcode);
+		Optional<Feed> feed = feedRepo.findById(feedcode);
 		return null;
 	}
 
 	@Override
 	public void deleteByFeedcode(Integer feedcode) { //레코드 삭제 delete()
-		feed_repo.deleteById(feedcode);
+		feedRepo.deleteById(feedcode);
 	}
 
 	@Override
 	public Feed save(Feed feed) { //레코드 저장(insert, update) save()
-		feed_repo.save(feed);
+		feedRepo.save(feed);
 		return feed;
 	}
 
 	@Override
 	public void updateByFeedcode(Integer feedcode, Feed feed) {
-		Optional<Feed> e = feed_repo.findById(feedcode);
+		Optional<Feed> e = feedRepo.findById(feedcode);
 		
 		if(e.isPresent()) {
 			e.get().setFeedcode(feed.getFeedcode());
