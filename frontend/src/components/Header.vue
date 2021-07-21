@@ -11,13 +11,17 @@
       <v-app-bar-nav-icon color="secondary" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-spacer></v-spacer>
-      <v-layout align-center class="logo">
-        <img
-          src="../assets/logo.png"
-          class="my-auto"
-          height="65vh"        
-        />
-      </v-layout>
+      <router-link
+        to="/main"
+      >  
+        <v-layout align-center class="logo">
+          <img
+            src="@/assets/logo.png"
+            class="my-auto"
+            height="65vh"        
+          />
+        </v-layout>
+      </router-link>
 
       <v-spacer></v-spacer>
 
