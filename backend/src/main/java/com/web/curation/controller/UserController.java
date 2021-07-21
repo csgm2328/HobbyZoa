@@ -98,7 +98,8 @@ public class UserController {
 	public Object ConfirmUserEmail(@Valid @RequestParam String token) {
 		ResponseEntity response = null;
 		final BasicResponse result = new BasicResponse();
-		if (userService.confirmEmail(token)) {
+//		if (userService.confirmEmail(token)) {
+		if(confirmationTokenService.confirmEmail(token)) {
 			result.status = true;
 			result.data = "success";
 			response = new ResponseEntity<>(result, HttpStatus.OK);
@@ -117,7 +118,8 @@ public class UserController {
 		ResponseEntity response = null;
 		final BasicResponse result = new BasicResponse();
 		// 기존 토큰 삭제 후 재 생성
-		userService.reCreateToken(userEmail, recieverEmail);
+//		userService.reCreateToken(userEmail, recieverEmail);
+		confirmationTokenService.reCreateToken(userEmail, recieverEmail);
 		result.status = true;
 		result.data = "success";
 		response = new ResponseEntity<>(result, HttpStatus.OK);
