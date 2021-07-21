@@ -32,6 +32,7 @@ public class User {
     private String password;
     @Column
     private String phone;
+    private boolean emailVerified;
     @JsonIgnore
     private String comment;
 
@@ -83,5 +84,9 @@ public class User {
 
 	public void setRegdate(LocalDateTime regdate) {
 		this.regdate = regdate;
+	}
+
+	public void emailVerifiedSuccess() {
+		this.emailVerified = true;
 	}
 }

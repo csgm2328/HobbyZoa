@@ -2,17 +2,28 @@ package com.web.curation.user.service;
 
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.web.curation.email.model.EmailToken;
+import com.web.curation.email.repo.EmailTokenRepository;
+import com.web.curation.email.service.EmailTokenServiceImpl;
 import com.web.curation.user.model.User;
 import com.web.curation.user.repo.UserRepo;
 
+@Transactional
 @Service
-public class UserServiceImpl implements UserService{
-	
+public class UserServiceImpl implements UserService {
+
 	@Autowired
 	UserRepo userRepo;
+	@Autowired
+	EmailTokenServiceImpl confirmationTokenService;
+	@Autowired
+	EmailTokenRepository confirmationTokenRepository;
+
 	@Override
 	public Optional<User> findById(String email) {
 		return userRepo.findById(email);
