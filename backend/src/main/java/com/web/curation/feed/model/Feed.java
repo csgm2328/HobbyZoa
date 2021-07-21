@@ -1,9 +1,17 @@
 package com.web.curation.feed.model;
 
 import lombok.*;
+
+import java.time.LocalDateTime;
+
 import javax.persistence.*;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 @Data
+@DynamicInsert
+@DynamicUpdate
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity(name ="feed")
@@ -13,15 +21,19 @@ public class Feed {
 	private String email; //이메일주소
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int feedcode; //피드구별번호, 기본키
 	
 	private String nickname; //닉네임
-	private String regtime; //등록일, 날짜 포맷 설정해야함
+	
+	@Column(insertable=false, updatable=false)
+	private LocalDateTime regtime; //등록일, 날짜 포맷
+	
 	private String comment; //한줄설명
 	private String metadata; //사진 등 메타데이터, 타입 설정
-	private int likes; //좋아요 수
-	private int scrap; //스크랩 수
+	
+	private Integer likes; //좋아요 수
+	private Integer scrap; //스크랩 수
 	
 	//regtime 없는 생성자
 	public Feed(String email, String nickname, String comment, String metadata, int likes, int scrap) {
@@ -35,18 +47,18 @@ public class Feed {
 	}
 	
 	
-	//regtime 있는 생성자
-	public Feed(String email, String nickname, String regtime, String comment, String metadata, int likes, int scrap) {
-		super();
-		this.email = email;
-		this.nickname = nickname;
-		this.regtime = regtime;
-		this.comment = comment;
-		this.metadata = metadata;
-		this.likes = likes;
-		this.scrap = scrap;
-	}
+	//regtime
+//	@PrePersist
+//    public void regtime() {
+//        this.regtime = LocalDateTime.now();
+//    }
 
+	//default 0이거나 원래 값 넣어주기
+	@PrePersist
+    public void prePersist() {
+        this.likes = this.likes == null ? 0 : this.likes;
+        this.scrap = this.scrap == null ? 0 : this.scrap;
+    }
 
 	public String getEmail() {
 		return email;
@@ -78,12 +90,12 @@ public class Feed {
 	}
 
 
-	public String getRegtime() {
+	public LocalDateTime getRegtime() {
 		return regtime;
 	}
 
 
-	public void setRegtime(String regtime) {
+	public void setRegtime(LocalDateTime regtime) {
 		this.regtime = regtime;
 	}
 
