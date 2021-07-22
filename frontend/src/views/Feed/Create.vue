@@ -8,22 +8,9 @@
         no-gutters
       >
         <v-col cols="12" sm="8" class="mt-3">
-          <v-file-input
-            style="height: 30vh;"
-            class="d-flex justify-center align-center"
-            v-if="unselected_picture"
-            accept="image/png, image/jpeg, image/bmp"
-            placeholder="Pick picture(s)"
-            prepend-icon="mdi-camera"
-            label="Select picture(s)"
-            v-model="files"
-            @change="addFiles"
-            multiple
-          >
-          </v-file-input>
           <v-carousel
-            v-else
-            hide-delimiters
+            :show-arrows="false"
+            v-if="selected_picture"
             style="height: 30vh;"
           >
             <v-carousel-item
@@ -36,16 +23,35 @@
               <v-img :src="url[i]" contain max-height="30vh" max-width="100vw"></v-img>
             </v-carousel-item>
           </v-carousel>
+          <div
+            class="carousel"
+            :class="{ lower : selected_picture }"
+          >
+            <v-file-input
+              :class="{ changewide : !selected_picture }"
+              small-chips
+              multiple
+              accept="image/png, image/jpeg, image/bmp"
+              label="Select picture(s)"
+              prepend-icon="mdi-camera"
+              @change="addFiles"
+              v-model="files"
+            ></v-file-input>
+          </div>
+          <p v-if="pic_error" style="color: red; margin-top: 2vh; text-align: center;">사진을 입력해주세요</p>
         </v-col>
         <v-col cols="12" sm="8"  class="my-3 px-1">
-          <v-textarea fluid
+          <v-textarea
+            @keyup="inputText"
+            v-model="text"
+            fluid
             counter
-            style="height: 30vh;"
+            style="height: 30vh; border-radius: 15px;"
+            outlined
             label="Text"
-            :rules="rules"
-            :value="value"
             placeholder="내용을 입력해주세요."
           ></v-textarea>
+          <p v-if="text_error" style="color: red; text-align: center;">내용을 입력해주세요</p>
         </v-col>
         
       </v-row>
@@ -57,6 +63,7 @@
       dark
       large
       color="cyan"
+      @click="checkForm"
     >
       <v-icon dark>
         mdi-pencil
@@ -76,32 +83,56 @@
     },
     data() {
       return {
-
+        text: "",
         files: [],
         url: [],
-        unselected_picture: true,
+        selected_picture: false,
         items: [
           {
             src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
-            },
-            {
-              src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
-            },
-            {
-              src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
-            },
-            {
-              src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
-            },
-          ],
+          },
+          {
+            src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
+          },
+          {
+            src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
+          },
+          {
+            src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
+          },
+        ],
+        pic_error: false,
+        text_error: false
       }
     },
     methods: {
+      inputText() {
+        this.text_error = false
+      },
       addFiles() {
         this.files.forEach(file => {
           this.url.push(URL.createObjectURL(file))
         });
-        this.unselected_picture = false
+        this.selected_picture = true
+        if (this.files.length == 0) {
+          console.log(this.files)
+          this.selected_picture = false
+        }
+        this.pic_error = false
+      },
+      checkForm() {
+        if (this.files.length == 0) {
+          this.pic_error = true
+        }
+        else {
+          this.pic_error = false
+        }
+        if (this.text.length  == 0) {
+          this.text_error = true
+        }
+        else {
+          this.text_error = false
+        }
       }
     }
   }
@@ -112,5 +143,21 @@
 .mid {
   left: 50%;
   transform: translate(-50%, -50%);
+}
+.lower {
+  height: auto !important;
+  margin-top: 5vh;
+  background-color: white !important;
+  width: 100% !important;
+}
+.changewide {
+  max-width: 50% !important;
+}
+.carousel {
+  height: 30vh; display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  background-color: rgba(209, 209, 209, 0.596); 
+  border-radius: 15px;
 }
 </style>

@@ -5,7 +5,6 @@
       style=" text-decoration: none;"
     >
       <v-btn
-        v-show="!hidden"
         color="cyan accent-3"
         fixed
         bottom
