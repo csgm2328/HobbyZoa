@@ -5,6 +5,14 @@
       <v-layout column align-center justify-center>
         <h1>Sign Up</h1>
         <v-form ref="form" lazy-validation>
+          <v-alert
+            v-if="signupError"
+            dense
+            outlined
+            type="error"
+          >
+            이미 존재하는 이메일입니다.
+          </v-alert>
           <v-text-field
             v-model="email"
             label="Email"
@@ -92,7 +100,7 @@ export default {
     
   },
   methods: {
-    async Signup() {
+    Signup() {
       const validate = this.$refs.form.validate()
       if (validate) {
         this.loading = true
@@ -105,13 +113,22 @@ export default {
         
         this.$store.dispatch('CREATE_USER', userinfo)
           .then(() => {
-            this.$router.push('/main')
+            this.$router.push('/signupsuccess')
           })
+          .catch(() => {
+            this.loading = false
+          })
+          
       }
     }
   },
   watch: {
 
+  },
+  computed: {
+    signupError() {
+      return this.$store.getters.getSignupError
+    }
   }
 
   

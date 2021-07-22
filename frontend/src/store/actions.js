@@ -2,10 +2,20 @@ import axios from "axios"
 
 export default {
   // signup action
-  async CREATE_USER({ commit }, userinfo) {
-    const USER_CREATE_URL = '/user/signup'
-    const response = await axios.post(USER_CREATE_URL, userinfo)
-    console.log(commit, response)
+  CREATE_USER({ commit }, userinfo) {
+    return new Promise((resolve, reject) => {
+      const USER_CREATE_URL = '/user/signup'
+      axios.post(USER_CREATE_URL, userinfo)
+        .then(() => {
+          commit('SIGNUP_EMAIL', userinfo.email)
+          resolve()
+        })
+        .catch((err) => {
+          const signupError = err.response.data.data
+          commit('SIGNUP_ERROR', signupError)
+          reject()
+        })
+    })
   },
   // login action
   async AUTH_USER({ commit }, userinfo) {
