@@ -199,4 +199,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Server
+Servers/
+backend/Servers/
+
 # End of https://www.toptal.com/developers/gitignore/api/vue,vuejs,eclipse,windows,macos,visualstudiocode,maven,java
