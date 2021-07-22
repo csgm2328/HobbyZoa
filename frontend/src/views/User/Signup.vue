@@ -1,56 +1,59 @@
 <template>
   <div style="height: 100%">
     <v-container fluid fill-height>
+
       <v-layout column align-center justify-center>
-          <v-form ref="form" lazy-validation>
-            <v-text-field
-              v-model="email"
-              label="Email"
-              outlined
-              :rules="[rules.required, rules.email]"
-            >
-            </v-text-field>
-            <v-text-field
-              v-model="password"
-              label="password"
-              type="password"
-              outlined
-              :rules="[rules.required, rules.password]"
-            >
-            </v-text-field>
-            <v-text-field
-              v-model="password_confirm"
-              label="password confirm"
-              type="password"
-              outlined
-              :rules="[rules.required, rules.password_confirm]"
-            >
-            </v-text-field>
-            <v-text-field
-              v-model="nickname"
-              label="Nickname"
-              outlined
-              :rules="[rules.required, rules.counter]"
-            >
-            </v-text-field>
-            <v-text-field
-              v-model="phone"
-              label="Phone Number"
-              outlined
-              :rules="[rules.required, rules.phone]"
-            >
-            </v-text-field>
-          </v-form>
-          <v-btn
-            :loading="loading"
-            rounded
-            class="ma-3"
-            max-width="400"
-            min-width="200"
-            color="yellow darken-2"
-            @click="Signup"
-          >회원가입</v-btn>
+        <h1>Sign Up</h1>
+        <v-form ref="form" lazy-validation>
+          <v-text-field
+            v-model="email"
+            label="Email"
+            outlined
+            :rules="[rules.required, rules.email]"
+          >
+          </v-text-field>
+          <v-text-field
+            v-model="password"
+            label="password"
+            type="password"
+            outlined
+            :rules="[rules.required, rules.password]"
+          >
+          </v-text-field>
+          <v-text-field
+            v-model="password_confirm"
+            label="password confirm"
+            type="password"
+            outlined
+            :rules="[rules.required, rules.password_confirm]"
+          >
+          </v-text-field>
+          <v-text-field
+            v-model="nickname"
+            label="Nickname"
+            outlined
+            :rules="[rules.required, rules.counter]"
+          >
+          </v-text-field>
+          <v-text-field
+            v-model="phone"
+            label="Phone Number"
+            outlined
+            :rules="[rules.required, rules.phone]"
+          >
+          </v-text-field>
+        </v-form>
+        <v-btn
+          :loading="loading"
+          rounded
+          class="ma-3"
+          max-width="400"
+          min-width="200"
+          color="yellow darken-2"
+          @click="Signup"
+        >회원가입</v-btn>
       </v-layout>
+
     </v-container>
   </div>
 </template>
