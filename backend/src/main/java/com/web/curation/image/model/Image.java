@@ -17,14 +17,14 @@ public class Image {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer imgcode;
 	
-    @NotNull
+	@NotNull
     private Integer feedcode; //fk
-
+	
     private String imgname;
     private String imgpath;
     private long imgsize;
 
-	public Image(Integer feedcode, String imgname, String imgpath, long imgsize) {
+    public Image(Integer feedcode, String imgname, String imgpath, long imgsize) {
 		super();
 		this.feedcode = feedcode;
 		this.imgname = imgname;
@@ -47,7 +47,7 @@ public class Image {
 	public void setFeedcode(Integer feedcode) {
 		this.feedcode = feedcode;
 	}
-
+	
 	public String getImgname() {
 		return imgname;
 	}
