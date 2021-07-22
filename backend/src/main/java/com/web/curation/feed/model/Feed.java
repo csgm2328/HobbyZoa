@@ -16,9 +16,10 @@ public class Feed {
 	private String email; //이메일주소
 	
 	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY) //기본 키 생성을 데이터베이스 AI에 위임
 	private int feedcode; //피드구별번호, 기본키
-	
+	//Statement.getGeneratedKeys() 를 사용해서 데이터를 저장함과 동시에 생성된 기본 키 값을 얻어 올 수 있음.
+
 	private String nickname; //닉네임
 	
 	@Column(insertable=false, updatable=false)
@@ -43,7 +44,7 @@ public class Feed {
 		this.metadata = metadata;
 	}
 
-	//regtime 없는 생성자
+	//feedcode, regtime 없는 생성자
 	public Feed(String email, String nickname, String comment, String metadata, int likes, int scrap) {
 		super();
 		this.email = email;
