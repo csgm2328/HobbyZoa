@@ -11,12 +11,13 @@ Vue.use(Vuex)
 axios.defaults.baseURL = 'http://localhost:9990'
 
 const state = {
-  
+  signupEmail: '',
+  signupError: '',
 }
 
 export default new Vuex.Store({
-    state,
-    mutations,
-    getters,
-    actions
+  state,
+  mutations,
+  getters,
+  actions
 })
