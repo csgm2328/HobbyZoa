@@ -39,32 +39,31 @@ public class LoginController {
 
 	@GetMapping("/login")
 	@ApiOperation(value = "로그인")
-	public Object login(@RequestParam(required = true) final String email,
+	public  ResponseEntity<Map<String, Object>> login(@RequestParam(required = true) final String email,
 			@RequestParam(required = true) final String password) {
 
-		Optional<User> userOpt = userService.findUserByEmailAndPassword(email, password);
 		Map<String, Object> resultMap = new HashMap<>();	//토큰 정보 저장 할 곳
-		ResponseEntity response = null;
-			
-		if (userOpt.isPresent()) {   //로그인 성공하면
-			System.out.println("[ " + userOpt.get().getNickname() + " ] 님 로그인 성공");
-			
-			String token = jwtService.create("userid", userOpt.get().getEmail(), "access-token");// key, data, subject
-			resultMap.put("acess-token", token);
-			resultMap.put("message", SUCCESS);
+		HttpStatus status = null;
+		
+		try {
+			Optional<User> userOpt = userService.findUserByEmailAndPassword(email, password);
+			if (userOpt.isPresent()) {   //로그인 성공하면
+				System.out.println("[ " + userOpt.get().getNickname() + " ] 님 로그인 성공");
+				String token = jwtService.create("userid", userOpt.get().getEmail(), "access-token");// key, data, subject
+				resultMap.put("acess-token", token);
+				resultMap.put("message", SUCCESS);
+				status = HttpStatus.ACCEPTED;
 
-			
-//			final BasicResponse result = new BasicResponse();
-//			result.status = true;
-//			result.data = "success";
-//			result.object = userOpt.get();
-//			response = new ResponseEntity<>(result, HttpStatus.OK);
-			
-		} else {
-			response = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+				
+			} else {
+				resultMap.put("message", FAIL);
+				status = HttpStatus.ACCEPTED;
+			}			
+		} catch (Exception e) {
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
-		System.out.println(response);
-		return response;
+			
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
 
