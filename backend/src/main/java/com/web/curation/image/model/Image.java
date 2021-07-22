@@ -14,20 +14,16 @@ import lombok.*;
 public class Image {
     
 	@Id
-//  @GeneratedValue
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer imgcode;
 	
     @NotNull
     private Integer feedcode; //fk
 
-
     private String imgname;
     private String imgpath;
     private long imgsize;
-    
-    public Image() {}
 
-    
 	public Image(Integer feedcode, String imgname, String imgpath, long imgsize) {
 		super();
 		this.feedcode = feedcode;

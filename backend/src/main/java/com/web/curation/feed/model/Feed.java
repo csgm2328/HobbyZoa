@@ -3,10 +3,15 @@ package com.web.curation.feed.model;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
 
+import com.web.curation.image.model.Image;
+
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity(name ="feed")
@@ -26,26 +31,27 @@ public class Feed {
 	private LocalDateTime regtime; //등록일, 날짜 포맷
 	
 	private String comment; //한줄설명
-	private String metadata; //사진 등 메타데이터, 타입 설정
+	
+	@ElementCollection
+	private List<Image> metadata = new ArrayList(); //사진 등 메타데이터, 타입 설정
 	
 	private Integer likes; //좋아요 수
 	private Integer scrap; //스크랩 수
 	
-	//기본 생성자
-	public Feed() {	}
-	
 	//likes, scrap 없는 생성자
-	public Feed(String email, int feedcode, String nickname, String comment, String metadata) {
+	public Feed(String email, int feedcode, String nickname, LocalDateTime regtime, String comment,
+			List<Image> metadata) {
 		super();
 		this.email = email;
 		this.feedcode = feedcode;
 		this.nickname = nickname;
+		this.regtime = regtime;
 		this.comment = comment;
 		this.metadata = metadata;
 	}
 
 	//feedcode, regtime 없는 생성자
-	public Feed(String email, String nickname, String comment, String metadata, int likes, int scrap) {
+	public Feed(String email, String nickname, String comment, List<Image> metadata, int likes, int scrap) {
 		super();
 		this.email = email;
 		this.nickname = nickname;
@@ -118,12 +124,12 @@ public class Feed {
 	}
 
 
-	public String getMetadata() {
+	public List<Image> getMetadata() {
 		return metadata;
 	}
 
 
-	public void setMetadata(String metadata) {
+	public void setMetadata(List<Image> metadata) {
 		this.metadata = metadata;
 	}
 
@@ -146,6 +152,7 @@ public class Feed {
 	public void setScrap(int scrap) {
 		this.scrap = scrap;
 	}
-	
-	
+
+
+
 }
