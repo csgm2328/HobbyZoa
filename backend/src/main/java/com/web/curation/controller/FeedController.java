@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -26,6 +27,7 @@ import com.web.curation.feed.model.Feed;
 import com.web.curation.feed.service.FeedService;
 import com.web.curation.response.BasicResponse;
 
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -46,20 +48,21 @@ public class FeedController {
 	FeedService feedService;
 	
 	// 피드 생성
-	@PostMapping 
+	@PostMapping
+	@ApiOperation(value="피드 생성", notes="email, nickname, comment와 file리스트를 입력받아 uri를 반환")
 	public ResponseEntity<?> createFeed(
             @Valid @RequestParam("email") String email,
             @Valid @RequestParam("nickname") String nickname,
             @RequestParam("comment") String comment,
-            @Valid @RequestPart("files") MultipartFile files
+            @Valid @RequestPart("files") List<MultipartFile> files
     ) throws Exception {
-		List<MultipartFile> list = new ArrayList(); //테스트를 위한 코드, swagger ui는 여러파일 업로드 지원하지 않아서 
-		list.add(files);
+//		List<MultipartFile> list = new ArrayList<>(); //테스트를 위한 코드, swagger ui는 여러파일 업로드 지원하지 않아서 
+//		list.add(files);
         Feed feed = feedService.save(Feed.builder()
                 .email(email)
                 .nickname(nickname)
                 .comment(comment)
-                .build(), list);
+                .build(), files);
 
         URI uriLocation = new URI("/board/" + feed.getFeedcode());
         return ResponseEntity.created(uriLocation).body("{}");
@@ -68,6 +71,7 @@ public class FeedController {
 
 	// 모든 피드 조회 
 	@GetMapping(value="/all") 
+	@ApiOperation(value="모든 피드 조회", notes="모든 피드 반환")
 	public ResponseEntity<List<Feed>> getAllFeeds() { 
 		List<Feed> feed = feedService.findAll(); 
 		return new ResponseEntity<List<Feed>>(feed, HttpStatus.OK); 
@@ -75,8 +79,17 @@ public class FeedController {
 	
 	// 피드번호로 피드 삭제
 	@DeleteMapping(value = "/{feedcode}") 
+	@ApiOperation(value="피드 삭제", notes="feedcode로 삭제")
 	public ResponseEntity<Void> deleteFeed(@PathVariable("feedcode") Integer feedcode) { 
 		feedService.deleteByFeedcode(feedcode); 
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT); 
+	}
+	
+	// 피드 번호로 피드수정
+	@PutMapping(value = "/{feedcode}") 
+	@ApiOperation(value="피드 수정", notes="feedcode로 수정 후 수정 피드 반환")
+	public ResponseEntity<Feed> updateFeed(@PathVariable("feedcode") Integer feedcode, Feed feed) { 
+		feedService.updateByFeedcode(feedcode, feed); 
+		return new ResponseEntity<Feed>(feed, HttpStatus.OK); 
 	}
 }

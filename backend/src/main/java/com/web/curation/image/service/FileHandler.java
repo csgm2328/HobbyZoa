@@ -22,37 +22,31 @@ import lombok.*;
 @Component
 public class FileHandler {
 	
-	public List<Image> parseFileInfo(
-            Integer feedcode,
-            List<MultipartFile> multipartFiles
-    ) throws Exception{
+	public List<Image> parseFileInfo(Integer feedcode,List<MultipartFile> multipartFiles) throws Exception{
 
-        // 반환을 할 파일 리스트
-        List<Image> fileList = new ArrayList<>();
+        List<Image> fileList = new ArrayList<>(); //return할 리스트
 
-        // 파일이 빈 것이 들어오면 빈 것을 반환
         if(multipartFiles.isEmpty()){
+//        	System.out.println("파일 비었음");
             return fileList;
         }
         
-        // 파일 이름을 업로드 한 날짜로 바꾸어서 저장할 것이다
+        // 파일 이름을 업로드 한 날짜로 바꾸어서 저장
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         String current_date = simpleDateFormat.format(new Date());
 
         // 프로젝트 폴더에 저장하기 위해 절대경로를 설정 (Window 의 Tomcat 은 Temp 파일을 이용한다)
         String absolutePath = new File("").getAbsolutePath() + "\\";
 
-        // 경로를 지정하고 그곳에다가 저장할 심산이다
         String path = "images/" + current_date;
         File file = new File(path);
         // 저장할 위치의 디렉토리가 존재하지 않을 경우
         if(!file.exists()){
-            // mkdir() 함수와 다른 점은 상위 디렉토리가 존재하지 않을 때 그것까지 생성
             file.mkdirs();
         }
 
         for (MultipartFile multipartFile : multipartFiles){
-            // 파일이 비어 있지 않을 때 작업을 시작해야 오류가 나지 않는다
+            
             if(!multipartFile.isEmpty()){
                 // jpeg, png, gif 파일들만 받아서 처리할 예정
                 String contentType = multipartFile.getContentType();
@@ -80,7 +74,7 @@ public class FileHandler {
                 String new_file_name = Long.toString(System.nanoTime()) + originalFileExtension;
                 // 생성 후 리스트에 추가
                 Image image = Image.builder()
-                        .feedcode(feedcode)
+                		.feedcode(feedcode)
                         .imgname(multipartFile.getOriginalFilename())
                         .imgpath(path + "/" + new_file_name)
                         .imgsize(multipartFile.getSize())
