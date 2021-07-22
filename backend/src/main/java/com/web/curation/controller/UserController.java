@@ -2,6 +2,7 @@ package com.web.curation.controller;
 
 import java.util.Optional;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import com.web.curation.user.service.UserService;
@@ -15,13 +16,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -64,11 +68,10 @@ public class UserController {
 
 	@PostMapping("/signup")
 	@ApiOperation(value = "회원가입", notes = "비밀번호는 문자,숫자,특문포함해서  8자리 이상")
-
 	public Object signup(@Valid @RequestBody SignupRequest request) {
 		ResponseEntity response = null;
 		final BasicResponse result = new BasicResponse();
-		if (!userService.findById(request.getEmail()).isPresent()) { //이메일 중복검사
+		if (!userService.findById(request.getEmail()).isPresent()) { // 이메일 중복검사
 			User user = new User();
 			user.setNickname(request.getNickname());
 			user.setEmail(request.getEmail());
@@ -99,7 +102,7 @@ public class UserController {
 		ResponseEntity response = null;
 		final BasicResponse result = new BasicResponse();
 //		if (userService.confirmEmail(token)) {
-		if(confirmationTokenService.confirmEmail(token)) {
+		if (confirmationTokenService.confirmEmail(token)) {
 			result.status = true;
 			result.data = "success";
 			response = new ResponseEntity<>(result, HttpStatus.OK);
@@ -123,6 +126,53 @@ public class UserController {
 		result.status = true;
 		result.data = "success";
 		response = new ResponseEntity<>(result, HttpStatus.OK);
+		return response;
+	}
+
+	@PutMapping("{userEmail}")
+	@ApiOperation(value = "계정 정보 수정", notes = "비밀번호 변경, 프로필 사진 설정하는 부분")
+	public Object UpdateProfile(@Valid @RequestBody SignupRequest updateUser) {
+		ResponseEntity response = null;
+		final BasicResponse result = new BasicResponse();
+
+		User user = userService.findById(updateUser.getEmail()).get();
+		//PK인 email 빼고 전부다 변경가능
+		user.setNickname(updateUser.getNickname());
+		user.setPassword(updateUser.getPassword());
+		user.setPhone(updateUser.getPhone());
+		if (updateUser.getComment() != null)
+			user.setComment(updateUser.getComment());
+		Optional<User> returnObject = userService.findById(updateUser.getEmail());
+
+		if (returnObject.isPresent()) {
+			result.status = true;
+			result.data = "success";
+			result.object = returnObject;
+			response = new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		else {
+			result.status = false;
+			result.data = "Fail: 계정 설정 변경 오류";
+			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
+	@DeleteMapping("{userEmail}")
+	@ApiOperation(value = "계정 탈퇴", notes = "계정 삭제 ON CASCADE")
+	public Object DeleteUser(@RequestParam String userEmail) {
+		ResponseEntity response = null;
+		final BasicResponse result = new BasicResponse();
+
+		if(userService.deleteById(userEmail) != 0) {
+			result.status = true;
+			result.data = "success";
+			response = new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		else {
+			result.status = false;
+			result.data = "Fail: 계정 탈퇴 변경 오류";
+			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		}
 		return response;
 	}
 }

@@ -19,4 +19,5 @@ public interface UserService {
 	Optional<User> findById(String email);
 	User save(User user);
 	Optional<User> findUserByEmailAndPassword(String email, String password);
+	long deleteById(String email);
 }

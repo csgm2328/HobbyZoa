@@ -34,7 +34,7 @@ public class User {
     private String phone;
     @Column
     private boolean emailVerified;
-    @JsonIgnore
+    @Column
     private String comment;
 
     @Column(insertable = false, updatable = false)
