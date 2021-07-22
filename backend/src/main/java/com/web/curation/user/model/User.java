@@ -32,13 +32,15 @@ public class User {
     private String password;
     @Column
     private String phone;
+    @Column
     private boolean emailVerified;
     @JsonIgnore
     private String comment;
 
     @Column(insertable = false, updatable = false)
     private LocalDateTime regdate;
-    public String getEmail() {
+
+	public String getEmail() {
 		return email;
 	}
 
@@ -88,5 +90,12 @@ public class User {
 
 	public void emailVerifiedSuccess() {
 		this.emailVerified = true;
+	}
+	public boolean isEmailVerified() {
+		return emailVerified;
+	}
+
+	public void setEmailVerified(boolean emailVerified) {
+		this.emailVerified = emailVerified;
 	}
 }
