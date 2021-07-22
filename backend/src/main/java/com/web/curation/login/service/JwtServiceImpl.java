@@ -29,7 +29,7 @@ public class JwtServiceImpl implements JwtService {
 	private static final String TK = "secretToken";
 	private static final int EXPIRE_MINUTES = 60;
 	
-	//토큰 생성
+	//토큰 생성   key:"userid", data:useremail, "access-token"
 	@Override
 	public <T> String create(String key, T data, String subject) {
 		String jwt = Jwts.builder().setHeaderParam("typ","JWT").setHeaderParam("regDate", System.currentTimeMillis())
@@ -81,12 +81,12 @@ public class JwtServiceImpl implements JwtService {
 			claims = Jwts.parser().setSigningKey(TK.getBytes("UTF-8")).parseClaimsJws(jwt);
 		} catch (Exception e) {
 		
-			logger.error(e.getMessage());
+			//logger.error(e.getMessage());
 			//throw new UnauthorizedException();
 		} 
 		
 		Map<String, Object> value = claims.getBody();
-		logger.info("value:{}",value);
+		//logger.info("value:{}",value);
 		return value;
 	}
 
