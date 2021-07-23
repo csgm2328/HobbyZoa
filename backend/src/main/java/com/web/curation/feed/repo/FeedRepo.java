@@ -10,8 +10,6 @@ import com.web.curation.feed.model.Feed;
 @Repository
 public interface FeedRepo extends JpaRepository<Feed, Integer>{ //왜 Long일까, 우린 int니가 Integer로 하면 되나
 
-	//findBy 뒤에 컬럼명을 붙이면 이를 이용한 검색 가능
-//	List<Feed> findByFeedcode(int feedcode);
 	//모두 검색
 	List<Feed> findByEmail(String email);
 	//피드 저장
