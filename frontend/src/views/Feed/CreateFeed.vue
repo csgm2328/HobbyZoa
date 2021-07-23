@@ -121,15 +121,7 @@
         if (!this.pic_error && !this.text_error) {
           const form = new FormData()
           const files = this.files
-          console.log(files)
-          // form.append('files', files)
-          // const feed_info = {
-          //   'email': 'wnsdud4197@naver.com',
-          //   'nickname': 'test',
-          //   'comment': this.text,
-          //   'files': form
-          // }
-          // this.$store.dispatch('CREATE_FEED', feed_info)
+          
           for (let i = 0; i < files.length; i++) {
             form.append('files', files[i])
           }

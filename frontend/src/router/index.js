@@ -7,7 +7,7 @@ import Signupsuccess from '@/views/User/SignupSuccess.vue'
 import SignupConfirm from '@/views/User/SignupConfirm.vue'
 import Login from '@/views/User/Login.vue'
 import Profile from '@/views/User/Profile.vue'
-import FeedCreate from '@/views/Feed/Create.vue'
+import FeedCreate from '@/views/Feed/CreateFeed.vue'
 
 Vue.use(VueRouter)
 
