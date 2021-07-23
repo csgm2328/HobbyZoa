@@ -130,10 +130,11 @@
           //   'files': form
           // }
           // this.$store.dispatch('CREATE_FEED', feed_info)
-
+          for (let i = 0; i < files.length; i++) {
+            form.append('files', files[i])
+          }
           form.append('email', 'wnsdud4197@naver.com')
           form.append('nickname', 'test')
-          form.append('files', files)
           form.append('comment', this.text)
           this.$store.dispatch('CREATE_FEED', form)
 
