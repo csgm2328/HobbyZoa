@@ -95,6 +95,18 @@ public class FeedController {
 		return new ResponseEntity<Map<String, Image>>(map, HttpStatus.OK); 
 	}
 	
+	// 해당 feedcode 피드 상세보기
+	@GetMapping(value="/search/{feedcode}") 
+	@ApiOperation(value="해당 feedcode의 피드 상세보기", notes="피드 정보 담긴 객체와 이미지리스트 반환")
+	public ResponseEntity<Map<String, Object>> getFeedByFeedcode(@PathVariable("feedcode") Integer feedcode) { 
+		Map<String, Object> map = new HashMap<>();
+		Feed feed = feedService.findByFeedcode(feedcode);
+		List<Image> images = feedService.findAllByfeedcode(feedcode);
+		map.put("feed", feed);
+		map.put("images", images);
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK); 
+	}
+	
 	// 피드번호로 피드 삭제
 	@DeleteMapping(value = "/{feedcode}") 
 	@ApiOperation(value="피드 삭제", notes="feedcode로 삭제")

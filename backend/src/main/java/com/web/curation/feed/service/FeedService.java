@@ -12,7 +12,8 @@ public interface FeedService {
 
 	List<Feed> findAll();
 	Image findOneByfeedcode(Integer feedcode);
-	Optional<Feed> findByFeedcode(Integer feedcode);
+	List<Image> findAllByfeedcode(Integer feedcode);
+	Feed findByFeedcode(Integer feedcode);
 	List<Feed> findByEmail(String email);
 	void deleteByFeedcode(Integer feedcode);
 	Feed save(Feed feed, List<MultipartFile> files ) throws Exception;
