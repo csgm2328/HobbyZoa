@@ -38,9 +38,14 @@ public class FeedServiceImpl implements FeedService{
 		return imageRepo.findOneByfeedcode(feedcode);
 	}
 	
-	@Override //피드 누르면 상세보기 가능하도록
-	public Optional<Feed> findByFeedcode(Integer feedcode) { //일단 보류
-		Optional<Feed> feed = feedRepo.findById(feedcode);
+	@Override
+	public List<Image> findAllByfeedcode(Integer feedcode){ //해당 피드코드 이미지 모두 반환
+		return imageRepo.findAllByfeedcode(feedcode);
+	}
+	
+	@Override 
+	public Feed findByFeedcode(Integer feedcode) { //피드 누르면 상세보기 가능하도록
+		Feed feed = feedRepo.findByFeedcode(feedcode);
 		return feed;
 	}
 	

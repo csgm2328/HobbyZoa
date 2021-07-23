@@ -12,10 +12,10 @@ public interface FeedRepo extends JpaRepository<Feed, Integer>{ //왜 Long일까
 
 	//모두 검색
 	List<Feed> findByEmail(String email);
+	//피드번호로 검색
+	Feed findByFeedcode(Integer feedcode);
 	//피드 저장
 //	Feed save(Feed feed);
-	//이미지 저장
-//	Image save(Image image);
 	
 }
 
