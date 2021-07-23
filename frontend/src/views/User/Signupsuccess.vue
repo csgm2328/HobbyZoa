@@ -4,7 +4,7 @@
     <v-container fluid fill-height>
       <v-layout column align-center justify-center>
         <h1 class="ma-5">회원 가입 완료</h1>
-        <div>{{ signupEmail }}</div>
+        <div>{{ signupEmail }}로</div>
         <div class="font-weight-light mb-5">
           인증 이메일이 발송 되었습니다.
         </div>
