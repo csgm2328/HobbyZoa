@@ -46,8 +46,8 @@ public class FeedServiceImpl implements FeedService{
 	
 	@Override
 	public List<Feed> findByEmail(String email) {
-		
-		return null;
+		List<Feed> feeds = feedRepo.findByEmail(email);
+		return feeds;
 	}
 
 	@Override
@@ -69,9 +69,7 @@ public class FeedServiceImpl implements FeedService{
             	Image savedImage = imageRepo.save(image); //계속 null 던짐
             	imageList.add(savedImage); //imgcode까지 추가된 이미지 리스트
             }
-//            feed.setMetadata(imageList); //이걸 어떻게 처리할까
         }
-
 		return feed;
 	}
 

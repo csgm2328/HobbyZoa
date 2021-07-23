@@ -58,7 +58,7 @@ public class FeedController {
             @Valid @RequestParam("nickname") String nickname,
             @RequestParam("comment") String comment,
             @Valid @RequestPart("files") List<MultipartFile> files
-    ) throws Exception {
+    ) throws Exception { //위에 List<MultipartFile> 대신 MultipartFile로 
 //		List<MultipartFile> list = new ArrayList<>(); //테스트를 위한 코드, swagger ui는 여러파일 업로드 지원하지 않아서 
 //		list.add(files);
         Feed feed = feedService.save(Feed.builder()
@@ -85,9 +85,13 @@ public class FeedController {
 	@ApiOperation(value="해당 계정의 모든 피드 조회", notes="피드 comment와 이미지1장 반환")
 	public ResponseEntity<Map<String, Image>> getFeedsByEmail(@PathVariable("email") String email) { 
 		Map<String, Image> map = new HashMap<>();
-//	    map.put(1, "아");
 		//email에 해당하는 모든 피드 list
-		//list.get(i).getFeedcode(), list.get(i).getComment(),
+		List<Feed> list = feedService.findByEmail(email);
+		for (int i = 0; i < list.size(); i++) {
+			Feed curFeed = list.get(i);
+			Image image = feedService.findOneByfeedcode(curFeed.getFeedcode());
+			map.put(curFeed.getComment(), image);
+		}
 		return new ResponseEntity<Map<String, Image>>(map, HttpStatus.OK); 
 	}
 	
