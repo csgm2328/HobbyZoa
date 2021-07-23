@@ -32,31 +32,30 @@ public class Feed {
 	
 	private String comment; //한줄설명
 	
-	@ElementCollection
-	private List<Image> metadata = new ArrayList(); //사진 등 메타데이터, 타입 설정
+//	@ElementCollection
+//	private List<Image> metadata = new ArrayList<>(); //사진 등 메타데이터, 타입 설정
 	
 	private Integer likes; //좋아요 수
 	private Integer scrap; //스크랩 수
 	
 	//likes, scrap 없는 생성자
-	public Feed(String email, int feedcode, String nickname, LocalDateTime regtime, String comment,
-			List<Image> metadata) {
+	public Feed(String email, int feedcode, String nickname, LocalDateTime regtime, String comment) {
 		super();
 		this.email = email;
 		this.feedcode = feedcode;
 		this.nickname = nickname;
 		this.regtime = regtime;
 		this.comment = comment;
-		this.metadata = metadata;
+//		this.metadata = metadata;
 	}
 
 	//feedcode, regtime 없는 생성자
-	public Feed(String email, String nickname, String comment, List<Image> metadata, int likes, int scrap) {
+	public Feed(String email, String nickname, String comment, int likes, int scrap) {
 		super();
 		this.email = email;
 		this.nickname = nickname;
 		this.comment = comment;
-		this.metadata = metadata;
+//		this.metadata = metadata;
 		this.likes = likes;
 		this.scrap = scrap;
 	}
@@ -124,14 +123,14 @@ public class Feed {
 	}
 
 
-	public List<Image> getMetadata() {
-		return metadata;
-	}
-
-
-	public void setMetadata(List<Image> metadata) {
-		this.metadata = metadata;
-	}
+//	public List<Image> getMetadata() {
+//		return metadata;
+//	}
+//
+//
+//	public void setMetadata(List<Image> metadata) {
+//		this.metadata = metadata;
+//	}
 
 
 	public int getLikes() {
