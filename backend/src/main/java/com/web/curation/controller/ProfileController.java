@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.curation.profile.model.ProfileImage;
+import com.web.curation.profile.service.ProfileHandler;
 import com.web.curation.profile.service.ProfileService;
 import com.web.curation.response.BasicResponse;
 
@@ -31,7 +32,7 @@ public class ProfileController {
 	
 	@GetMapping("/{email}")
 	@ApiOperation(value = "프로필 이미지 보기", notes = "이미지 어떻게 봐야되지?")
-	public ResponseEntity<BasicResponse> ShowProfileImage(@RequestParam String email){
+	public ResponseEntity<BasicResponse> ShowProfileImage(@PathVariable String email){
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
 		result.object = profileService.findById(email).get();
@@ -53,18 +54,18 @@ public class ProfileController {
 		final BasicResponse result = new BasicResponse();
 		System.out.println(email);
 		
-		ProfileImage profile = new ProfileImage();  
-		profile.setEmail(email);
-		profile.setImage_name(file.getOriginalFilename());
-		profile.setContent_type(file.getContentType());
-		profile.setImage_size(file.getSize());
+//		ProfileImage profile = new ProfileImage();  
+//		profile.setEmail(email);
+//		profile.setImage_name(file.getOriginalFilename());
+//		profile.setContent_type(file.getContentType());
+//		profile.setImage_size(file.getSize());
+//		profile.setImage_path(file.getResource());
 		try {
-			profile.setImage_data(file.getBytes());
-		} catch (IOException e) {
-			System.out.println("파일 오류");
+			result.object = profileService.save(email, file);
+		} catch (IllegalStateException | IOException e) {
+			System.out.println("FAIL: 업로드 파일 오류");
 			e.printStackTrace();
 		}
-		result.object = profileService.save(profile);
 		if (result.object != null) {
 			result.status = true;
 			result.data = "success";

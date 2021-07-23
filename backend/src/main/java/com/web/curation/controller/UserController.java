@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -131,7 +132,7 @@ public class UserController {
 
 	@GetMapping("/{email}")
 	@ApiOperation(value = "계정 설정 페이지 보기", notes = "마이페이지 보기")
-	public ResponseEntity<BasicResponse> ShowUser(@RequestParam String email) {
+	public ResponseEntity<BasicResponse> ShowUser(@PathVariable String email) {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
 		result.object = userService.findById(email).get();
@@ -143,11 +144,11 @@ public class UserController {
 
 	@PutMapping("/{email}")
 	@ApiOperation(value = "계정 정보 수정", notes = "비밀번호 변경, 프로필 사진 설정하는 부분")
-	public ResponseEntity<BasicResponse> UpdateUser(@Valid @RequestBody SignupRequest UpdateInfo) {
+	public ResponseEntity<BasicResponse> UpdateUser(@PathVariable String email, @Valid @RequestBody SignupRequest UpdateInfo) {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
 
-		User user = userService.findById(UpdateInfo.getEmail()).get();
+		User user = userService.findById(email).get();
 		// PK인 email 빼고 전부다 변경가능
 		user.setNickname(UpdateInfo.getNickname());
 		user.setPassword(UpdateInfo.getPassword());
@@ -170,7 +171,7 @@ public class UserController {
 
 	@DeleteMapping("/{email}")
 	@ApiOperation(value = "계정 탈퇴", notes = "계정 삭제 ON CASCADE")
-	public ResponseEntity<BasicResponse> DeleteUser(@RequestParam String email) {
+	public ResponseEntity<BasicResponse> DeleteUser(@PathVariable String email) {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
 
