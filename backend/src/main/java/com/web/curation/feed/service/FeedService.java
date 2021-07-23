@@ -11,11 +11,12 @@ import com.web.curation.image.model.Image;
 public interface FeedService {
 
 	List<Feed> findAll();
-	List<Image> findByEmail(String email);
+	Image findOneByfeedcode(Integer feedcode);
 	Optional<Feed> findByFeedcode(Integer feedcode);
+	List<Feed> findByEmail(String email);
 	void deleteByFeedcode(Integer feedcode);
 	Feed save(Feed feed, List<MultipartFile> files ) throws Exception;
-	void updateByFeedcode(Integer feedcode, Feed feed);
+	void updateByFeedcode(Integer feedcode, Feed feed, List<MultipartFile> files) throws Exception;
 	
 	
 }

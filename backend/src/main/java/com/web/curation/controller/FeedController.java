@@ -2,7 +2,9 @@ package com.web.curation.controller;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -25,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.web.curation.feed.model.Feed;
 import com.web.curation.feed.service.FeedService;
+import com.web.curation.image.model.Image;
 import com.web.curation.response.BasicResponse;
 
 import io.swagger.annotations.ApiOperation;
@@ -77,6 +80,17 @@ public class FeedController {
 		return new ResponseEntity<List<Feed>>(feed, HttpStatus.OK); 
 	}
 	
+	// 해당 계정 피드 조회 
+	@GetMapping(value="/{email}") 
+	@ApiOperation(value="해당 계정의 모든 피드 조회", notes="피드 comment와 이미지1장 반환")
+	public ResponseEntity<Map<String, Image>> getFeedsByEmail(@PathVariable("email") String email) { 
+		Map<String, Image> map = new HashMap<>();
+//	    map.put(1, "아");
+		//email에 해당하는 모든 피드 list
+		//list.get(i).getFeedcode(), list.get(i).getComment(),
+		return new ResponseEntity<Map<String, Image>>(map, HttpStatus.OK); 
+	}
+	
 	// 피드번호로 피드 삭제
 	@DeleteMapping(value = "/{feedcode}") 
 	@ApiOperation(value="피드 삭제", notes="feedcode로 삭제")
@@ -88,8 +102,9 @@ public class FeedController {
 	// 피드 번호로 피드수정
 	@PutMapping(value = "/{feedcode}") 
 	@ApiOperation(value="피드 수정", notes="feedcode로 수정 후 수정 피드 반환")
-	public ResponseEntity<Feed> updateFeed(@PathVariable("feedcode") Integer feedcode, Feed feed) { 
-		feedService.updateByFeedcode(feedcode, feed); 
+	public ResponseEntity<Feed> updateFeed(@PathVariable("feedcode") Integer feedcode, 
+			Feed feed, @RequestPart("files") List<MultipartFile> files) throws Exception { 
+		feedService.updateByFeedcode(feedcode, feed, files); 		
 		return new ResponseEntity<Feed>(feed, HttpStatus.OK); 
 	}
 }
