@@ -13,8 +13,11 @@ import com.web.curation.email.service.EmailTokenServiceImpl;
 import com.web.curation.user.model.User;
 import com.web.curation.user.repo.UserRepo;
 
-@Transactional
+import lombok.RequiredArgsConstructor;
+
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
 	@Autowired
@@ -37,6 +40,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Optional<User> findUserByEmailAndPassword(String email, String password) {
 		return userRepo.findUserByEmailAndPassword(email, password);
+	}
+
+	@Override
+	public long deleteById(String email) {
+		return userRepo.deleteByemail(email);
 	}
 
 }
