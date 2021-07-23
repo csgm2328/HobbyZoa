@@ -1,6 +1,10 @@
 package com.web.curation.controller;
 
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +17,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.web.curation.feed.model.Feed;
 import com.web.curation.feed.service.FeedService;
@@ -40,13 +47,28 @@ public class FeedController {
 	
 	// 피드 생성
 	@PostMapping 
-	public ResponseEntity<Feed> save(Feed feed) { 
-		return new ResponseEntity<Feed>(feedService.save(feed), HttpStatus.OK); 
-	}
+	public ResponseEntity<?> createFeed(
+            @Valid @RequestParam("email") String email,
+            @Valid @RequestParam("nickname") String nickname,
+            @RequestParam("comment") String comment,
+            @Valid @RequestPart("files") MultipartFile files
+    ) throws Exception {
+		List<MultipartFile> list = new ArrayList(); //테스트를 위한 코드, swagger ui는 여러파일 업로드 지원하지 않아서 
+		list.add(files);
+        Feed feed = feedService.save(Feed.builder()
+                .email(email)
+                .nickname(nickname)
+                .comment(comment)
+                .build(), list);
+
+        URI uriLocation = new URI("/board/" + feed.getFeedcode());
+        return ResponseEntity.created(uriLocation).body("{}");
+    }
+		
 
 	// 모든 피드 조회 
 	@GetMapping(value="/all") 
-	public ResponseEntity<List<Feed>> getAllfeeds() { 
+	public ResponseEntity<List<Feed>> getAllFeeds() { 
 		List<Feed> feed = feedService.findAll(); 
 		return new ResponseEntity<List<Feed>>(feed, HttpStatus.OK); 
 	}

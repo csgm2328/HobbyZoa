@@ -11,9 +11,9 @@ import com.web.curation.user.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Service
-@Slf4j
+//@Slf4j
 @Transactional
 public interface UserService {
 	Optional<User> findById(String email);
