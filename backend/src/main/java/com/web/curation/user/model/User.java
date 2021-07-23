@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL) //null아닌것만 responseBody에 포함
 public class User {
     @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)

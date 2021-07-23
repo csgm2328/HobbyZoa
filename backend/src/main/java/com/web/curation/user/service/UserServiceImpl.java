@@ -13,8 +13,11 @@ import com.web.curation.email.service.EmailTokenServiceImpl;
 import com.web.curation.user.model.User;
 import com.web.curation.user.repo.UserRepo;
 
-@Transactional
+import lombok.RequiredArgsConstructor;
+
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
 	@Autowired

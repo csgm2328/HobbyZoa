@@ -39,7 +39,6 @@ public class EmailToken  {
     @Column
     private boolean expired;
 
-	//일부러 FK 사용 안함
     @Column
     private String userEmail;
     
