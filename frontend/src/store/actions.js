@@ -37,6 +37,18 @@ export default {
     const AUTH_USER_URL = 'user/login'
     const response = await axios.get(AUTH_USER_URL, userinfo)
     console.log(commit, response)
-  }
+  },
+  // create feed
+  async CREATE_FEED({ commit }, data)  {
+    let config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    }
+    console.log(data)
+    const FEED_CREATE_URL = '/feed'
+    const response = await axios.post(FEED_CREATE_URL, data, config)
+    console.log(commit, response)
+  },
 
 }

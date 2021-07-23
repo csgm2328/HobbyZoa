@@ -86,20 +86,6 @@
         files: [],
         url: [],
         selected_picture: false,
-        items: [
-          {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
-          },
-          {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
-          },
-          {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
-          },
-          {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
-          },
-        ],
         pic_error: false,
         text_error: false
       }
@@ -114,7 +100,6 @@
         });
         this.selected_picture = true
         if (this.files.length == 0) {
-          console.log(this.files)
           this.selected_picture = false
         }
         this.pic_error = false
@@ -131,6 +116,27 @@
         }
         else {
           this.text_error = false
+        }
+
+        if (!this.pic_error && !this.text_error) {
+          const form = new FormData()
+          const files = this.files
+          console.log(files)
+          // form.append('files', files)
+          // const feed_info = {
+          //   'email': 'wnsdud4197@naver.com',
+          //   'nickname': 'test',
+          //   'comment': this.text,
+          //   'files': form
+          // }
+          // this.$store.dispatch('CREATE_FEED', feed_info)
+
+          form.append('email', 'wnsdud4197@naver.com')
+          form.append('nickname', 'test')
+          form.append('files', files)
+          form.append('comment', this.text)
+          this.$store.dispatch('CREATE_FEED', form)
+
         }
       }
     }
