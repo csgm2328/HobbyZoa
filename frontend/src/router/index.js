@@ -3,7 +3,8 @@ import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
 import Main from '@/views/Main.vue'
 import Signup from '@/views/User/Signup.vue'
-import Signupsuccess from '@/views/User/Signupsuccess.vue'
+import Signupsuccess from '@/views/User/SignupSuccess.vue'
+import SignupConfirm from '@/views/User/SignupConfirm.vue'
 import Login from '@/views/User/Login.vue'
 import Profile from '@/views/User/Profile.vue'
 import FeedCreate from '@/views/Feed/Create.vue'
@@ -30,6 +31,11 @@ const routes = [
     path: '/signupsuccess',
     name: 'Signupsuccess',
     component: Signupsuccess
+  },
+  {
+    path: '/signupconfirm',
+    name: 'SignupConfirm',
+    component: SignupConfirm
   },
   {
     path: '/login',

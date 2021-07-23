@@ -17,6 +17,12 @@ export default {
         })
     })
   },
+  // signup action
+  async SIGNUP_CONFIRM({ commit }, signup_token) {
+    const SIGNUP_CONFRIM_URL = 'http://localhost:9990/user/confirm-email'
+    const response = await axios.get(SIGNUP_CONFRIM_URL, { params: {token: signup_token}})
+    console.log(commit, response)
+  },
   // login action
   async AUTH_USER({ commit }, userinfo) {
     // return newPromise((resolve) => {
