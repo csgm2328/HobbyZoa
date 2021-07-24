@@ -72,12 +72,16 @@ public class FeedController {
     }
 		
 
-	// 모든 피드 조회 
+	// 모든 피드 조회 (이미지 엮어서 보내주기)
 	@GetMapping(value="/all") 
 	@ApiOperation(value="모든 피드 조회", notes="모든 피드 반환")
-	public ResponseEntity<List<Feed>> getAllFeeds() { 
-		List<Feed> feed = feedService.findAll(); 
-		return new ResponseEntity<List<Feed>>(feed, HttpStatus.OK); 
+	public ResponseEntity<Map<String, Object>> getAllFeeds() { 
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Feed> feeds = feedService.findAllFeeds(); 
+		List<Image> images = feedService.findAllImages();
+		map.put("feeds", feeds); //이렇게 보내면 front에서 feedcode에 맞는 image골라줘야함.
+		map.put("images", images);
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK); 
 	}
 	
 	// 해당 계정 피드 조회 
