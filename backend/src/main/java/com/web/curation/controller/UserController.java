@@ -90,7 +90,7 @@ public class UserController {
 			confirmationTokenService.createEmailConfirmationToken(request.getEmail(), request.getEmail());
 		} else {
 			result.status = true;
-			result.data = "Fail: 이미 존재하는 이메일입니다.";
+			result.data = "fail: 이미 존재하는 이메일입니다.";
 			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
 		return response;
@@ -108,7 +108,7 @@ public class UserController {
 			response = new ResponseEntity<>(result, HttpStatus.OK);
 		} else {
 			result.status = true;
-			result.data = "Fail: 이메일 인증 오류";
+			result.data = "fail: 이메일 인증 오류";
 			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
 		return response;
@@ -163,7 +163,7 @@ public class UserController {
 			response = new ResponseEntity<>(result, HttpStatus.OK);
 		} else {
 			result.status = false;
-			result.data = "Fail: 계정 설정 변경 오류";
+			result.data = "fail: 계정 설정 변경 오류";
 			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
 		return response;
@@ -181,7 +181,7 @@ public class UserController {
 			response = new ResponseEntity<>(result, HttpStatus.OK);
 		} else {
 			result.status = false;
-			result.data = "Fail: 계정 탈퇴 변경 오류";
+			result.data = "fail: 계정 탈퇴 변경 오류";
 			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
 		return response;

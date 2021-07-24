@@ -30,11 +30,8 @@ public class EmailTokenServiceImpl implements EmailTokenService{
 	@Autowired
 	private UserRepo userRepo;
 	
-    /**
-     * 이메일 인증 토큰 생성
-     * @return
-     */
 	@Override
+	//이메일 인증 토큰 생성
     public String createEmailConfirmationToken(String userEmail, String receiverEmail){
     	
         Assert.hasText(userEmail,"userEmail는 필수 입니다.");
@@ -54,12 +51,8 @@ public class EmailTokenServiceImpl implements EmailTokenService{
         return emailConfirmationToken.getId();
     }
 
-    /**
-     * 유효한 토큰 가져오기
-     * @param confirmationTokenId
-     * @return
-     */
 	@Override
+	// 유효한 토큰 가져오기
     public EmailToken findByIdAndExpirationDateAfterAndExpired(String confirmationTokenId){
         Optional<EmailToken> confirmationToken = confirmationTokenRepository.findByIdAndExpirationDateAfterAndExpired(confirmationTokenId, LocalDateTime.now(),false);
         System.out.println(confirmationTokenId);
@@ -71,6 +64,7 @@ public class EmailTokenServiceImpl implements EmailTokenService{
 		return confirmationTokenRepository.findById(confirmationTokenId);
 	}
 	@Override
+	//링크누르면  해당 이메일 인증 상태로 처리
 	public boolean confirmEmail(String token) {
 		EmailToken findConfirmationToken = findByIdAndExpirationDateAfterAndExpired(token);
 		Optional<User> user = userRepo.findById(findConfirmationToken.getUserEmail());

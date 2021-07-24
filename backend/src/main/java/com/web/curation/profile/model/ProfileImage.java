@@ -23,21 +23,20 @@ public class ProfileImage {
 	private String imgname;
 	@Column
 	private String content_type;
-	@Lob
-	@Column
-	private byte[] imgdata;
+//	@Lob
+//	@Column
+//	private byte[] imgdata;
 	@Column
 	private long imgsize;
 	@Column
 	private String imgpath;
 	
-	public ProfileImage(String email, String image_name, String content_type, byte[] image_data, long image_size,
+	public ProfileImage(String email, String image_name, String content_type, long image_size,
 			String image_path) {
 		super();
 		this.email = email;
 		this.imgname = image_name;
 		this.content_type = content_type;
-		this.imgdata = image_data;
 		this.imgsize = image_size;
 		this.imgpath = image_path;
 	}
