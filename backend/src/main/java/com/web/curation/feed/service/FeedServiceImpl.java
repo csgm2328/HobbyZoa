@@ -27,10 +27,17 @@ public class FeedServiceImpl implements FeedService{
 	FileHandler fileHandler;
 	
 	@Override
-	public List<Feed> findAll() { //전체 레코드 불러오기 findAll(), 이미지를 어떻게 할까
+	public List<Feed> findAllFeeds() { //전체 레코드 불러오기 findAll(), 이미지를 어떻게 할까
 		List<Feed> feeds = new ArrayList<Feed>();
 		feedRepo.findAll().forEach(e -> feeds.add(e));
 		return feeds;
+	}
+	
+	@Override
+	public List<Image> findAllImages() { //전체 레코드 불러오기 findAll(), 이미지를 어떻게 할까
+		List<Image> images = new ArrayList<Image>();
+		imageRepo.findAll().forEach(e -> images.add(e));
+		return images;
 	}
 
 	@Override

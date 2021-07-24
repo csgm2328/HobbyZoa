@@ -1,7 +1,6 @@
 package com.web.curation.feed.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,7 +9,8 @@ import com.web.curation.image.model.Image;
 
 public interface FeedService {
 
-	List<Feed> findAll();
+	List<Feed> findAllFeeds();
+	List<Image> findAllImages();
 	Image findOneByfeedcode(Integer feedcode);
 	List<Image> findAllByfeedcode(Integer feedcode);
 	Feed findByFeedcode(Integer feedcode);
