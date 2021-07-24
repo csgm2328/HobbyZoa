@@ -58,14 +58,13 @@ public class ProfileHandler{
 			}
 		}
 		// 파일이름 : 유저이메일( PK ) : 날짜 .확장자
-		String new_file_name = email + uploadFile.getOriginalFilename() + current_date + originalFileExtension;
+		String new_file_name = email + current_date + originalFileExtension;
 		// 생성 후 리스트에 추가
 		System.out.println(uploadFile.getSize());
 		ProfileImage image = ProfileImage.builder()
 				.email(email)
 				.imgname(uploadFile.getOriginalFilename())
 				.content_type(contentType)
-				.imgdata(uploadFile.getBytes())
 				.imgsize(uploadFile.getSize())
 				.imgpath(path + "/" + new_file_name).build();
 
