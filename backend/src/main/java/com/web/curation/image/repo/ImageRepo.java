@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.web.curation.image.model.Image;
 
@@ -14,4 +15,6 @@ public interface ImageRepo extends JpaRepository<Image, Integer>{
     List<Image> findAllByfeedcode(Integer feedcode);
     //해당 피드코드 이미지 하나만 가져오기
     Image findOneByfeedcode(Integer feedcode);
+    @Transactional
+    void deleteAllByFeedcode(Integer feedcode);
 }

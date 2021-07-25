@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%">
     <Header/>
     <v-container fluid fill-height>
       <v-layout column align-center justify-center>
@@ -24,11 +24,7 @@ export default {
   },
   created() {
     const confirmToken = this.$route.query.token
-    const confirmAddress = `http://localhost:9990/user/confirm-email?=token${confirmToken}`
-    fetch(confirmAddress)
-    .then((res) => {
-      console.log(res)
-    })
+    this.$store.dispatch('SIGNUP_CONFIRM', confirmToken)
   }
 }
 </script>

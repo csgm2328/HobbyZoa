@@ -2,6 +2,7 @@ package com.web.curation.controller;
 
 import java.util.Optional;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import com.web.curation.user.service.UserService;
@@ -14,14 +15,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -42,11 +46,11 @@ public class UserController {
 
 	@GetMapping("/login")
 	@ApiOperation(value = "로그인")
-	public Object login(@RequestParam(required = true) final String email,
+	public ResponseEntity<BasicResponse> login(@RequestParam(required = true) final String email,
 			@RequestParam(required = true) final String password) {
 
 		Optional<User> userOpt = userService.findUserByEmailAndPassword(email, password);
-		ResponseEntity response = null;
+		ResponseEntity<BasicResponse> response = null;
 
 		if (userOpt.isPresent()) {
 			System.out.println("[ " + userOpt.get().getNickname() + " ] 님 로그인 성공");
@@ -64,11 +68,10 @@ public class UserController {
 
 	@PostMapping("/signup")
 	@ApiOperation(value = "회원가입", notes = "비밀번호는 문자,숫자,특문포함해서  8자리 이상")
-
-	public Object signup(@Valid @RequestBody SignupRequest request) {
-		ResponseEntity response = null;
+	public ResponseEntity<BasicResponse> signUp(@Valid @RequestBody SignupRequest request) {
+		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
-		if (!userService.findById(request.getEmail()).isPresent()) { //이메일 중복검사
+		if (!userService.findById(request.getEmail()).isPresent()) { // 이메일 중복검사
 			User user = new User();
 			user.setNickname(request.getNickname());
 			user.setEmail(request.getEmail());
@@ -76,7 +79,7 @@ public class UserController {
 			user.setPhone(request.getPhone());
 			user.setComment(request.getComment());
 
-			userService.save(user);
+			result.object = userService.save(user);
 			System.out.println("[ " + user.getNickname() + " ] 님 등록 성공");
 			result.status = true;
 			result.data = "success";
@@ -87,35 +90,36 @@ public class UserController {
 			confirmationTokenService.createEmailConfirmationToken(request.getEmail(), request.getEmail());
 		} else {
 			result.status = true;
-			result.data = "Fail: 이미 존재하는 이메일입니다.";
+			result.data = "fail: 이미 존재하는 이메일입니다.";
 			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
 		return response;
 	}
 
-	@GetMapping("confirm-email")
+	@GetMapping("/confirm-email")
 	@ApiOperation(value = "회원가입시 이메일 인증", notes = "5분 안에 링크접속시 인증완료 페이지 제공")
-	public Object ConfirmUserEmail(@Valid @RequestParam String token) {
-		ResponseEntity response = null;
+	public ResponseEntity<BasicResponse> confirmUserEmail(@Valid @RequestParam String token) {
+		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
 //		if (userService.confirmEmail(token)) {
-		if(confirmationTokenService.confirmEmail(token)) {
+		if (confirmationTokenService.confirmEmail(token)) {
 			result.status = true;
 			result.data = "success";
 			response = new ResponseEntity<>(result, HttpStatus.OK);
 		} else {
 			result.status = true;
-			result.data = "Fail: 이메일 인증 오류";
+			result.data = "fail: 이메일 인증 오류";
 			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
 		return response;
 	}
 
-	@GetMapping("reconfirm-email")
+	@GetMapping("/reconfirm_email")
 	@ApiOperation(value = "이메일 재인증", notes = "토큰 만료로 인한 재인증 요청")
-	public Object reConfirmEmail(@RequestParam(required = true, value = "가입한 이메일") final String userEmail,
+	public ResponseEntity<BasicResponse> reConfirmEmail(
+			@RequestParam(required = true, value = "가입한 이메일") final String userEmail,
 			@RequestParam(required = true, value = "인증메일 받을 이메일") final String recieverEmail) {
-		ResponseEntity response = null;
+		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
 		// 기존 토큰 삭제 후 재 생성
 //		userService.reCreateToken(userEmail, recieverEmail);
@@ -125,4 +129,62 @@ public class UserController {
 		response = new ResponseEntity<>(result, HttpStatus.OK);
 		return response;
 	}
+
+	@GetMapping("/{email}")
+	@ApiOperation(value = "계정 설정 페이지 보기", notes = "마이페이지 보기")
+	public ResponseEntity<BasicResponse> ShowUser(@PathVariable String email) {
+		ResponseEntity<BasicResponse> response = null;
+		final BasicResponse result = new BasicResponse();
+		result.object = userService.findById(email).get();
+		result.status = true;
+		result.data = "success";
+		response = new ResponseEntity<>(result, HttpStatus.OK);
+		return response;
+	}
+
+	@PutMapping("/{email}")
+	@ApiOperation(value = "계정 정보 수정", notes = "비밀번호 변경, 프로필 사진 설정하는 부분")
+	public ResponseEntity<BasicResponse> UpdateUser(@PathVariable String email, @Valid @RequestBody SignupRequest UpdateInfo) {
+		ResponseEntity<BasicResponse> response = null;
+		final BasicResponse result = new BasicResponse();
+
+		User user = userService.findById(email).get();
+		// PK인 email 빼고 전부다 변경가능
+		user.setNickname(UpdateInfo.getNickname());
+		user.setPassword(UpdateInfo.getPassword());
+		user.setPhone(UpdateInfo.getPhone());
+		if (UpdateInfo.getComment() != null)
+			user.setComment(UpdateInfo.getComment());
+		result.object = userService.findById(UpdateInfo.getEmail()).get();
+
+		if (result.object != null) {
+			result.status = true;
+			result.data = "success";
+			response = new ResponseEntity<>(result, HttpStatus.OK);
+		} else {
+			result.status = false;
+			result.data = "fail: 계정 설정 변경 오류";
+			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
+
+	@DeleteMapping("/{email}")
+	@ApiOperation(value = "계정 탈퇴", notes = "계정 삭제 ON CASCADE")
+	public ResponseEntity<BasicResponse> DeleteUser(@PathVariable String email) {
+		ResponseEntity<BasicResponse> response = null;
+		final BasicResponse result = new BasicResponse();
+
+		if (userService.deleteById(email) != 0) {
+			result.status = true;
+			result.data = "success";
+			response = new ResponseEntity<>(result, HttpStatus.OK);
+		} else {
+			result.status = false;
+			result.data = "fail: 계정 탈퇴 변경 오류";
+			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
+	
 }

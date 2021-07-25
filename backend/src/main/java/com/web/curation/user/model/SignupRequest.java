@@ -23,6 +23,8 @@ public class SignupRequest {
     @NotNull
     String phone;
     
+    String comment;
+    
     public String getPhone() {
 		return phone;
 	}
@@ -38,8 +40,6 @@ public class SignupRequest {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
-	String comment;
 
     public String getEmail() {
         return email;

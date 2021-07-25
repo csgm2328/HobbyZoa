@@ -2,7 +2,9 @@ package com.web.curation.controller;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -25,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.web.curation.feed.model.Feed;
 import com.web.curation.feed.service.FeedService;
+import com.web.curation.image.model.Image;
 import com.web.curation.response.BasicResponse;
 
 import io.swagger.annotations.ApiOperation;
@@ -55,7 +58,7 @@ public class FeedController {
             @Valid @RequestParam("nickname") String nickname,
             @RequestParam("comment") String comment,
             @Valid @RequestPart("files") List<MultipartFile> files
-    ) throws Exception {
+    ) throws Exception { //위에 List<MultipartFile> 대신 MultipartFile로 
 //		List<MultipartFile> list = new ArrayList<>(); //테스트를 위한 코드, swagger ui는 여러파일 업로드 지원하지 않아서 
 //		list.add(files);
         Feed feed = feedService.save(Feed.builder()
@@ -69,12 +72,43 @@ public class FeedController {
     }
 		
 
-	// 모든 피드 조회 
+	// 모든 피드 조회 (이미지 엮어서 보내주기)
 	@GetMapping(value="/all") 
 	@ApiOperation(value="모든 피드 조회", notes="모든 피드 반환")
-	public ResponseEntity<List<Feed>> getAllFeeds() { 
-		List<Feed> feed = feedService.findAll(); 
-		return new ResponseEntity<List<Feed>>(feed, HttpStatus.OK); 
+	public ResponseEntity<Map<String, Object>> getAllFeeds() { 
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Feed> feeds = feedService.findAllFeeds(); 
+		List<Image> images = feedService.findAllImages();
+		map.put("feeds", feeds); //이렇게 보내면 front에서 feedcode에 맞는 image골라줘야함.
+		map.put("images", images);
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK); 
+	}
+	
+	// 해당 계정 피드 조회 
+	@GetMapping(value="/{email}") 
+	@ApiOperation(value="해당 계정의 모든 피드 조회", notes="피드 comment와 이미지1장 반환")
+	public ResponseEntity<Map<String, Image>> getFeedsByEmail(@PathVariable("email") String email) { 
+		Map<String, Image> map = new HashMap<>();
+		//email에 해당하는 모든 피드 list
+		List<Feed> list = feedService.findByEmail(email);
+		for (int i = 0; i < list.size(); i++) {
+			Feed curFeed = list.get(i);
+			Image image = feedService.findOneByfeedcode(curFeed.getFeedcode());
+			map.put(curFeed.getComment(), image);
+		}
+		return new ResponseEntity<Map<String, Image>>(map, HttpStatus.OK); 
+	}
+	
+	// 해당 feedcode 피드 상세보기
+	@GetMapping(value="/search/{feedcode}") 
+	@ApiOperation(value="해당 feedcode의 피드 상세보기", notes="피드 정보 담긴 객체와 이미지리스트 반환")
+	public ResponseEntity<Map<String, Object>> getFeedByFeedcode(@PathVariable("feedcode") Integer feedcode) { 
+		Map<String, Object> map = new HashMap<>();
+		Feed feed = feedService.findByFeedcode(feedcode);
+		List<Image> images = feedService.findAllByfeedcode(feedcode);
+		map.put("feed", feed);
+		map.put("images", images);
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK); 
 	}
 	
 	// 피드번호로 피드 삭제
@@ -88,8 +122,9 @@ public class FeedController {
 	// 피드 번호로 피드수정
 	@PutMapping(value = "/{feedcode}") 
 	@ApiOperation(value="피드 수정", notes="feedcode로 수정 후 수정 피드 반환")
-	public ResponseEntity<Feed> updateFeed(@PathVariable("feedcode") Integer feedcode, Feed feed) { 
-		feedService.updateByFeedcode(feedcode, feed); 
+	public ResponseEntity<Feed> updateFeed(@PathVariable("feedcode") Integer feedcode, 
+			Feed feed, @RequestPart("files") List<MultipartFile> files) throws Exception { 
+		feedService.updateByFeedcode(feedcode, feed, files); 		
 		return new ResponseEntity<Feed>(feed, HttpStatus.OK); 
 	}
 }

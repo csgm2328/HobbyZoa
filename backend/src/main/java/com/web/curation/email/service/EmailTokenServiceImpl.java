@@ -30,11 +30,8 @@ public class EmailTokenServiceImpl implements EmailTokenService{
 	@Autowired
 	private UserRepo userRepo;
 	
-    /**
-     * 이메일 인증 토큰 생성
-     * @return
-     */
 	@Override
+	//이메일 인증 토큰 생성
     public String createEmailConfirmationToken(String userEmail, String receiverEmail){
     	
         Assert.hasText(userEmail,"userEmail는 필수 입니다.");
@@ -48,18 +45,14 @@ public class EmailTokenServiceImpl implements EmailTokenService{
         mailMessage.setSubject("Hobby Zoa: 회원가입 이메일 인증");
         mailMessage.setText("안녕하세요 " + emailConfirmationToken.getUserEmail() + "님."
         		+ " Hobby Zoa에 오신 걸 환영합니다.\n\n아래 링크를 통해 이메일을 인증해주세요!\n" +
-        		"http://localhost:9990/user/confirm-email?token="+emailConfirmationToken.getId());
+        		"http://localhost:9990/signupconfirm?token="+emailConfirmationToken.getId());
         emailSenderService.sendEmail(mailMessage);
         
         return emailConfirmationToken.getId();
     }
 
-    /**
-     * 유효한 토큰 가져오기
-     * @param confirmationTokenId
-     * @return
-     */
 	@Override
+	// 유효한 토큰 가져오기
     public EmailToken findByIdAndExpirationDateAfterAndExpired(String confirmationTokenId){
         Optional<EmailToken> confirmationToken = confirmationTokenRepository.findByIdAndExpirationDateAfterAndExpired(confirmationTokenId, LocalDateTime.now(),false);
         System.out.println(confirmationTokenId);
@@ -71,6 +64,7 @@ public class EmailTokenServiceImpl implements EmailTokenService{
 		return confirmationTokenRepository.findById(confirmationTokenId);
 	}
 	@Override
+	//링크누르면  해당 이메일 인증 상태로 처리
 	public boolean confirmEmail(String token) {
 		EmailToken findConfirmationToken = findByIdAndExpirationDateAfterAndExpired(token);
 		Optional<User> user = userRepo.findById(findConfirmationToken.getUserEmail());

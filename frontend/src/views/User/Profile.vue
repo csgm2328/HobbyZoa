@@ -1,41 +1,109 @@
 <template>
   <div>
     <Header/>
-    <v-container
-      class="yellow darken-2"
-    >
+    <div>
+      <div id="profileBox" class="yellow darken-2 d-flex justify-center">
+        <v-row class="pa-3 ma-0" style="max-width: 900px;" >
+          <!--------------------------- SCREAM IMAGE -------------------------->
+          <v-col cols="4" offset-sm="0" sm="3" class="center d-flex justify-center align-center">
+            <v-avatar color="indigo" height="83px" width="83px" id="profileImg">
+              <v-icon dark>
+                mdi-account-circle
+              </v-icon>
+            </v-avatar>
+          </v-col>
+          <v-col cols="8">
+            <v-row>
+              <v-col cols="12 mt-3 pa-0">
+                <h1 class="title hover">Test User</h1>
+                <p class="font-weight-light grey--text text--darken-1 body-2">2 minutes ago</p>
+              </v-col>
+              <v-row>
+                <v-col
+                  cols="4"
+                  class="d-flex justify-center"
+                >
+                  <v-btn
+                    style="display: inline-block"
+                    :loading="loading3"
+                    :disabled="loading3"
+                    color="blue"
+                    @click="loader = 'loading3'"
+                  >
+                    <span>게시글<br/>123</span>
+                  </v-btn>
+                </v-col>
+                <v-col
+                  cols="4"  
+                  class="d-flex justify-center"
+                > 
+                  <v-btn
+                    :loading="loading3"
+                    :disabled="loading3"
+                    color="blue"
+                    @click="loader = 'loading3'"
+                  >
+                    <span>팔로워<br/>123</span>
+                  </v-btn>
+                </v-col>
+                <v-col
+                  cols="4"
+                  class="d-flex justify-center"
+                > 
+                  <v-btn
+                    :loading="loading3"
+                    :disabled="loading3"
+                    color="blue"
+                    @click="loader = 'loading3'"
+                  >
+                    <span>팔로워<br/>123</span>
+                  </v-btn>
+                </v-col>
+              </v-row>
+              <v-col cols="12" class="relative ma-0 pa-0">
+                 <v-btn icon  v-if="isLiked" @click="changeLike">
+                  <v-icon  >mdi-heart</v-icon>
+                </v-btn>
+                <v-btn icon v-else @click="changeLike">
+                  <v-icon    color="red">mdi-heart</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-col>
+          <v-col class="text-left" cols="12">
+            <div class="font-weight-regular text-truncate">
+              hi im test user
+            </div>
+          </v-col>
+        </v-row>
+      </div>
       <v-row
-        no-gutters
+        align="center"
+        justify="space-around"
+        style="border-bottom: solid #e9e9e9; margin:auto;"
       >
-        <v-col
-          cols=4
-          class="d-flex align-center justify-center"
-        >
-          <v-avatar color="indigo">
-            <v-icon dark>
-              mdi-account-circle
-            </v-icon>
-          </v-avatar>
-        </v-col>
-        <v-col
-          cols=8
-        > 
-          <div
-            icon
-          >
-            <h2>Test User</h2>
-          </div>
-          <div></div>
-          <v-btn
-            icon
-            class="ma-2"
-          >
-            <p>setting</p>
-          </v-btn>
-        </v-col>
+        <v-btn icon>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stickies" viewBox="0 0 16 16">
+            <path d="M1.5 0A1.5 1.5 0 0 0 0 1.5V13a1 1 0 0 0 1 1V1.5a.5.5 0 0 1 .5-.5H14a1 1 0 0 0-1-1H1.5z"/>
+            <path d="M3.5 2A1.5 1.5 0 0 0 2 3.5v11A1.5 1.5 0 0 0 3.5 16h6.086a1.5 1.5 0 0 0 1.06-.44l4.915-4.914A1.5 1.5 0 0 0 16 9.586V3.5A1.5 1.5 0 0 0 14.5 2h-11zM3 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 .5.5V9h-4.5A1.5 1.5 0 0 0 9 10.5V15H3.5a.5.5 0 0 1-.5-.5v-11zm7 11.293V10.5a.5.5 0 0 1 .5-.5h4.293L10 14.793z"/>
+          </svg>
+          <span style="margin-left: 10px;">Posts</span>
+        </v-btn>
+        <v-btn icon>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmarks" viewBox="0 0 16 16">
+            <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5V4zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1H4z"/>
+            <path d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1z"/>
+          </svg>
+          <span style="margin-left: 10px;">Saved</span>
+        </v-btn>
+        <v-btn icon>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trophy" viewBox="0 0 16 16">
+            <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5c0 .538-.012 1.05-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33.076 33.076 0 0 1 2.5.5zm.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935zm10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935zM3.504 1c.007.517.026 1.006.056 1.469.13 2.028.457 3.546.87 4.667C5.294 9.48 6.484 10 7 10a.5.5 0 0 1 .5.5v2.61a1 1 0 0 1-.757.97l-1.426.356a.5.5 0 0 0-.179.085L4.5 15h7l-.638-.479a.501.501 0 0 0-.18-.085l-1.425-.356a1 1 0 0 1-.757-.97V10.5A.5.5 0 0 1 9 10c.516 0 1.706-.52 2.57-2.864.413-1.12.74-2.64.87-4.667.03-.463.049-.952.056-1.469H3.504z"/>
+          </svg>
+          <span style="margin-left: 10px;">Level</span>
+        </v-btn>
       </v-row>
-      <p>안녕하세요 자기소개 란입니다.</p>
-    </v-container>
+    </div>
   </div>
 
 </template>
@@ -47,10 +115,30 @@
     name: "Profile",
     components: {
       Header
+    },
+    data() {
+      return {
+        isLiked: false,
+      }
+    },
+    methods: {
+      changeLike() {
+        if (this.isLiked) {
+          this.isLiked = false
+        }
+        else {
+          this.isLiked = true
+        }
+      }
     }
   }
 </script>
 
-<style>
-
+<style scoped>
+@media (min-width: 700px) {
+#profileImg {
+    width: 150px !important;
+    height: 150px !important;
+  }
+}
 </style>
