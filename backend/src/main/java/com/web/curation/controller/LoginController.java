@@ -65,8 +65,6 @@ public class LoginController {
 				System.out.println("[ " + userOpt.get().getEmail() + " ] 님 로그인 성공");
 				String token = jwtService.create("useremil", userOpt.get().getEmail(), "access-token");// key, data,
 
-				//response.setHeader("access-token", token);
-				//response.da
 				resultMap.put("access-token", token);
 				status = HttpStatus.ACCEPTED;
 
@@ -84,17 +82,18 @@ public class LoginController {
 	@ApiOperation(value = "회원 인증", notes = "회원 정보 반환")
 	@GetMapping("/v1/accounts/{email}")
 	public ResponseEntity<Map<String, Object>> getInfo(
-			@PathVariable("email") @ApiParam(value = "인증할 회원 이메일.", required = true) String email,
 //			String token) {
 			HttpServletRequest request) {
 
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
-
+		Map<String, Object> getEmail = jwtService.get(request.getHeader("access-token"));
+		String email = (String) getEmail.get("email");
+		
 //		if (jwtService.isUsable(token)) {
 			if (jwtService.isUsable(request.getHeader("access-token"))){ //request헤더의 "access토큰 항목"가져오기			
 			try {
-
+				//String email = jwtService.get(token);
 				Optional<User> user = userService.findById(email);
 				resultMap.put("userInfo", user);
 				resultMap.put("message", SUCCESS);

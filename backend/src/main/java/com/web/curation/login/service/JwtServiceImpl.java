@@ -86,17 +86,17 @@ public class JwtServiceImpl implements JwtService {
 
 			throw new UnauthorizedException();
 		}
-		// Map<String, Object> value = (LinkedHashMap<String,
-		// Object>)claims.getBody().get(key);
+//		 Map<String, Object> value = (LinkedHashMap<String,
+//		 Object>)claims.getBody().get(key);		 
 		Map<String, Object> value = claims.getBody();
 
 		return value;
 	}
 
-	@Override
-	public String getUserId() {
-
-		return (String) this.get("user").get("userid");
-	}
+//	@Override
+//	public String getUserId() {
+//
+//		return (String) this.get("user").get("userid");
+//	}
 
 }
