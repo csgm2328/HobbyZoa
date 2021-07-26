@@ -16,7 +16,6 @@ local.properties
 .recommenders
 
 # ignore properties file
-application.properties
 application.yml
 
 # External tool builders
