@@ -56,7 +56,7 @@
             height="10vh"
           />
 
-          <div class="d-flex justify-space-around mb-3">
+          <div v-if="!isLogin" class="d-flex justify-space-around mb-3">
             <router-link
               :to="{name: 'Login'}"
               style=" text-decoration: none;"
@@ -73,6 +73,16 @@
                 회원가입
               </v-btn>
             </router-link>
+          </div>
+            
+          <div v-else>
+            {{ nickname }}
+            <v-btn
+              text
+              @click="logout"
+            >
+              Logout
+            </v-btn>
           </div>
 
           <v-list-item>
@@ -109,6 +119,21 @@ export default {
       this.drawer = false
     },
   },
+
+  computed: {
+    isLogin() {
+      return this.$store.getters.isAuthenticated
+    },
+    nickname() {
+      return this.$store.getters.getUsername
+    }
+  },
+
+  methods: {
+    logout() {
+      this.$store.commit('AUTH_LOGOUT')
+    }
+  }
 }
 </script>
 

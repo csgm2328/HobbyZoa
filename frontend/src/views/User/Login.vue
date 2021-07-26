@@ -2,31 +2,40 @@
   <div style="height: 100%">
     <v-container fluid fill-height>
       <v-layout column align-center justify-center>
-          <v-form ref="form" lazy-validation>
-            <v-text-field
-              v-model="email"
-              label="Email"
-              outlined
-              :rules="[rules.required, rules.email]"
-            >
-            </v-text-field>
-            <v-text-field
-              v-model="password"
-              label="password"
-              type="password"
-              outlined
-              :rules="[rules.required]"
-            >
-            </v-text-field>
-          </v-form>
-          <v-btn
-            rounded
-            class="ma-3"
-            max-width="400"
-            min-width="200"
-            color="yellow darken-2"
-            @click="Login"
-          >로그인</v-btn>
+        <h1>Login</h1>
+        <v-form ref="form" lazy-validation>
+          <v-alert
+            v-if="loginError"
+            dense
+            outlined
+            type="error"
+          >
+            주소나 비밀번호를 확인해주세요.
+          </v-alert>
+          <v-text-field
+            v-model="email"
+            label="Email"
+            outlined
+            :rules="[rules.required, rules.email]"
+          >
+          </v-text-field>
+          <v-text-field
+            v-model="password"
+            label="password"
+            type="password"
+            outlined
+            :rules="[rules.required]"
+          >
+          </v-text-field>
+        </v-form>
+        <v-btn
+          rounded
+          class="ma-3"
+          max-width="400"
+          min-width="200"
+          color="yellow darken-2"
+          @click="Login"
+        >로그인</v-btn>
       </v-layout>
     </v-container>
   </div>
@@ -63,11 +72,19 @@ export default {
           .then(() => {
             this.$router.push('/main')
           })
+          .catch(() => {
+
+          })
       }
     }
   },
   watch: {
 
+  },
+  computed: {
+    loginError() {
+      return this.$store.getters.getLoginError
+    }
   }
 
   
