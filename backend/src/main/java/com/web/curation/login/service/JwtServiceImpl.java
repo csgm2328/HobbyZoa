@@ -93,6 +93,12 @@ public class JwtServiceImpl implements JwtService {
 		return value;
 	}
 
+	@Override
+	public String getUserId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 //	@Override
 //	public String getUserId() {
 //
