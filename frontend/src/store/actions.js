@@ -36,7 +36,7 @@ export default {
           commit('AUTH_USER', token)
           axios.defaults.headers.common['access-token'] = token
           
-          axios.get('/auth/v1/accounts')
+          axios.get('/auth/loginInfo')
             .then((res) => {
               localStorage.setItem('user', res.data.userInfo.nickname)
               resolve()
