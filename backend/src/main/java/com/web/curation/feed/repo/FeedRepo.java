@@ -18,6 +18,8 @@ public interface FeedRepo extends JpaRepository<Feed, Integer>{ //왜 Long일까
 //	Feed save(Feed feed);
 	//이미지 저장
 //	Image save(Image image);
+
+	int countByEmail(String email);
 	
 }
 

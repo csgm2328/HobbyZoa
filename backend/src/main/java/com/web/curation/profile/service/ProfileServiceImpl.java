@@ -57,7 +57,7 @@ public class ProfileServiceImpl implements ProfileService {
 					.email(email)
 					.following(followRepo.countByFromemail(email))
 					.follower(followRepo.countByToemail(email))
-//					.feeds(feedRepo.countByEmail(email))
+					.feeds(feedRepo.countByEmail(email))
 					.imgpath(profileImageRepo.findById(email).get().getImgpath())
 					.comment(userRepo.findById(email).get().getComment())
 					.build());
