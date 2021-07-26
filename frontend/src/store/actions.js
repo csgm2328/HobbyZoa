@@ -35,10 +35,11 @@ export default {
           localStorage.setItem('token', token)
           commit('AUTH_USER', token)
           axios.defaults.headers.common['access-token'] = token
-          
+
           axios.get('/auth/loginInfo')
             .then((res) => {
               localStorage.setItem('user', res.data.userInfo.nickname)
+              localStorage.setItem('email', res.data.userInfo.email)
               resolve()
             })
             .catch((err) => {
