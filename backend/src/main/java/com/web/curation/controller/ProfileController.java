@@ -82,12 +82,6 @@ public class ProfileController {
 		final BasicResponse result = new BasicResponse();
 		System.out.println(email);
 
-//		ProfileImage profile = new ProfileImage();  
-//		profile.setEmail(email);
-//		profile.setImage_name(file.getOriginalFilename());
-//		profile.setContent_type(file.getContentType());
-//		profile.setImage_size(file.getSize());
-//		profile.setImage_path(file.getResource());
 		try {
 			result.object = profileService.save(email, file);
 		} catch (IllegalStateException | IOException e) {
