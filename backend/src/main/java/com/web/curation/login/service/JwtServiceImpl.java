@@ -86,8 +86,8 @@ public class JwtServiceImpl implements JwtService {
 
 			throw new UnauthorizedException();
 		}
-		// Map<String, Object> value = (LinkedHashMap<String,
-		// Object>)claims.getBody().get(key);
+//		 Map<String, Object> value = (LinkedHashMap<String,
+//		 Object>)claims.getBody().get(key);		 
 		Map<String, Object> value = claims.getBody();
 
 		return value;
@@ -95,8 +95,14 @@ public class JwtServiceImpl implements JwtService {
 
 	@Override
 	public String getUserId() {
-
-		return (String) this.get("user").get("userid");
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+//	@Override
+//	public String getUserId() {
+//
+//		return (String) this.get("user").get("userid");
+//	}
 
 }
