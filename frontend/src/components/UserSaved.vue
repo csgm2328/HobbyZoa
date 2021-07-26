@@ -1,8 +1,7 @@
 <template>
   <div
     style="margin: 20px;"
-  >
-    <h1>User Feed</h1>  
+  > 
     <div v-for="(item) in items" :key="item.uid" class="mx-auto">
       <v-card
         :loading="loading"
@@ -19,7 +18,7 @@
 
         <v-img
           height="250"
-          src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+          src="https://logos.flamingtext.com/Name-Logos/Saved-design-sketch-name.webp"
         ></v-img>
 
         <v-card-text>

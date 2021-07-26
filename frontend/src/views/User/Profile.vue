@@ -15,7 +15,7 @@
           </v-col>
           <v-col cols="8">
             <v-row class="pa-3">
-              <v-col cols="12" class="mt-3 pa-0">
+              <v-col cols="12" class="mt-1 pa-0">
                 <h1 class="title hover">Test User</h1>
                 <!-- <p class="font-weight-light grey--text text--darken-1 body-2">2 minutes ago</p> -->
               </v-col>
@@ -25,18 +25,23 @@
               >
                 <v-btn
                   icon
-                  style="display: inline-block"
+                  disabled
                 >
-                  <span><span style="color: black; font-weight: bold;">게시글</span><br/>123</span>
+                <span><span style="color: black; font-weight: bold;">게시글</span><br/>123</span>
                 </v-btn>
               </v-col>
+
+              
               <v-col
                 cols="4"  
                 class="d-flex justify-center"
               > 
                 <v-btn
-                  icon
+                  icon @click.stop="showFollowerModal=true"
                 >
+                  <FollowerModal
+                    :visible="showFollowerModal" @close="showFollowerModal=false"
+                  />
                   <span><span style="color: black; font-weight: bold;">팔로워</span><br/>123</span>
                 </v-btn>
               </v-col>
@@ -45,8 +50,11 @@
                 class="d-flex justify-center"
               > 
                 <v-btn
-                  icon
+                  icon @click.stop="showFollowModal=true"
                 >
+                  <FollowModal
+                    :visible="showFollowModal" @close="showFollowModal=false"
+                  />
                   <span><span style="color: black; font-weight: bold;">팔로우</span><br/>123</span>
                 </v-btn>
               </v-col>
@@ -81,7 +89,7 @@
             </v-row>
           </v-col>
           <v-col class="text-left" cols="12">
-            <div class="font-weight-regular text-truncate">
+            <div class="font-weight-regular text-truncate my-5">
               hi im test user
             </div>
           </v-col>
@@ -90,7 +98,7 @@
       <v-row
         align="center"
         justify="space-around"
-        style="border-bottom: solid #e9e9e9; margin:auto; max-width: 900px;"
+        style="border-bottom: solid #e9e9e9; margin:auto; max-width: 1000px;"
       >
         <v-btn 
           icon
@@ -141,6 +149,8 @@
   import UserFeed from '@/components/UserFeed'
   import UserSaved from '@/components/UserSaved'
   import UserLevel from '@/components/UserLevel'
+  import FollowModal from '@/components/FollowModal'
+  import FollowerModal from '@/components/FollowerModal'
 
   export default {
     name: "Profile",
@@ -148,12 +158,16 @@
       Header,
       UserFeed,
       UserSaved,
-      UserLevel
+      UserLevel,
+      FollowModal,
+      FollowerModal,
     },
     data() {
       return {
         isLiked: false,
         selected: "posts",
+        showFollowModal: false,
+        showFollowerModal: false,
       }
     },
     methods: {
@@ -168,7 +182,7 @@
       UserSelected(message) {
         this.selected = message
         console.log(this.selected)
-      }
+      },
     }
   }
 </script>
