@@ -1,39 +1,37 @@
 package com.web.curation.login.model;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.ToString;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 @Valid
 @ToString
 public class LoginRequest {
-	
     @ApiModelProperty(required = true)
     @NotNull
-    String loginEmail;
-    
+    String email;
     @ApiModelProperty(required = true)
     @NotNull
-    //@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d$@$!%*#?&]{8,}$")
-    String loginPassword;
-    
-	public String getLoginEmail() {
-		return loginEmail;
-	}
-	public void setLoginEmail(String loginEmail) {
-		this.loginEmail = loginEmail;
-	}
-	public String getLoginPassword() {
-		return loginPassword;
-	}
-	public void setLoginPassword(String loginPassword) {
-		this.loginPassword = loginPassword;
-	}
-    
-    
-    
+    String password;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+
+    public String getPassword() {
+        return password;
+    }
+
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
 }

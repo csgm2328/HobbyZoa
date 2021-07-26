@@ -25,18 +25,30 @@ export default {
   },
   // login action
   async AUTH_USER({ commit }, userinfo) {
-    // return newPromise((resolve) => {
-    //   const AUTH_USER_URL = 'user/login'
-    //   const data = userinfo
-    //   axios.post(AUTH_USER_URL, data)
-    //     .then((response) => {
+    return new Promise((resolve, reject) => {
+      const AUTH_USER_URL = 'auth/login'
+      const data = userinfo
+      axios.post(AUTH_USER_URL, data)
+        .then((response) => {
+          const token = response.data['access-token']
           
-    //     })
-    // })
-
-    const AUTH_USER_URL = 'user/login'
-    const response = await axios.get(AUTH_USER_URL, userinfo)
-    console.log(commit, response)
+          localStorage.setItem('token', token)
+          commit('AUTH_USER', token)
+          axios.defaults.headers.common['access-token'] = token
+          
+          axios.get('/auth/v1/accounts')
+            .then((res) => {
+              localStorage.setItem('user', res.data.userInfo.nickname)
+              resolve()
+            })
+            .catch((err) => {
+              console.log(err)
+              const loginError = 'Login'
+              commit('LOGIN_ERROR', loginError)
+              reject()
+            })
+        })
+    })
   },
   // create feed
   async CREATE_FEED({ commit }, data)  {

@@ -13,6 +13,9 @@ axios.defaults.baseURL = 'http://localhost:9990'
 const state = {
   signupEmail: '',
   signupError: '',
+  loginError: '',
+  token: localStorage.getItem('token'),
+  nickname: localStorage.getItem('user'),
 }
 
 export default new Vuex.Store({

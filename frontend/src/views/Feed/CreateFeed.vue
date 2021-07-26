@@ -125,7 +125,7 @@
           for (let i = 0; i < files.length; i++) {
             form.append('files', files[i])
           }
-          form.append('email', 'wnsdud4197@naver.com')
+          form.append('email', 'test@naver.com')
           form.append('nickname', 'test')
           form.append('comment', this.text)
           this.$store.dispatch('CREATE_FEED', form)
