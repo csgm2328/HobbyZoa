@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-	private static final String[] EXCLUDE_PATHS = { "/auth/**", "/error/**", "/user/**"};
+	private static final String[] EXCLUDE_PATHS = { "/**"};
 
 	@Autowired
 	private JwtInterceptor jwtInterceptor;
