@@ -63,7 +63,7 @@ public class LoginController {
 			Optional<User> userOpt = userService.findUserByEmailAndPassword(request.getEmail(), request.getPassword());
 			if (userOpt.isPresent()) { // 로그인 성공하면 이메일 정보로 토큰만들기
 				System.out.println("[ " + userOpt.get().getEmail() + " ] 님 로그인 성공");
-				String token = jwtService.create("useremil", userOpt.get().getEmail(), "access-token");// key, data,
+				String token = jwtService.create("email", userOpt.get().getEmail(), "access-token");// key, data,
 
 				resultMap.put("access-token", token);
 				status = HttpStatus.ACCEPTED;
@@ -80,21 +80,21 @@ public class LoginController {
 	}
 
 	@ApiOperation(value = "회원 인증", notes = "회원 정보 반환")
-	@GetMapping("/v1/accounts/{email}")
+	@GetMapping("/loginInfo")
 	public ResponseEntity<Map<String, Object>> getInfo(
 //			String token) {
 			HttpServletRequest request) {
 
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
-		Map<String, Object> getEmail = jwtService.get(request.getHeader("access-token"));
-		String email = (String) getEmail.get("email");
+		String getEmail = jwtService.get(request.getHeader("access-token"));
+//		String getEmail = jwtService.get(token);		
 		
 //		if (jwtService.isUsable(token)) {
 			if (jwtService.isUsable(request.getHeader("access-token"))){ //request헤더의 "access토큰 항목"가져오기			
 			try {
 				//String email = jwtService.get(token);
-				Optional<User> user = userService.findById(email);
+				Optional<User> user = userService.findById(getEmail);
 				resultMap.put("userInfo", user);
 				resultMap.put("message", SUCCESS);
 
