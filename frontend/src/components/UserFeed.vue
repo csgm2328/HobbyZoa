@@ -2,7 +2,6 @@
   <div
     style="margin: 20px;"
   >
-    <h1>User Feed</h1>  
     <div v-for="(item) in items" :key="item.uid" class="mx-auto">
       <v-card
         :loading="loading"
