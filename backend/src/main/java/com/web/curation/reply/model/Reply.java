@@ -7,6 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import com.web.curation.feed.model.Feed;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -39,5 +43,8 @@ public class Reply {
 	
 	private int feedcode;
 	
+	@ManyToOne
+	@JoinColumn(name = "feed_feedcode")
+	private Feed feed;
 	
 }
