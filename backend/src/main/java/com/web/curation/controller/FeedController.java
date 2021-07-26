@@ -28,6 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.web.curation.feed.model.Feed;
 import com.web.curation.feed.service.FeedService;
 import com.web.curation.image.model.Image;
+import com.web.curation.reply.model.Reply;
+import com.web.curation.reply.service.ReplyService;
 import com.web.curation.response.BasicResponse;
 
 import io.swagger.annotations.ApiOperation;
@@ -50,6 +52,9 @@ public class FeedController {
 	@Autowired
 	FeedService feedService;
 	
+	@Autowired
+	ReplyService replyService;
+	
 	// 피드 생성
 	@PostMapping
 	@ApiOperation(value="피드 생성", notes="email, nickname, comment와 file리스트를 입력받아 uri를 반환")
@@ -58,9 +63,7 @@ public class FeedController {
             @Valid @RequestParam("nickname") String nickname,
             @RequestParam("comment") String comment,
             @Valid @RequestPart("files") List<MultipartFile> files
-    ) throws Exception { //위에 List<MultipartFile> 대신 MultipartFile로 
-//		List<MultipartFile> list = new ArrayList<>(); //테스트를 위한 코드, swagger ui는 여러파일 업로드 지원하지 않아서 
-//		list.add(files);
+    ) throws Exception { //swagger는 위에 List<MultipartFile> 대신 MultipartFile로 
         Feed feed = feedService.save(Feed.builder()
                 .email(email)
                 .nickname(nickname)
@@ -75,13 +78,9 @@ public class FeedController {
 	// 모든 피드 조회 (이미지 엮어서 보내주기)
 	@GetMapping(value="/all") 
 	@ApiOperation(value="모든 피드 조회", notes="모든 피드 반환")
-	public ResponseEntity<Map<String, Object>> getAllFeeds() { 
-		Map<String, Object> map = new HashMap<String, Object>();
-		List<Feed> feeds = feedService.findAllFeeds(); 
-		List<Image> images = feedService.findAllImages();
-		map.put("feeds", feeds); //이렇게 보내면 front에서 feedcode에 맞는 image골라줘야함.
-		map.put("images", images);
-		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK); 
+	public ResponseEntity<List<Feed>> getAllFeeds() { 
+		List<Feed> feeds = feedService.findAllFeeds();
+		return new ResponseEntity<List<Feed>>(feeds, HttpStatus.OK); 
 	}
 	
 	// 해당 계정 피드 조회 
@@ -106,8 +105,10 @@ public class FeedController {
 		Map<String, Object> map = new HashMap<>();
 		Feed feed = feedService.findByFeedcode(feedcode);
 		List<Image> images = feedService.findAllByfeedcode(feedcode);
+		List<Reply> replies = replyService.findAllByFeedcode(feedcode);
 		map.put("feed", feed);
 		map.put("images", images);
+		map.put("replies", replies);
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK); 
 	}
 	

@@ -30,14 +30,13 @@ public class FeedServiceImpl implements FeedService{
 	public List<Feed> findAllFeeds() { //전체 레코드 불러오기 findAll(), 이미지를 어떻게 할까
 		List<Feed> feeds = new ArrayList<Feed>();
 		feedRepo.findAll().forEach(e -> feeds.add(e));
+
+		for (int i = 0; i < feeds.size(); i++) {
+			List<Image> images = new ArrayList<Image>();
+			imageRepo.findAllByfeedcode(feeds.get(i).getFeedcode()).forEach(e -> images.add(e));
+			feeds.get(i).setImages(images);
+		}
 		return feeds;
-	}
-	
-	@Override
-	public List<Image> findAllImages() { //전체 레코드 불러오기 findAll(), 이미지를 어떻게 할까
-		List<Image> images = new ArrayList<Image>();
-		imageRepo.findAll().forEach(e -> images.add(e));
-		return images;
 	}
 
 	@Override

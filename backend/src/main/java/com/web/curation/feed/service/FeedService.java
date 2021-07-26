@@ -10,7 +10,6 @@ import com.web.curation.image.model.Image;
 public interface FeedService {
 
 	List<Feed> findAllFeeds();
-	List<Image> findAllImages();
 	Image findOneByfeedcode(Integer feedcode);
 	List<Image> findAllByfeedcode(Integer feedcode);
 	Feed findByFeedcode(Integer feedcode);
