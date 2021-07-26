@@ -72,12 +72,14 @@ public class JwtServiceImpl implements JwtService {
 		}
 	}
 
+	//토큰에 대한 email반환
 	@Override
-	public Map<String, Object> get(String key) {
+	public String get(String key) {
 		// 디코딩
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getRequest();
 		String jwt = request.getHeader("access-token");
+		//String jwt = key;
 		Jws<Claims> claims = null;
 
 		try {
@@ -86,9 +88,9 @@ public class JwtServiceImpl implements JwtService {
 
 			throw new UnauthorizedException();
 		}
-//		 Map<String, Object> value = (LinkedHashMap<String,
-//		 Object>)claims.getBody().get(key);		 
-		Map<String, Object> value = claims.getBody();
+	 
+		String value = (String) claims.getBody().get("email");
+//		System.out.println(value);
 
 		return value;
 	}
