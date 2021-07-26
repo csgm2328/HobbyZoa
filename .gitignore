@@ -17,6 +17,7 @@ local.properties
 
 # ignore properties file
 application.properties
+application.yml
 
 # External tool builders
 .externalToolBuilders/
