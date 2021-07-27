@@ -40,6 +40,7 @@ export default {
             .then((res) => {
               localStorage.setItem('user', res.data.userInfo.nickname)
               localStorage.setItem('email', res.data.userInfo.email)
+              commit('FETCH_NICKNAME', res.data.userInfo.nickname)
               resolve()
             })
             .catch((err) => {
@@ -63,5 +64,24 @@ export default {
     const response = await axios.post(FEED_CREATE_URL, data, config)
     console.log(commit, response)
   },
-
+  // get all feed
+  async FETCH_ALL_FEED({ commit }) {
+    const FEED_ALL_URL = '/feed/all'
+    const response = await axios.get(FEED_ALL_URL)
+    console.log(response.data)
+    commit('FETCH_FEED_LIST', response.data)
+  },
+  // get feed detail
+  async FETCH_FEED_DETAIL({ commit }, feedcode) {
+    const FEED_DETAIL_URL = `/feed/search/${feedcode}`
+    const response = await axios.get(FEED_DETAIL_URL)
+    commit('FETCH_FEED_DETAIL', response.data)
+  },
+  // create reply
+  async CREATE_REPLY({ commit }, reply) {
+    const CREATE_REPLY_URL = '/reply'
+    console.log(reply)
+    const response = await axios.post(CREATE_REPLY_URL, reply)
+    console.log(commit, response)
+  }
 }
