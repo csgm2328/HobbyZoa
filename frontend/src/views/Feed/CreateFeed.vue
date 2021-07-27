@@ -125,10 +125,13 @@
           for (let i = 0; i < files.length; i++) {
             form.append('files', files[i])
           }
-          form.append('email', 'test@naver.com')
-          form.append('nickname', 'test')
+          form.append('email', localStorage.getItem('email'))
+          form.append('nickname', localStorage.getItem('user'))
           form.append('comment', this.text)
           this.$store.dispatch('CREATE_FEED', form)
+            .then(() => {
+              this.$router.push('/main')
+            })
 
         }
       }
