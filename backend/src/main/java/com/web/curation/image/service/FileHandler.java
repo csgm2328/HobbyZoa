@@ -35,11 +35,10 @@ public class FileHandler {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         String current_date = simpleDateFormat.format(new Date());
 
-        // 프로젝트 폴더에 저장하기 위해 절대경로를 설정 (Window 의 Tomcat 은 Temp 파일을 이용한다)
-        String absolutePath = new File("").getAbsolutePath() + "\\";
+        String absolutePath = "C:\\subpjt2Img\\";
 
-        String path = "images/" + current_date;
-        File file = new File(path);
+        String path = "images/feeds/" + current_date;
+        File file = new File(absolutePath+path);
         // 저장할 위치의 디렉토리가 존재하지 않을 경우
         if(!file.exists()){
             file.mkdirs();
@@ -75,7 +74,8 @@ public class FileHandler {
                 // 생성 후 리스트에 추가
                 Image image = Image.builder()
                 		.feedcode(feedcode)
-                        .imgname(multipartFile.getOriginalFilename())
+                        .orgname(multipartFile.getOriginalFilename())
+                        .newname(new_file_name)
                         .imgpath(path + "/" + new_file_name)
                         .imgsize(multipartFile.getSize())
                         .build();

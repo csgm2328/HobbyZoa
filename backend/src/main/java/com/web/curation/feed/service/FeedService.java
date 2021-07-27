@@ -11,6 +11,7 @@ public interface FeedService {
 
 	List<Feed> findAllFeeds();
 	Image findOneByfeedcode(Integer feedcode);
+	Image findByNewname(String newname);
 	List<Image> findAllByfeedcode(Integer feedcode);
 	Feed findByFeedcode(Integer feedcode);
 	List<Feed> findByEmail(String email);

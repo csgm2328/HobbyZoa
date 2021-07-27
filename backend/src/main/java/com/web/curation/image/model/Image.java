@@ -23,7 +23,8 @@ public class Image {
 	@NotNull
     private Integer feedcode; //fk
 	
-    private String imgname;
+    private String orgname;
+    private String newname;
     private String imgpath;
     private long imgsize;
 
@@ -31,10 +32,11 @@ public class Image {
     @JoinColumn(name = "feed_feedcode")
     private Feed feed;
     
-    public Image(Integer feedcode, String imgname, String imgpath, long imgsize) {
+    public Image(Integer feedcode, String orgname, String newname, String imgpath, long imgsize) {
 		super();
 		this.feedcode = feedcode;
-		this.imgname = imgname;
+		this.orgname = orgname;
+		this.newname = newname;
 		this.imgpath = imgpath;
 		this.imgsize = imgsize;
 	}

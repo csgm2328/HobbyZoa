@@ -1,5 +1,9 @@
 package com.web.curation.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,10 +12,12 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -70,7 +76,7 @@ public class FeedController {
                 .comment(comment)
                 .build(), files);
 
-        URI uriLocation = new URI("/board/" + feed.getFeedcode());
+        URI uriLocation = new URI("/feed/" + feed.getFeedcode());
         return ResponseEntity.created(uriLocation).body("{}");
     }
 		
@@ -127,5 +133,15 @@ public class FeedController {
 			Feed feed, @RequestPart("files") List<MultipartFile> files) throws Exception { 
 		feedService.updateByFeedcode(feedcode, feed, files); 		
 		return new ResponseEntity<Feed>(feed, HttpStatus.OK); 
+	}
+	
+	//
+	@GetMapping(value="{newname}", produces = MediaType.IMAGE_JPEG_VALUE)
+	public ResponseEntity<byte[]> imageSearch(@PathVariable("newname") String newname)throws IOException {
+		Image image = feedService.findByNewname(newname);
+		InputStream imageStream = new FileInputStream("C:\\subpjt2Img\\"+image.getImgpath());
+		byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+		imageStream.close();
+		return new ResponseEntity<byte[]>(imageByteArray, HttpStatus.OK);
 	}
 }
