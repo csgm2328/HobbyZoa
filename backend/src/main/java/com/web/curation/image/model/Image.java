@@ -17,7 +17,7 @@ import lombok.*;
 public class Image {
     
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer imgcode;
 	
 	@NotNull
