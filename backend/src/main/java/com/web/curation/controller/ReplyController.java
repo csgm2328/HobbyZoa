@@ -55,7 +55,8 @@ public class ReplyController {
 				.hide(hide)
 				.feedcode(feedcode)
 				.build());
-		URI uriLocation = new URI("/feed/" + reply.getReplycode()); //replycode or feedcode
+		
+		URI uriLocation = new URI("/reply/" + reply.getReplycode()); //replycode or feedcode
         return ResponseEntity.created(uriLocation).body("{}");
 	}
 	

@@ -45,6 +45,11 @@ public class FeedServiceImpl implements FeedService{
 	}
 	
 	@Override
+	public Image findByNewname(String newname) { // 새이름으로 이미지 반환
+		return imageRepo.findByNewname(newname);
+	}
+	
+	@Override
 	public List<Image> findAllByfeedcode(Integer feedcode){ //해당 피드코드 이미지 모두 반환
 		return imageRepo.findAllByfeedcode(feedcode);
 	}

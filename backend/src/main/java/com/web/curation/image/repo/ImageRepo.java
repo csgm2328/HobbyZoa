@@ -15,6 +15,8 @@ public interface ImageRepo extends JpaRepository<Image, Integer>{
     List<Image> findAllByfeedcode(Integer feedcode);
     //해당 피드코드 이미지 하나만 가져오기
     Image findOneByfeedcode(Integer feedcode);
+    //새이름으로 이미지 가져오기
+    Image findByNewname(String newname);
     @Transactional
     void deleteAllByFeedcode(Integer feedcode);
 }
