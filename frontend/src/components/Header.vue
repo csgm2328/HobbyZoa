@@ -4,10 +4,12 @@
     height="10vh"
     width="100%"
   >
+    <!-- nav bar -->
     <v-app-bar
       color="white accent-4"
       dark
     >
+      <!-- leftside icon  -->
       <v-app-bar-nav-icon color="secondary" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-spacer></v-spacer>
@@ -25,16 +27,18 @@
 
       <v-spacer></v-spacer>
 
+      <!-- rightside icons -->
       <v-btn icon color="secondary">
         <v-icon>mdi-dots-vertical</v-icon>
       </v-btn>
       
-      <v-btn icon color="secondary">
+      <v-btn icon color="secondary" @click.stop="searchbar = !searchbar">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
     </v-app-bar>
 
+    <!-- nav bar(hamburger) -->
     <v-navigation-drawer
       v-model="drawer"
       absolute
@@ -74,7 +78,7 @@
               </v-btn>
             </router-link>
           </div>
-            
+          
           <div v-else>
             {{ nickname }}
             <v-btn
@@ -103,16 +107,61 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
+
+
+    <!-- search nav bar -->
+    <v-navigation-drawer
+      v-model="searchbar"
+      absolute
+      right
+      temporary
+      style="min-width: 80%;"
+    > 
+      <div class="my-4 d-flex justify-between align-center">
+        <v-text-field
+          label="Filled"
+          placeholder="Dense & Rounded"
+          filled
+          rounded
+          dense
+          pa-0
+          style="width: 80%;"
+        ></v-text-field>
+        <v-btn icon color="secondary" @click.stop="searchbar = !searchbar">
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+      </div>
+      <v-list
+        nav
+        dense
+      >
+        <v-list-item-group
+          v-model="group"
+          active-class="deep-purple--text text--accent-4"
+        >
+          <div v-if="!isLogin" class="d-flex justify-space-around mb-3">
+          </div>
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
+
+
   </v-sheet>
 </template>
 
 <script>
+// import SearchBar from '@/components/SearchBar'
 
 export default {
   data: () => ({
     drawer: false,
     group: null,
+    searchbar: false,
   }),
+
+  components: {
+    // SearchBar
+  },
 
   watch: {
     group () {
@@ -144,4 +193,5 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-</style>>
+
+</style>
