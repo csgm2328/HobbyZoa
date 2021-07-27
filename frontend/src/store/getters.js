@@ -14,5 +14,12 @@ export default {
   },
   getUsername(state) {
     return state.nickname
+  },
+  getFeedList(state) {
+    return state.feedList
+  },
+  getFeedDetail(state) {
+    return state.feedDetail
   }
+
 }

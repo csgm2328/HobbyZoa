@@ -16,6 +16,8 @@ const state = {
   loginError: '',
   token: localStorage.getItem('token'),
   nickname: localStorage.getItem('user'),
+  feedList: [],
+  feedDetail: [],
 }
 
 export default new Vuex.Store({
