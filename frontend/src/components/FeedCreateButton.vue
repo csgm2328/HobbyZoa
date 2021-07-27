@@ -3,12 +3,11 @@
     <router-link
       :to="{name: 'FeedCreate'}"
       style=" text-decoration: none;"
+      
     >
       <v-btn
+        class="rightdown"
         color="cyan accent-3"
-        fixed
-        bottom
-        right
         fab
       >
         <v-icon>mdi-plus</v-icon>
@@ -23,3 +22,15 @@
     name: 'FeedCreateButton',
   }
 </script>
+
+<style scoped>
+.inline-block {
+  display: inline-block;
+}
+
+.rightdown {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+</style>

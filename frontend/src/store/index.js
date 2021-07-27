@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import getters from './getters'
 import actions from './actions'
 import mutations from './mutations'
+import feedStore from '././modules/feedStore'
 
 Vue.use(Vuex)
 
@@ -22,5 +23,8 @@ export default new Vuex.Store({
   state,
   mutations,
   getters,
-  actions
+  actions,
+  modules: {
+    feedStore
+  }
 })

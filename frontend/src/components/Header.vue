@@ -108,64 +108,68 @@
       </v-list>
     </v-navigation-drawer>
 
-
     <!-- search nav bar -->
     <v-navigation-drawer
       v-model="searchbar"
-      absolute
       right
       temporary
       style="min-width: 80%;"
+      :class="{ phone : is_phone }"
     > 
-      <div class="my-4 d-flex justify-between align-center">
-        <v-text-field
-          label="Filled"
-          placeholder="Dense & Rounded"
-          filled
-          rounded
-          dense
-          pa-0
-          style="width: 80%;"
-        ></v-text-field>
-        <v-btn icon color="secondary" @click.stop="searchbar = !searchbar">
-          <v-icon>mdi-magnify</v-icon>
+      <div
+        class=" d-flex justify-end align-center"
+      >
+        <v-btn
+          class="ma-1"
+          color="grey"
+          plain
+          @click.stop="searchbar = !searchbar"
+        >
+          Cancel
         </v-btn>
       </div>
-      <v-list
-        nav
-        dense
-      >
-        <v-list-item-group
-          v-model="group"
-          active-class="deep-purple--text text--accent-4"
-        >
-          <div v-if="!isLogin" class="d-flex justify-space-around mb-3">
-          </div>
-        </v-list-item-group>
-      </v-list>
+      <div style="width: 90%; max-width: 700px;" class="my-4 mx-auto d-flex justify-center align-start">
+        <v-text-field
+          hint="example@naver.com"
+          v-model="search"
+          placeholder="Search User"
+          filled
+          dense
+          rounded
+          pa-0
+          class="mx-3"
+          @keyup.enter="searchUser"
+        ></v-text-field>
+        <button icon color="secondary" class="mt-2 mx-1" @click="searchUser">
+          <v-icon>mdi-magnify</v-icon>
+        </button>
+      </div>
     </v-navigation-drawer>
-
-
+    
   </v-sheet>
 </template>
 
 <script>
-// import SearchBar from '@/components/SearchBar'
-
 export default {
   data: () => ({
     drawer: false,
     group: null,
     searchbar: false,
+    search: '',
   }),
-
-  components: {
-    // SearchBar
-  },
 
   watch: {
     group () {
       this.drawer = false
+    },
+    is_phone() {
+      if (window.innerWidth < 1100) {
+        return true
+      }
+      else {
+        console.log(window.innerWidth)
+        return false
+      }
     },
   },
 
@@ -175,12 +179,27 @@ export default {
     },
     nickname() {
       return this.$store.getters.getUsername
-    }
+    },
+    is_phone() {
+      if (window.innerWidth < 1100) {
+        return true
+      }
+      else {
+        console.log(window.innerWidth)
+        return false
+      }
+    },
   },
 
   methods: {
     logout() {
       this.$store.commit('AUTH_LOGOUT')
+    },
+    searchUser() {
+      console.log(this.search)
+    },
+    test() {
+      this.$store.dispatch('feedStore/test', this.search)
     }
   }
 }
@@ -193,5 +212,10 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
+.phone {
+  width: 100% !important;
+}
+.v-messages{
+  height: 0;
+}
 </style>
