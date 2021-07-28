@@ -109,8 +109,9 @@
     </v-navigation-drawer>
 
     <!-- search nav bar -->
-    <!-- v-navigation-drawer absolute 속성 제거 -->
+    <!-- v-navigation-drawer absolute -> fixed -->
     <v-navigation-drawer
+      fixed
       v-model="searchbar"
       right
       temporary
