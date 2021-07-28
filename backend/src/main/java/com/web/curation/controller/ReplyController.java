@@ -66,7 +66,11 @@ public class ReplyController {
 	//댓글 수정
 	@PutMapping(value = "/{replycode}") 
 	@ApiOperation(value="댓글 수정", notes="replycode로 수정 후 수정 피드 반환")
-	public ResponseEntity<Reply> updateReply(@PathVariable("replycode") Integer replycode, Reply reply){ 
+	public ResponseEntity<Reply> updateReply(@PathVariable("replycode") Integer replycode, 
+			@RequestParam("content") String content, @RequestParam("hide") Boolean hide){ 
+		Reply reply = replyService.findByReplycode(replycode);
+		reply.setContent(content);
+		reply.setHide(hide);
 		replyService.updateByReplycode(replycode, reply); 		
 		return new ResponseEntity<Reply>(reply, HttpStatus.OK); 
 	}

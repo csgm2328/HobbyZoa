@@ -10,6 +10,8 @@ public interface ReplyService {
 	Reply save(Reply reply);
 	//댓글보기(feed에 해당하는 댓글들)
 	List<Reply> findAllByFeedcode(Integer feedcode);
+	//해당 댓글 리턴
+	Reply findByReplycode(Integer replycode);
 	//댓글수정
 	void updateByReplycode(Integer replycode, Reply reply);
 	//댓글삭제
