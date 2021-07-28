@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 import getters from './getters'
 import actions from './actions'
 import mutations from './mutations'
-import feedStore from '././modules/feedStore'
+import profileStore from '././modules/profileStore'
 
 Vue.use(Vuex)
 
@@ -27,6 +27,6 @@ export default new Vuex.Store({
   getters,
   actions,
   modules: {
-    feedStore
+    profileStore
   }
 })

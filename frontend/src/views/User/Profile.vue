@@ -16,7 +16,7 @@
           <v-col cols="8">
             <v-row class="pa-3">
               <v-col cols="12" class="mt-1 pa-0">
-                <h1 class="title hover">Test User</h1>
+                <h1 class="title hover">{{ email }}</h1>
                 <!-- <p class="font-weight-light grey--text text--darken-1 body-2">2 minutes ago</p> -->
               </v-col>
               <v-col
@@ -27,11 +27,9 @@
                   icon
                   disabled
                 >
-                <span><span style="color: black; font-weight: bold;">게시글</span><br/>123</span>
+                <span><span style="color: black; font-weight: bold;">게시글</span><br/>{{ this.feed }}</span>
                 </v-btn>
-              </v-col>
-
-              
+              </v-col>   
               <v-col
                 cols="4"  
                 class="d-flex justify-center"
@@ -42,7 +40,7 @@
                   <FollowerModal
                     :visible="showFollowerModal" @close="showFollowerModal=false"
                   />
-                  <span><span style="color: black; font-weight: bold;">팔로워</span><br/>123</span>
+                  <span><span style="color: black; font-weight: bold;">팔로워</span><br/>{{ this.follower }}</span>
                 </v-btn>
               </v-col>
               <v-col
@@ -55,7 +53,7 @@
                   <FollowModal
                     :visible="showFollowModal" @close="showFollowModal=false"
                   />
-                  <span><span style="color: black; font-weight: bold;">팔로우</span><br/>123</span>
+                  <span><span style="color: black; font-weight: bold;">팔로우</span><br/>{{ this.following }}</span>
                 </v-btn>
               </v-col>
               <v-col cols="12" class="relative ma-0 pa-0">
@@ -89,9 +87,11 @@
             </v-row>
           </v-col>
           <v-col class="text-left" cols="12">
-            <div class="font-weight-regular text-truncate my-5">
-              hi im test user
-            </div>
+            <!-- <div
+              v-if="this.comment != null"
+              class="font-weight-regular text-truncate my-5">
+              {{ this.comment }}
+            </div> -->
           </v-col>
         </v-row>
       </div>
@@ -151,6 +151,8 @@
   import UserLevel from '@/components/UserLevel'
   import FollowModal from '@/components/FollowModal'
   import FollowerModal from '@/components/FollowerModal'
+  import axios from 'axios'
+  const SERVER_URL = 'http://localhost:9990'
 
   export default {
     name: "Profile",
@@ -164,13 +166,39 @@
     },
     data() {
       return {
+        username: this.$route.params.username,
         isLiked: false,
         selected: "posts",
         showFollowModal: false,
         showFollowerModal: false,
+        profile_user: {
+          email: null,
+          feed: null,
+          following: null,
+          follower: null,
+          imgpath: null,
+          comment: null,
+        },
       }
     },
+    created() {
+      this.fetchProfile()
+    },
     methods: {
+      fetchProfile() {
+        axios.get(SERVER_URL + '/profile/' + this.username)
+          .then((res) => {
+            const info = res.data.object
+            console.log(info)
+            this.email = info.email
+            this.feed = info.feeds
+            this.following = info.following
+            this.follower = info.follower
+            this.imgpath = info.imgpath
+            this.comment = info.comment
+          }) 
+          .catch(err => console.log(err))
+      },
       changeLike() {
         if (this.isLiked) {
           this.isLiked = false
