@@ -1,11 +1,9 @@
 package com.web.curation.controller;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,12 +128,14 @@ public class FeedController {
 	@PutMapping(value = "/{feedcode}") 
 	@ApiOperation(value="피드 수정", notes="feedcode로 수정 후 수정 피드 반환")
 	public ResponseEntity<Feed> updateFeed(@PathVariable("feedcode") Integer feedcode, 
-			Feed feed, @RequestPart("files") List<MultipartFile> files) throws Exception { 
+			@RequestParam("comment") String comment, @RequestPart("files") List<MultipartFile> files) throws Exception { 
+		Feed feed = feedService.findByFeedcode(feedcode);
+		feed.setComment(comment);
 		feedService.updateByFeedcode(feedcode, feed, files); 		
 		return new ResponseEntity<Feed>(feed, HttpStatus.OK); 
 	}
 	
-	//
+	//이미지 리턴
 	@GetMapping(value="{newname}", produces = MediaType.IMAGE_JPEG_VALUE)
 	public ResponseEntity<byte[]> imageSearch(@PathVariable("newname") String newname)throws IOException {
 		Image image = feedService.findByNewname(newname);
