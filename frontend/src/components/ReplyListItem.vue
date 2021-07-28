@@ -18,7 +18,7 @@
         <div v-if="!reply.hide">
           {{ reply.content }}
         </div>
-        <div v-else>
+        <div v-else class="text-decoration-line-through">
           숨김 처리 된 댓글입니다.
         </div>
         <div class="font-weight-light">
@@ -110,6 +110,9 @@ export default {
     },
     hide() {
       this.$store.dispatch('HIDE_REPLY', this.reply)
+        .then(() => {
+          this.$store.dispatch('FETCH_FEED_DETAIL', this.feed.feedcode)
+        })
     }
   },
   computed: {

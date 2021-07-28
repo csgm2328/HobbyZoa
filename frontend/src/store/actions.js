@@ -103,7 +103,7 @@ export default {
       }
 
     }
-    console.log(reply)
+    
     const response = await axios.put(UPDATE_REPLY_URL, form)
     console.log(commit, response)
   }
