@@ -1,4 +1,4 @@
-const feedStore = {
+const profileStore = {
   namespaced: true,
   state: {
     //   feeds: [],
@@ -26,4 +26,4 @@ const feedStore = {
   }
 }
 
-export default feedStore
+export default profileStore

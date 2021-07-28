@@ -44,9 +44,9 @@ const routes = [
     component: Login
   },
   {
-    path: '/profile',
+    path: '/user/:username',
     name: 'Profile',
-    component: Profile
+    component: Profile,
   },
   {
     path: '/create',
