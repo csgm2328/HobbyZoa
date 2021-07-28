@@ -11,7 +11,7 @@
         <template slot="progress">
           <v-progress-linear
             color="deep-purple"
-            height="10"
+            height="unique_110"
             indeterminate
           ></v-progress-linear>
         </template>
@@ -56,7 +56,7 @@ export default {
         // tmp data
         likedCount: 12,
         comment: "멋지군요!(코멘트 보여주기란)",
-        items: [{uid: 'unique_1', text: 'abc'}, {uid: 'unique_1', text: 'abc'},{uid: 'unique_1', text: 'abc'},{uid: 'unique_1', text: 'abc'},{uid: 'unique_2', text: 'xyz'},]
+        items: [{text: 'abc'}, {text: 'abc'},{text: 'abc'},{text: 'abc'},{text: 'xyz'},]
       }
     },
     // components: { 'virtual-list': VirtualList },
