@@ -83,5 +83,28 @@ export default {
     console.log(reply)
     const response = await axios.post(CREATE_REPLY_URL, reply)
     console.log(commit, response)
+  },
+  // delete reply
+  async DELETE_REPLY({ commit }, replycode) {
+    const DELETE_REPLY_URL = `/reply/${replycode}`
+    const response = await axios.delete(DELETE_REPLY_URL)
+    console.log(commit, response)
+  },
+  // hide reply
+  async HIDE_REPLY({ commit }, reply) {
+    const UPDATE_REPLY_URL = `/reply/${reply.replycode}`
+    const form = new FormData()
+    for (const key in reply) {
+      if (key === 'hide') {
+        form.append(key, !reply[key])
+      }
+      else {
+        form.append(key, reply[key])
+      }
+
+    }
+    console.log(reply)
+    const response = await axios.put(UPDATE_REPLY_URL, form)
+    console.log(commit, response)
   }
 }

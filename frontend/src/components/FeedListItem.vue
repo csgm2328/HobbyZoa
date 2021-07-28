@@ -28,7 +28,6 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-    <img :src="src" alt="">
   </div>
 </template>
 
@@ -42,7 +41,7 @@ export default {
   },
   computed: {
     src() {
-      return `C:\\Users\\multicampus\\Desktop\\S05P12C102\\backend\\${this.feed.images[0].imgpath}`
+      return `http://localhost:9990/feed/${this.feed.images[0].newname}`
     },
     feedpage() {
       return `feed/${this.feed.feedcode}`

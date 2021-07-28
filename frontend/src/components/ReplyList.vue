@@ -6,6 +6,7 @@
       v-for="reply in replyList"
       :key="reply.replycode"
       :reply="reply"
+      :feed="feed"
     />
   </div>  
 </template>
@@ -24,6 +25,9 @@ export default {
     replyList() {
       return this.$store.getters.getFeedDetail.replies
     },
+    feed() {
+      return this.$store.getters.getFeedDetail.feed
+    }
 
   }
 }
