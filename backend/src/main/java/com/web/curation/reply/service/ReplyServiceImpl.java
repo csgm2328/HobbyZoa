@@ -25,6 +25,10 @@ public class ReplyServiceImpl implements ReplyService{
 		return replyRepo.findAllByFeedcode(feedcode);
 	}
 
+	public Reply findByReplycode(Integer replycode) {
+		return replyRepo.findByReplycode(replycode);
+	}
+	
 	@Override
 	public void updateByReplycode(Integer replycode, Reply reply) {
 		Optional<Reply> e = replyRepo.findById(replycode);
