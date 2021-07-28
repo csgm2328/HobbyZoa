@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.web.curation.follow.service.FollowService;
 import com.web.curation.profile.service.ProfileService;
+import com.web.curation.request.model.Message;
+import com.web.curation.request.model.MessageType;
 import com.web.curation.response.BasicResponse;
 import com.web.curation.user.service.UserService;
 
@@ -38,9 +40,11 @@ public class ProfileController {
 	FollowService followService;
 	@Autowired
 	UserService userService;
+	@Autowired
+	NotifyController notifyController;
 
 	@GetMapping("{email}")
-	@ApiOperation(value = "프로필 보기", notes = "첫 요청시 프로필 생성함! 이메일, 이미지, 게시물 수, 팔로워, 팔로잉 수, 코멘트는 계정설정에서 가져옴")
+	@ApiOperation(value = "프로필 보기", notes = "요청시 게시물 수, 팔로워, 팔로잉 수 업데이트 반영, 코멘트는 계정설정에서 가져옴")
 	public ResponseEntity<BasicResponse> ShowProfile(@PathVariable String email) {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
@@ -76,7 +80,7 @@ public class ProfileController {
 	}
 
 	@PostMapping("/image/{email}")
-	@ApiOperation(value = "프로필 이미지 설정", notes = "이미 존재시 수정")
+	@ApiOperation(value = "프로필 이미지 설정", notes = "이미 존재시 수정, 프로필에서 수정가능한 건 이미지 뿐")
 	public ResponseEntity<BasicResponse> SaveProfileImage(@PathVariable String email, @RequestBody MultipartFile file) {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
@@ -122,6 +126,12 @@ public class ProfileController {
 		else
 			result.data = "success:" + "[" + from + "] 가 [" + to + "]를 더이상 팔로우하지 않습니다.";
 		response = new ResponseEntity<>(result, HttpStatus.OK);
+		Message FollowMessage = new Message();
+		FollowMessage.setContent(result.data);
+		FollowMessage.setSender(from);
+		FollowMessage.setType(MessageType.FOLLOW);
+				
+		notifyController.Follow(FollowMessage,to);
 		return response;
 	}
 
@@ -129,7 +139,7 @@ public class ProfileController {
 	@ApiOperation(value = "팔로우 여부 확인", notes = "방문한 사람이 현재 유저를 팔로우하는 중인지 체크")
 	public ResponseEntity<BasicResponse> CheckFollow(
 			@RequestParam(required = true) @ApiParam(value = "email") final String from,
-			@RequestParam(required = true, name = "email") @ApiParam(value = "email") final String to) {
+			@RequestParam(required = true) @ApiParam(value = "email") final String to) {
 		System.out.println(from + to);
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();

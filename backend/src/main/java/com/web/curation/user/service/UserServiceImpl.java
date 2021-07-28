@@ -7,9 +7,9 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.web.curation.email.model.EmailToken;
 import com.web.curation.email.repo.EmailTokenRepository;
 import com.web.curation.email.service.EmailTokenServiceImpl;
+import com.web.curation.profile.service.ProfileService;
 import com.web.curation.user.model.User;
 import com.web.curation.user.repo.UserRepo;
 
@@ -23,6 +23,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserRepo userRepo;
 	@Autowired
+	ProfileService profileService;
+	@Autowired
 	EmailTokenServiceImpl confirmationTokenService;
 	@Autowired
 	EmailTokenRepository confirmationTokenRepository;
@@ -34,7 +36,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User save(User user) {
-		return userRepo.save(user);
+		//회원가입시 프로필 자동 생성
+		User result = userRepo.save(user);
+		profileService.findProfileById(user.getEmail());
+		return result;
 	}
 
 	@Override
