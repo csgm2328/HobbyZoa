@@ -143,7 +143,7 @@ public class UserController {
 	}
 
 	@PutMapping("/{email}")
-	@ApiOperation(value = "계정 정보 수정", notes = "비밀번호 변경, 프로필 사진 설정하는 부분")
+	@ApiOperation(value = "계정 정보 수정", notes = "닉네임, 비밀번호, 연락처, 코멘트(프로필에서 표시) 변경 가능")
 	public ResponseEntity<BasicResponse> UpdateUser(@PathVariable String email, @Valid @RequestBody SignupRequest UpdateInfo) {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();

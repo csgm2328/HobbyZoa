@@ -29,10 +29,10 @@ public class ProfileHandler{
 		String current_date = simpleDateFormat.format(new Date());
 
 		// 프로젝트 폴더에 저장하기 위해 절대경로를 설정 (Window 의 Tomcat 은 Temp 파일을 이용한다)
-		String absolutePath = new File("").getAbsolutePath() + "\\";
-
+//		String absolutePath = new File("").getAbsolutePath() + "\\";
+		String absolutePath = "C:\\subpjt2Img\\";
 		String path = "images/profiles";
-		File file = new File(path);
+		File file = new File(absolutePath + path);
 		// 저장할 위치의 디렉토리가 존재하지 않을 경우
 		if (!file.exists()) {
 			file.mkdirs();
@@ -58,17 +58,18 @@ public class ProfileHandler{
 			}
 		}
 		// 파일이름 : 유저이메일( PK ) : 날짜 .확장자
-		String new_file_name = email + current_date + originalFileExtension;
+		String new_file_name = email + "_" + current_date + originalFileExtension;
 		// 생성 후 리스트에 추가
-		System.out.println(uploadFile.getSize());
+		System.out.printf("업로드한 파일 크기: %.2fKB", uploadFile.getSize() / Math.pow(2,10)); //KB
 		ProfileImage image = ProfileImage.builder()
 				.email(email)
 				.imgname(uploadFile.getOriginalFilename())
 				.content_type(contentType)
 				.imgsize(uploadFile.getSize())
-				.imgpath(path + "/" + new_file_name).build();
+				.imgpath(absolutePath  + path + "/" + new_file_name).build();
 
 		// 저장된 파일로 변경하여 이를 보여주기 위함
+		// Update: 폴더 내 말고 절대경로로 변경
 		file = new File(absolutePath + path + "/" + new_file_name);
 		uploadFile.transferTo(file);
 

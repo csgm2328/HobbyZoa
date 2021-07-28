@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional
 public class ProfileServiceImpl implements ProfileService {
-	
+
 	@Autowired
 	ProfileRepo profileRepo;
 	@Autowired
@@ -34,31 +34,32 @@ public class ProfileServiceImpl implements ProfileService {
 	FeedRepo feedRepo;
 	@Autowired
 	UserRepo userRepo;
-	
+
 	@Autowired
 	ProfileHandler profileHandler;
-	
+
 	@Override
-	//프로필 이미지 얻기
+	// 프로필 이미지 얻기
 	public Optional<ProfileImage> findProfileImageById(String email) {
 		return profileImageRepo.findById(email);
 	}
 
 	@Override
-	//프로필 이미지 저장
+	// 프로필 이미지 저장 or 수정
 	public ProfileImage save(String email, MultipartFile file) throws IllegalStateException, IOException {
 		return profileImageRepo.save(profileHandler.parseFileInfo(email, file));
 	}
 
 	@Override
-	//프로필 정보 얻기: 처음 이면 생성, 아니면 수정됨
+	//프로필 정보 얻기: 회원 가입시 자동 생성, 팔로워, 피드수를 계속 업데이트해야므로 save() 동작
 	public Profile findProfileById(String email) {
+		Optional<ProfileImage> e =profileImageRepo.findById(email);
 		return profileRepo.save(Profile.builder()
 					.email(email)
 					.following(followRepo.countByFromemail(email))
 					.follower(followRepo.countByToemail(email))
 					.feeds(feedRepo.countByEmail(email))
-					.imgpath(profileImageRepo.findById(email).get().getImgpath())
+					.imgpath(e.isPresent() ? e.get().getImgpath() : null)
 					.comment(userRepo.findById(email).get().getComment())
 					.build());
 	}
