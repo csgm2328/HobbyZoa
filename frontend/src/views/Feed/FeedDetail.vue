@@ -3,12 +3,19 @@
     <Header/>
     <v-container>
       <v-layout column justify-center>
-        <v-img
-          class="white--text align-end"
-          gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-          height="200px"
+        <v-carousel
+          hide-delimiters
+          :continuous="false"
+          height="300"
         >
-        </v-img>
+          <v-carousel-item
+            v-for="(item,i) in imagesPath"
+            :key="i"
+            :src="item"
+            height="150"
+            contain
+          ></v-carousel-item>
+        </v-carousel>
         <h2 class="ms-1">{{ feed.feed.nickname }}</h2>
         <h4 class="ms-1">{{ feed.feed.comment }}</h4>
         <v-divider
@@ -30,14 +37,24 @@ export default {
     Header,
     ReplyList,
   },
+  data() {
+    return {
+      imagesPath: [],
+    }
+  },
   created() {
     const feedcode = this.$route.params.feedcode
     this.$store.dispatch('FETCH_FEED_DETAIL', feedcode)
+      .then(() => {
+        for (const image of this.$store.getters.getFeedDetail.images) {
+          this.imagesPath.push(`http://localhost:9990/feed/${image.newname}`)
+        }
+      })
   },
   computed: {
     feed() {
       return this.$store.getters.getFeedDetail
-    }
+    },
   }
 }
 </script>
