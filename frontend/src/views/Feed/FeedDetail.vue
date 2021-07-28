@@ -18,6 +18,15 @@
         </v-carousel>
         <h2 class="ms-1">{{ feed.feed.nickname }}</h2>
         <h4 class="ms-1">{{ feed.feed.comment }}</h4>
+        <div v-if="isMyFeed">
+          <v-btn
+            to="/update"
+            color="info"
+          >수정</v-btn>
+          <v-btn
+            color="error"
+          >삭제</v-btn>
+        </div>
         <v-divider
           class="ma-3"
         ></v-divider>
@@ -39,11 +48,13 @@ export default {
   },
   data() {
     return {
+      feedcode: '',
       imagesPath: [],
     }
   },
   created() {
     const feedcode = this.$route.params.feedcode
+    this.feedcode = feedcode
     this.$store.dispatch('FETCH_FEED_DETAIL', feedcode)
       .then(() => {
         for (const image of this.$store.getters.getFeedDetail.images) {
@@ -51,9 +62,20 @@ export default {
         }
       })
   },
+  methods: {
+    delete() {
+      this.$store.dispatch('DELETE_FEED', this.feedcode)
+        .then(() => {
+          this.$store.dispatch('FETCH_FEED_DETAIL', this.feedcode)
+        })
+    }
+  },
   computed: {
     feed() {
       return this.$store.getters.getFeedDetail
+    },
+    isMyFeed() {
+      return localStorage.getItem('email') === this.feed.email ? true : false
     },
   }
 }

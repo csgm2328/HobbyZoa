@@ -59,7 +59,6 @@ export default {
         'Content-Type': 'multipart/form-data',
       }
     }
-    console.log(data)
     const FEED_CREATE_URL = '/feed'
     const response = await axios.post(FEED_CREATE_URL, data, config)
     console.log(commit, response)
@@ -68,7 +67,6 @@ export default {
   async FETCH_ALL_FEED({ commit }) {
     const FEED_ALL_URL = '/feed/all'
     const response = await axios.get(FEED_ALL_URL)
-    console.log(response.data)
     commit('FETCH_FEED_LIST', response.data)
   },
   // get feed detail
@@ -77,10 +75,27 @@ export default {
     const response = await axios.get(FEED_DETAIL_URL)
     commit('FETCH_FEED_DETAIL', response.data)
   },
+  // update feed
+  async UPDATE_FEED({ commit }, form) {
+    let config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    }
+    const feedcode = form.get('feedcode')
+    const FEED_UPDATE_URL = `/feed/${feedcode}`
+    const response = await axios.put(FEED_UPDATE_URL, form, config)
+    console.log(commit, response)
+  },
+  // delete feed
+  async DELETE_FEED({ commit }, feedcode) {
+    const FEED_DELETE_URL = `/feed/${feedcode}`
+    const response = await axios.delete(FEED_DELETE_URL)
+    console.log(response, commit)
+  },
   // create reply
   async CREATE_REPLY({ commit }, reply) {
     const CREATE_REPLY_URL = '/reply'
-    console.log(reply)
     const response = await axios.post(CREATE_REPLY_URL, reply)
     console.log(commit, response)
   },
@@ -103,7 +118,7 @@ export default {
       }
 
     }
-    
+
     const response = await axios.put(UPDATE_REPLY_URL, form)
     console.log(commit, response)
   }

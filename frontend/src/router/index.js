@@ -8,6 +8,7 @@ import SignupConfirm from '@/views/User/SignupConfirm.vue'
 import Login from '@/views/User/Login.vue'
 import Profile from '@/views/User/Profile.vue'
 import FeedCreate from '@/views/Feed/CreateFeed.vue'
+import FeedUpdate from '@/views/Feed/FeedUpdate.vue'
 import FeedDetail from '@/views/Feed/FeedDetail.vue'
 
 Vue.use(VueRouter)
@@ -52,6 +53,11 @@ const routes = [
     path: '/create',
     name: 'FeedCreate',
     component: FeedCreate
+  },
+  {
+    path: '/update',
+    name: 'FeedUpdate',
+    component: FeedUpdate
   },
   {
     path: '/feed/:feedcode',
