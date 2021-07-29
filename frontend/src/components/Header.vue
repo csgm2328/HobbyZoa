@@ -26,10 +26,10 @@
       <v-spacer></v-spacer>
 
       <v-btn icon color="secondary">
-        <v-icon>mdi-dots-vertical</v-icon>
+        <v-icon>mdi-bell-outline</v-icon>
       </v-btn>
       
-      <v-btn icon color="secondary">
+      <v-btn icon color="secondary" @click.stop="searchbar = !searchbar">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
@@ -75,34 +75,133 @@
             </router-link>
           </div>
             
-          <div v-else>
-            {{ nickname }}
-            <v-btn
-              text
-              @click="logout"
-            >
-              Logout
+          <div v-else class="ms-2" :to="profile">
+            <v-btn text :to="profile">
+              <v-icon>mdi-account-circle</v-icon>
+              <span class="font-weight-black">{{ nickname }}</span> 님
             </v-btn>
+            
           </div>
-
+          <v-divider class="my-3"></v-divider>
           <v-list-item>
-            <v-list-item-title>Foo</v-list-item-title>
+            <v-list-item-title><h1>Feed</h1></v-list-item-title>
           </v-list-item>
 
           <v-list-item>
-            <v-list-item-title>Bar</v-list-item-title>
+            <v-list-item-title><h1>Hobby</h1></v-list-item-title>
           </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title>Fizz</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title>Buzz</v-list-item-title>
-          </v-list-item>
+          
+          
         </v-list-item-group>
       </v-list>
+      <div v-if="isLogin" class="ma-3 pa-2" style="position: absolute; top: 85vh">
+        <v-divider class="my-3 me-5"></v-divider>
+        <div>
+          <v-btn
+            text
+            @click="setting"
+          >
+            SETTING
+          </v-btn>
+          <v-divider :vertical="true"></v-divider>
+          <v-btn
+            text
+            @click="logout"
+          >
+            Logout
+          </v-btn>
+        </div>
+      </div>
     </v-navigation-drawer>
+
+    <!-- search nav bar -->
+    <!-- v-navigation-drawer absolute -> fixed -->
+    <v-navigation-drawer
+      fixed
+      v-model="searchbar"
+      right
+      temporary
+      style="min-width: 80%;"
+      :class="{ phone : is_phone }"
+    > 
+      <div
+        class=" d-flex justify-end align-center ma-0"
+      >
+        <v-btn
+          class="ma-1"
+          color="grey"
+          plain
+          @click.stop="searchbar = !searchbar"
+        >
+          Cancel
+        </v-btn>
+      </div>
+      <div style="width: 90%; max-width: 700px;" class="mt-4 mx-auto d-flex justify-center align-start">
+        <v-text-field
+          hint="example@naver.com"
+          v-model="search"
+          placeholder="Search User"
+          filled
+          dense
+          rounded
+          pa-0
+          class="mx-3"
+          @keyup.enter="searchUser"
+        ></v-text-field>
+        <button icon color="secondary" class="mt-2 mx-1" @click="searchUser">
+          <v-icon>mdi-magnify</v-icon>
+        </button>
+      </div>
+        <v-list v-if="searchhistory.length != 0" rounded>
+          <v-subheader>최근 검색어</v-subheader>
+          <v-list-item-group
+            color="primary"
+          >
+            <v-list-item
+              v-for="(history, idx) in searchhistory" :key="idx"
+            >
+              <v-list-item-content
+                class="d-flex justify-center"
+              >
+                <v-list-item-title
+                  :to="'/user/' + history.email" @click="refreshAll"
+                  class="ma-0 d-inline"
+                  v-text="history.nickname"
+                ></v-list-item-title>
+                
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+        <!-- 검색 결과 -->
+        <v-list v-if="results.length != 0" rounded>
+          <v-subheader>검색 결과는 다음과 같습니다</v-subheader>
+          <v-list-item-group
+            color="primary"
+          >
+            <v-list-item
+              v-for="(result, idx) in results" :key="idx"
+            > 
+            <!-- this.$router.push('/signup') -->
+            
+              <v-list-item-content
+                class="d-flex justify-center"
+              >
+                <v-list-item-title
+                  :to="'/user/' + result.email" @click="refreshAll"
+                  class="ma-0 d-inline"
+                  v-text="result.nickname"
+                ></v-list-item-title>
+                
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      <v-list v-else>
+        <v-subheader>검색 결과가 없습니다</v-subheader>
+      </v-list>
+    </v-navigation-drawer>
+
   </v-sheet>
 </template>
 
@@ -112,27 +211,69 @@ export default {
   data: () => ({
     drawer: false,
     group: null,
+    searchbar: false,
+    search: '',
   }),
-
+  created() {
+    this.$store.dispatch('searchStore/findHistory', localStorage.getItem('email'))
+  },
   watch: {
     group () {
       this.drawer = false
     },
+    is_phone() {
+      if (window.innerWidth < 1100) {
+        return true
+      }
+      else {
+        return false
+      }
+    },
   },
-
   computed: {
     isLogin() {
       return this.$store.getters.isAuthenticated
     },
     nickname() {
       return this.$store.getters.getUsername
+    },
+    request_user() {
+      return this.$store.getters.getEmail
+    },
+    is_phone() {
+      if (window.innerWidth < 1100) {
+        return true
+      }
+      else {
+        return false
+      }
+    },
+    profile() {
+      return 'user/' + this.$store.getters.getEmail
+    },
+    results() {
+      return this.$store.getters['searchStore/getSearchResult']
+    },
+    searchhistory() {
+      return this.$store.getters['searchStore/getSearchHistory']
     }
   },
-
   methods: {
+    setting() {
+      this.$router.push({ name: 'UserSetting'})
+    },
     logout() {
       this.$store.commit('AUTH_LOGOUT')
-    }
+      this.$router.push('/login')
+    },
+    searchUser() {
+      const params = [this.search, this.request_user]
+      this.$store.dispatch('searchStore/findUser', params)
+    },
+    refreshAll() {
+        // 새로고침
+      this.$router.go();
+    },
   }
 }
 </script>
@@ -144,4 +285,4 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-</style>>
+</style>

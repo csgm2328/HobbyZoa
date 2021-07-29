@@ -4,6 +4,9 @@ import Vuex from 'vuex'
 import getters from './getters'
 import actions from './actions'
 import mutations from './mutations'
+import profileStore from '././modules/profileStore'
+import searchStore from '././modules/searchStore'
+import followStore from '././modules/followStore'
 
 Vue.use(Vuex)
 
@@ -11,16 +14,25 @@ Vue.use(Vuex)
 axios.defaults.baseURL = 'http://localhost:9990'
 
 const state = {
+  user: [],
   signupEmail: '',
   signupError: '',
   loginError: '',
   token: localStorage.getItem('token'),
   nickname: localStorage.getItem('user'),
+  email: localStorage.getItem('email'),
+  feedList: [],
+  feedDetail: [],
 }
 
 export default new Vuex.Store({
   state,
   mutations,
   getters,
-  actions
+  actions,
+  modules: {
+    profileStore,
+    searchStore,
+    followStore
+  }
 })

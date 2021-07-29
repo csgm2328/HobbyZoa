@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,22 +33,38 @@ public class FeedServiceImpl implements FeedService{
 	FileHandler fileHandler;
 	
 	@Override
-	public List<Feed> findAllFeeds() { //전체 레코드 불러오기 findAll(), 이미지를 어떻게 할까
+	public List<Feed> findAllFeeds() { //전체 레코드 불러오기 findAll()
 		List<Feed> feeds = new ArrayList<Feed>();
-		feedRepo.findAll().forEach(e -> feeds.add(e));
+		feedRepo.findAll(Sort.by(Sort.Direction.DESC, "regtime")).forEach(e -> feeds.add(e));
+
+		for (int i = 0; i < feeds.size(); i++) {
+			List<Image> images = new ArrayList<Image>();
+			imageRepo.findAllByfeedcode(feeds.get(i).getFeedcode()).forEach(e -> images.add(e));
+			feeds.get(i).setImages(images);
+		}
+		return feeds;
+	}
+
+
+	@Override
+	public List<Feed> findByEmail(String email) { //해당 계정 피드 모아보기
+		List<Feed> feeds = feedRepo.findByEmail(email);
+		for (int i = 0; i < feeds.size(); i++) {
+			List<Image> images = new ArrayList<Image>();
+			imageRepo.findAllByfeedcode(feeds.get(i).getFeedcode()).forEach(e -> images.add(e));
+			feeds.get(i).setImages(images);
+		}
 		return feeds;
 	}
 	
 	@Override
-	public List<Image> findAllImages() { //전체 레코드 불러오기 findAll(), 이미지를 어떻게 할까
-		List<Image> images = new ArrayList<Image>();
-		imageRepo.findAll().forEach(e -> images.add(e));
-		return images;
-	}
-
-	@Override
 	public Image findOneByfeedcode(Integer feedcode) { // 해당 피드코드 이미지 하나만 반환
 		return imageRepo.findOneByfeedcode(feedcode);
+	}
+	
+	@Override
+	public Image findByNewname(String newname) { // 새이름으로 이미지 반환
+		return imageRepo.findByNewname(newname);
 	}
 	
 	@Override
@@ -62,17 +79,10 @@ public class FeedServiceImpl implements FeedService{
 		feed.setLikes(likeRepo.countByFeedcode(feedcode));
 		return feedRepo.findByFeedcode(feedcode); //수정 후 리턴
 	}
-	
-	@Override
-	public List<Feed> findByEmail(String email) {
-		List<Feed> feeds = feedRepo.findByEmail(email);
-		return feeds;
-	}
 
 	@Override
 	public void deleteByFeedcode(Integer feedcode) { //레코드 삭제 delete()
 		feedRepo.deleteById(feedcode);
-//		imageRepo.deleteAllByFeedcode(feedcode); //참조키 cascade 삭제 제약 조건으로 할지
 	}
 
 	@Override

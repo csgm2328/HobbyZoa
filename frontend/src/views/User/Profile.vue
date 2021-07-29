@@ -3,21 +3,28 @@
   >
     <Header/>
     <div>
+      <!-- profile box -->
       <div id="profileBox" class="d-flex justify-center mx-auto" style="max-width: 1000px;" >
         <v-row class="pa-3 ma-0" style="max-width: 1000px;" >
-          <!--------------------------- SCREAM IMAGE -------------------------->
+          <!-- profile img -->
           <v-col cols="4" offset-sm="0" sm="3" class="center d-flex justify-center align-center">
             <v-avatar color="indigo" height="77px" width="77px" id="profileImg">
-              <v-icon dark>
+              <img 
+                v-if="imgpath" 
+                :src="'http://localhost:9990/feed/' + imgpath"
+                alt="profile img">
+              <v-icon 
+                v-else
+                dark>
                 mdi-account-circle
               </v-icon>
             </v-avatar>
           </v-col>
+          <!-- profile email / feed,follower,follow -->
           <v-col cols="8">
             <v-row class="pa-3">
               <v-col cols="12" class="mt-1 pa-0">
-                <h1 class="title hover">Test User</h1>
-                <!-- <p class="font-weight-light grey--text text--darken-1 body-2">2 minutes ago</p> -->
+                <h1 class="title hover">{{ email }}</h1>
               </v-col>
               <v-col
                 cols="4"
@@ -27,11 +34,10 @@
                   icon
                   disabled
                 >
-                <span><span style="color: black; font-weight: bold;">게시글</span><br/>123</span>
+                <span><span style="color: black; font-weight: bold;">게시글</span><br/>{{ this.feed }}</span>
                 </v-btn>
               </v-col>
-
-              
+              <!-- follower Modal -->
               <v-col
                 cols="4"  
                 class="d-flex justify-center"
@@ -42,9 +48,10 @@
                   <FollowerModal
                     :visible="showFollowerModal" @close="showFollowerModal=false"
                   />
-                  <span><span style="color: black; font-weight: bold;">팔로워</span><br/>123</span>
+                  <span><span style="color: black; font-weight: bold;">팔로워</span><br/>{{ this.follower }}</span>
                 </v-btn>
               </v-col>
+              <!-- follow Modal -->
               <v-col
                 cols="4"
                 class="d-flex justify-center"
@@ -55,16 +62,13 @@
                   <FollowModal
                     :visible="showFollowModal" @close="showFollowModal=false"
                   />
-                  <span><span style="color: black; font-weight: bold;">팔로우</span><br/>123</span>
+                  <span><span style="color: black; font-weight: bold;">팔로우</span><br/>{{ this.following }}</span>
                 </v-btn>
               </v-col>
-              <v-col cols="12" class="relative ma-0 pa-0">
-                 <!-- <v-btn icon  v-if="isLiked" @click="changeLike">
-                  <v-icon  >mdi-heart</v-icon>
-                </v-btn>
-                <v-btn icon v-else @click="changeLike">
-                  <v-icon    color="red">mdi-heart</v-icon>
-                </v-btn> -->
+              <!-- follower button -->
+              <v-col
+                v-if="requestuser_email != email"
+                cols="12" class="relative ma-0 pa-0">
                 <v-btn
                   v-if="isLiked" @click="changeLike"
                   elevation="2"
@@ -88,13 +92,23 @@
               </v-col>
             </v-row>
           </v-col>
+          <!-- comment -->
           <v-col class="text-left" cols="12">
-            <div class="font-weight-regular text-truncate my-5">
-              hi im test user
+            <div 
+              v-if="comment"
+              class="font-weight-regular text-truncate my-5">
+              {{ comment }}
+            </div>
+            <div
+              v-else
+            >
+              아직 코멘트가 없습니다
             </div>
           </v-col>
         </v-row>
       </div>
+
+      <!-- posts / saved / level -->
       <v-row
         align="center"
         justify="space-around"
@@ -151,7 +165,7 @@
   import UserLevel from '@/components/UserLevel'
   import FollowModal from '@/components/FollowModal'
   import FollowerModal from '@/components/FollowerModal'
-
+  
   export default {
     name: "Profile",
     components: {
@@ -164,11 +178,46 @@
     },
     data() {
       return {
-        isLiked: false,
+        username: this.$route.params.username,
         selected: "posts",
         showFollowModal: false,
         showFollowerModal: false,
+        requestuser_email: null,
+        isLiked: null,
       }
+    },
+    created() {
+      this.requestuser_email = localStorage.email
+      this.checkFollow()
+      this.$store.dispatch('profileStore/fetchProfile', this.username)
+      this.isLiked = this.$store.getters['followStore/getCheckFollow']
+    },
+    computed: {
+
+      email() {
+        return this.$store.getters['profileStore/getEmail']
+      },
+      feed() {
+        return this.$store.getters['profileStore/getFeedNum']
+      },
+      follower() {
+        return this.$store.getters['profileStore/getFollowerNum']
+      },
+      following() {
+        return this.$store.getters['profileStore/getFollowingNum']
+      },
+      imgpath() {
+        return this.$store.getters['profileStore/getImgpath']
+      },
+      comment() {
+        return this.$store.getters['profileStore/getComment']
+      },
+      
+      checkfollow() {
+        
+        console.log('gere',this.$store.getters['followStore/getCheckFollow'])
+        return this.$store.getters['followStore/getCheckFollow']
+      },
     },
     methods: {
       changeLike() {
@@ -178,11 +227,18 @@
         else {
           this.isLiked = true
         }
+        const params = [ this.requestuser_email, this.username ]
+        this.$store.dispatch('followStore/follow', params)
       },
       UserSelected(message) {
         this.selected = message
-        console.log(this.selected)
       },
+      checkFollow() {
+        
+        const params = [ this.requestuser_email, this.username ]
+        console.log(params)
+        this.$store.dispatch('followStore/checkFollow', params)
+      }
     }
   }
 </script>
