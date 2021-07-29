@@ -188,10 +188,7 @@
     },
     created() {
       this.$store.dispatch('profileStore/fetchProfile', this.username)
-  
       this.requestuser_email = localStorage.email
-
-      console.log(this.requestuser_email)
     },
     computed: {
       email() {
