@@ -7,6 +7,7 @@ import Signupsuccess from '@/views/User/SignupSuccess.vue'
 import SignupConfirm from '@/views/User/SignupConfirm.vue'
 import Login from '@/views/User/Login.vue'
 import Profile from '@/views/User/Profile.vue'
+import UserSetting from '@/views/User/UserSetting.vue'
 import FeedCreate from '@/views/Feed/CreateFeed.vue'
 import FeedUpdate from '@/views/Feed/FeedUpdate.vue'
 import FeedDetail from '@/views/Feed/FeedDetail.vue'
@@ -43,6 +44,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/setting',
+    name: 'UserSetting',
+    component: UserSetting
   },
   {
     path: '/user/:username',
