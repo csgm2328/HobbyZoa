@@ -125,7 +125,7 @@
       :class="{ phone : is_phone }"
     > 
       <div
-        class=" d-flex justify-end align-center"
+        class=" d-flex justify-end align-center ma-0"
       >
         <v-btn
           class="ma-1"
@@ -136,7 +136,7 @@
           Cancel
         </v-btn>
       </div>
-      <div style="width: 90%; max-width: 700px;" class="my-4 mx-auto d-flex justify-center align-start">
+      <div style="width: 90%; max-width: 700px;" class="mt-4 mx-auto d-flex justify-center align-start">
         <v-text-field
           hint="example@naver.com"
           v-model="search"
@@ -152,6 +152,31 @@
           <v-icon>mdi-magnify</v-icon>
         </button>
       </div>
+        <v-list v-if="results.length != 0" rounded>
+          <v-subheader>검색 결과는 다음과 같습니다</v-subheader>
+          <v-list-item-group
+            color="primary"
+          >
+            <v-list-item
+              v-for="(result, idx) in results" :key="idx"
+            >
+            
+              <v-list-item-content
+                class="d-flex justify-center"
+              >
+                <v-list-item-title
+                  :to="'/user/' + result.email" @click="refreshAll"
+                  class="ma-0 d-inline"
+                  v-text="result.nickname"
+                ></v-list-item-title>
+                
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+        <v-list v-else>
+          <v-subheader>검색 결과가 없습니다</v-subheader>
+        </v-list>
     </v-navigation-drawer>
 
   </v-sheet>
@@ -165,9 +190,9 @@ export default {
     group: null,
     searchbar: false,
     search: '',
-  
   }),
-
+  created() {
+  },
   watch: {
     group () {
       this.drawer = false
@@ -177,12 +202,10 @@ export default {
         return true
       }
       else {
-        console.log(window.innerWidth)
         return false
       }
     },
   },
-
   computed: {
     isLogin() {
       return this.$store.getters.isAuthenticated
@@ -190,21 +213,25 @@ export default {
     nickname() {
       return this.$store.getters.getUsername
     },
+    request_user() {
+      return this.$store.getters.getEmail
+    },
     is_phone() {
       if (window.innerWidth < 1100) {
         return true
       }
       else {
-        console.log(window.innerWidth)
         return false
       }
     },
     profile() {
       return 'user/' + this.$store.getters.getEmail
+    },
+    results() {
+      return this.$store.getters['profileStore/getSearchResult']
     }
 
   },
-
   methods: {
     setting() {
       this.$router.push('/setting')
@@ -214,9 +241,13 @@ export default {
       this.$router.push('/login')
     },
     searchUser() {
-      console.log(this.search)
+      const params = [this.search, this.request_user]
+      this.$store.dispatch('profileStore/findUser', params)
     },
-
+    refreshAll() {
+        // 새로고침
+      this.$router.go();
+    },
   }
 }
 </script>

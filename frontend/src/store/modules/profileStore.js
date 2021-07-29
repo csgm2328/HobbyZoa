@@ -164,12 +164,20 @@ const profileStore = {
         }) 
         .catch(err => console.log(err))
     },
-    findUser({ commit }, search) {
+    findUser({ commit }, params) {
+      const search = params[0]
+      const request_user = params[1]
+      console.log(request_user, search)
       const SEARCH_URL = SERVER_URL + '/find/' + search
-        axios.get(SEARCH_URL)
-        .then((res) => 
-          commit('SEARCH_USER', res)
-        )
+        axios.get(SEARCH_URL, {
+          params: {
+            email: request_user
+          }
+        })
+        .then((res) => {
+          console.log(res)
+          commit('SEARCH_USER', res.data)
+        })
         .catch(err => console.log(err))
     }
   }
