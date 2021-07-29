@@ -2,9 +2,8 @@
   <div
     style="margin: 20px;"
   >
-    {{ feeds }}
-    <div v-for="(feed) in feeds" :key="feed.feedcode" class="mx-auto">
-      {{ feed }}
+    <div v-for="feed in feeds" :key="feed.feedcode" class="mx-auto">
+
       <v-card
         class="mx-auto my-12"
         max-width="374"
@@ -16,18 +15,20 @@
             indeterminate
           ></v-progress-linear>
         </template>
-
         <v-img
+          :src="'http://localhost:9990/feed/' + feed.images[0].newname"
           height="250"
-          :src="feed.imgpath"
         ></v-img>
         <v-card-text>
 
           <div class="my-2 text-subtitle-1">
-            좋아요 {{ likedCount }}개
+            좋아요 {{ feed.likes }}개
           </div>
 
           <div>{{ comment }}</div>
+          <div> 
+            {{ feed.replies }}
+          </div>
         </v-card-text>
 
         <v-divider class="mx-4"></v-divider>
@@ -36,7 +37,7 @@
           <v-btn
             color="blue lighten-2"
             text
-            @click="reserve"
+            :to="`/feed/` + feed.feedcode"
           >
             더보기
           </v-btn>

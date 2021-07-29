@@ -6,8 +6,12 @@
 
     </v-toolbar>
     <h3 class="d-flex justify-center my-3">Follower List</h3>
+
     <v-card-text>
-      <div class="text">{{ follower_list }}</div>
+      <!-- <div class="text">{{ follower_list }}</div> -->
+      <div v-for="follower in follower_list" :key="follower">
+        {{ follower }}
+      </div>
     </v-card-text>
   </v-card>
 </v-dialog>
