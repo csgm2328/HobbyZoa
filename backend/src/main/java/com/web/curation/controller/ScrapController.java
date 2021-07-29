@@ -1,7 +1,6 @@
 package com.web.curation.controller;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.feed.model.Feed;
 import com.web.curation.feed.service.FeedService;
+import com.web.curation.image.model.Image;
 import com.web.curation.response.BasicResponse;
 import com.web.curation.scrap.model.Scrap;
 import com.web.curation.scrap.service.ScrapService;
-import com.web.curation.user.model.User;
-import com.web.curation.user.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -43,9 +41,6 @@ public class ScrapController {
 	ScrapService scrapService;
 	
 	@Autowired
-	UserService userService;
-	
-	@Autowired
 	FeedService feedService;
 	
 	@PostMapping
@@ -53,7 +48,7 @@ public class ScrapController {
 	public ResponseEntity<?> saveScrap(@RequestParam("email") String email, @RequestParam("feedcode") Integer feedcode) throws Exception{
 		
 		Boolean flag = scrapService.existsByEmailAndFeedcode(email, feedcode);
-		if(!flag) {
+		if(!flag) { //중복 없으면 저장
 			Scrap scrap = scrapService.save(Scrap.builder()
 					.email(email)
 					.feedcode(feedcode)
@@ -61,7 +56,7 @@ public class ScrapController {
 			URI uriLocation = new URI("/scrap/"+scrap.getScrapcode());
 			return ResponseEntity.created(uriLocation).body("{}");
 		}
-		else {
+		else { //이미 있으면 스크랩 해제
 			Scrap scrap = scrapService.findByEmailAndFeedcode(email, feedcode);
 			scrapService.deleteByScrapcode(scrap.getScrapcode());
 			return ResponseEntity.noContent().build();
@@ -74,16 +69,18 @@ public class ScrapController {
 		List<Scrap> scraps = scrapService.findByEmail(email);
 		for (int i = 0; i < scraps.size(); i++) {
 			Feed feed = feedService.findByFeedcode(scraps.get(i).getFeedcode());
+			List<Image> images = feedService.findAllByfeedcode(feed.getFeedcode());
+			feed.setImages(images);
 			scraps.get(i).setFeed(feed);
 		}
 		return new ResponseEntity<List<Scrap>>(scraps, HttpStatus.OK);
 	}
 	
-	@GetMapping(value="/{scrapcode}")
-	@ApiOperation(value="스크랩 보기", notes="누르면 그 피드로 이동하게...")
-	public void findByScrapcode(@PathVariable("scrapcode") Integer scrapcode){
-		
-	}
+//	@GetMapping(value="/{scrapcode}")
+//	@ApiOperation(value="스크랩 보기", notes="스크랩한 피드 반환")
+//	public void findByScrapcode(@PathVariable("scrapcode") Integer scrapcode){
+//		
+//	}
 	
 	@DeleteMapping(value="/{scrapcode}")
 	@ApiOperation(value="스크랩삭제", notes="scrapcode을 입력 받아 스크랩 삭제")
