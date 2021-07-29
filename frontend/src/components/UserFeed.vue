@@ -24,11 +24,8 @@
           <div class="my-2 text-subtitle-1">
             좋아요 {{ feed.likes }}개
           </div>
-
-          <div>{{ comment }}</div>
-          <div> 
-            {{ feed.replies }}
-          </div>
+          
+          <div>{{ feed.comment }}</div>
         </v-card-text>
 
         <v-divider class="mx-4"></v-divider>

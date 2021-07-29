@@ -16,6 +16,7 @@ const profileStore = {
     message: '',
     feeds: [],
     saved: [],
+    search_result: [],
   },
   getters: {
     getEmail(state) {
@@ -51,6 +52,9 @@ const profileStore = {
     },
     getUserSaved(state) {
       return state.saved
+    },
+    getSearchResult(state) {
+      return state.search_result
     }
   },
   mutations: {
@@ -79,6 +83,9 @@ const profileStore = {
     },
     FETCH_USER_SAVED(state, res) {
       state.saved = res
+    },
+    SEARCH_USER(state, res) {
+      state.search_result = res
     }
   },
   actions: {
@@ -157,7 +164,14 @@ const profileStore = {
         }) 
         .catch(err => console.log(err))
     },
-    
+    findUser({ commit }, search) {
+      const SEARCH_URL = SERVER_URL + '/find/' + search
+        axios.get(SEARCH_URL)
+        .then((res) => 
+          commit('SEARCH_USER', res)
+        )
+        .catch(err => console.log(err))
+    }
   }
 }
 
