@@ -7,7 +7,10 @@
     </v-toolbar>
     <h3 class="d-flex justify-center my-3">Follow List</h3>
     <v-card-text>
-      <div class="text">{{ following_list }}</div>
+      <!-- <div class="text">{{ following_list }}</div> -->
+      <div v-for="following in following_list" :key="following">
+        {{ following }}
+      </div>
     </v-card-text>
   </v-card>
 </v-dialog>

@@ -10,10 +10,12 @@ const profileStore = {
     follower: null,
     imgpath: null,
     comment: null,
-    followlist: [],
+    followinglist: [],
     followerlist: [],
     checkfollow: null,
-    message: ''
+    message: '',
+    feeds: [],
+    saved: [],
   },
   getters: {
     getEmail(state) {
@@ -41,16 +43,17 @@ const profileStore = {
       return state.followinglist
     },
     getUserFeed(state) {
-      return state.feed
+      console.log(state.feeds)
+      return state.feeds
     },
     getCheckFollow(state) {
       return state.checkfollow
+    },
+    getUserSaved(state) {
+      return state.saved
     }
   },
   mutations: {
-    // getFeeds(state, feeds) {
-    //     state.feeds = feeds
-    // },
     FETCH_PROFILE(state, info) {
       state.email = info.email
       state.feed = info.feeds
@@ -66,14 +69,17 @@ const profileStore = {
       state.followinglist = info
     },
     FETCH_USER_FEED(state, res) {
-      state.feed = res
+      state.feeds = res
     },
     FOLLOW(state) {
       state.message = '요청이 성공적으로 처리되었습니다.'
     },
     CHECK_FOLLOW(state, res) {
-      state.checfollow = res
+      state.checkfollow = res
     },
+    FETCH_USER_SAVED(state, res) {
+      state.saved = res
+    }
   },
   actions: {
     fetchProfile({ commit }, username) {
@@ -114,7 +120,12 @@ const profileStore = {
         .catch(err => console.log(err))
     },
     fetchUserFeed({ commit }, username) {
-      axios.get(SERVER_URL + '/feed/' + username)
+      const USER_FEED_USER = SERVER_URL + '/feed/mine'
+      axios.get(USER_FEED_USER, {
+        params: {
+          email: username,
+        }
+      })
         .then((res) => {
           const info = res.data
           commit('FETCH_USER_FEED', info)
@@ -122,7 +133,6 @@ const profileStore = {
         .catch(err => console.log(err))
     },
     checkFollow({ commit }, follow_info) {
-      console.log(follow_info)
       const CHECK_FOLLOW_URL = SERVER_URL + '/profile/checkfollow'
       axios.get(CHECK_FOLLOW_URL, {
         params: {
@@ -135,6 +145,19 @@ const profileStore = {
         }) 
         .catch(err => console.log(err))
     },
+    fetchUserSaved({ commit }, username) {
+      const USER_SAVED_URL = SERVER_URL + '/scrap'
+      axios.get(USER_SAVED_URL, {
+        params: {
+          email: username
+        }
+      }) 
+        .then((res) => {
+          commit('FETCH_USER_SAVED', res.data)
+        }) 
+        .catch(err => console.log(err))
+    },
+    
   }
 }
 

@@ -11,7 +11,7 @@
             <v-avatar color="indigo" height="77px" width="77px" id="profileImg">
               <img 
                 v-if="imgpath" 
-                :src="imgpath" 
+                :src="'http://localhost:9990/feed/' + imgpath"
                 alt="profile img">
               <v-icon 
                 v-else
