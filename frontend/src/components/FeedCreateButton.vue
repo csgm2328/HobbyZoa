@@ -30,6 +30,7 @@
 
 .rightdown {
   position: fixed;
+  z-index: 100000000;
   bottom: 20px;
   right: 20px;
 }

@@ -188,7 +188,10 @@
     },
     created() {
       this.$store.dispatch('profileStore/fetchProfile', this.username)
+  
       this.requestuser_email = localStorage.email
+
+      console.log(this.requestuser_email)
     },
     computed: {
       email() {
@@ -208,6 +211,9 @@
       },
       comment() {
         return this.$store.getters['profileStore/getComment']
+      },
+      checkLike() {
+        return this.$store.getters['profileStore/getCheckFollow']
       }
     },
     methods: {
@@ -218,7 +224,8 @@
         else {
           this.isLiked = true
         }
-        this.$store.dispatch('profileStore/follow', this.requestuser_email, this.email)
+        const params = [ this.requestuser_email, this.username ]
+        this.$store.dispatch('profileStore/follow', params)
       },
       UserSelected(message) {
         this.selected = message
