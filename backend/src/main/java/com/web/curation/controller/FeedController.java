@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,18 +89,12 @@ public class FeedController {
 	}
 	
 	// 해당 계정 피드 조회 
-	@GetMapping(value="/{email}") 
-	@ApiOperation(value="해당 계정의 모든 피드 조회", notes="피드 comment와 이미지1장 반환")
-	public ResponseEntity<Map<String, Image>> getFeedsByEmail(@PathVariable("email") String email) { 
-		Map<String, Image> map = new HashMap<>();
+	@GetMapping(value="/mine") 
+	@ApiOperation(value="해당 계정의 모든 피드 조회", notes="계정 이메일 받아서 해당 계정의 피드와 이미지 엮어서 반환")
+	public ResponseEntity<List<Feed>> getFeedsByEmail(@RequestParam("email") String email) { 
 		//email에 해당하는 모든 피드 list
 		List<Feed> list = feedService.findByEmail(email);
-		for (int i = 0; i < list.size(); i++) {
-			Feed curFeed = list.get(i);
-			Image image = feedService.findOneByfeedcode(curFeed.getFeedcode());
-			map.put(curFeed.getComment(), image);
-		}
-		return new ResponseEntity<Map<String, Image>>(map, HttpStatus.OK); 
+		return new ResponseEntity<List<Feed>>(list, HttpStatus.OK); 
 	}
 	
 	// 해당 feedcode 피드 상세보기

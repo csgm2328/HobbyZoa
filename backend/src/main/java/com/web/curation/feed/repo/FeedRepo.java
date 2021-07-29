@@ -16,8 +16,6 @@ public interface FeedRepo extends JpaRepository<Feed, Integer>{ //왜 Long일까
 	Feed findByFeedcode(Integer feedcode);
 	//피드 저장
 //	Feed save(Feed feed);
-	//이미지 저장
-//	Image save(Image image);
 	// 프로필에서 피드수 리턴
 	int countByEmail(String email);
 	

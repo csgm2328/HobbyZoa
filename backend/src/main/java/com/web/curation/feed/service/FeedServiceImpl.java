@@ -27,7 +27,7 @@ public class FeedServiceImpl implements FeedService{
 	FileHandler fileHandler;
 	
 	@Override
-	public List<Feed> findAllFeeds() { //전체 레코드 불러오기 findAll(), 이미지를 어떻게 할까
+	public List<Feed> findAllFeeds() { //전체 레코드 불러오기 findAll()
 		List<Feed> feeds = new ArrayList<Feed>();
 		feedRepo.findAll().forEach(e -> feeds.add(e));
 
@@ -39,6 +39,18 @@ public class FeedServiceImpl implements FeedService{
 		return feeds;
 	}
 
+
+	@Override
+	public List<Feed> findByEmail(String email) {
+		List<Feed> feeds = feedRepo.findByEmail(email);
+		for (int i = 0; i < feeds.size(); i++) {
+			List<Image> images = new ArrayList<Image>();
+			imageRepo.findAllByfeedcode(feeds.get(i).getFeedcode()).forEach(e -> images.add(e));
+			feeds.get(i).setImages(images);
+		}
+		return feeds;
+	}
+	
 	@Override
 	public Image findOneByfeedcode(Integer feedcode) { // 해당 피드코드 이미지 하나만 반환
 		return imageRepo.findOneByfeedcode(feedcode);
@@ -59,17 +71,10 @@ public class FeedServiceImpl implements FeedService{
 		Feed feed = feedRepo.findByFeedcode(feedcode);
 		return feed;
 	}
-	
-	@Override
-	public List<Feed> findByEmail(String email) {
-		List<Feed> feeds = feedRepo.findByEmail(email);
-		return feeds;
-	}
 
 	@Override
 	public void deleteByFeedcode(Integer feedcode) { //레코드 삭제 delete()
 		feedRepo.deleteById(feedcode);
-//		imageRepo.deleteAllByFeedcode(feedcode); //참조키 cascade 삭제 제약 조건으로 할지
 	}
 
 	@Override
