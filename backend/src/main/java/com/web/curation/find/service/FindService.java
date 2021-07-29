@@ -9,7 +9,7 @@ public interface FindService {
 
 	List<User> findNickname(String nickname);
 
-	void saveHistory(SaveUser saveuser);
+	SaveUser saveHistory(SaveUser saveuser);
 	
 	List<SaveUser> showHistory(String email);
 

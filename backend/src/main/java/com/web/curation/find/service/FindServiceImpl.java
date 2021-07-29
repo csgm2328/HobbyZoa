@@ -18,7 +18,7 @@ public class FindServiceImpl implements FindService {
 	FindRepo findRepo;
 
 	@Autowired
-	FindHistoryRepo saveFindRepo;
+	FindHistoryRepo findHistoryRepo;
 
 	@Override
 	public List<User> findNickname(String nickname) {
@@ -28,14 +28,15 @@ public class FindServiceImpl implements FindService {
 
 	@Override
 	public List<SaveUser> showHistory(String email) {
-		List<SaveUser> list = saveFindRepo.findBySaveEmail(email);
+		List<SaveUser> list = findHistoryRepo.findBySaveEmail(email);
 		return list;
 	}
 
 	@Override
-	public void saveHistory(SaveUser saveuser) {
-		saveFindRepo.save(saveuser);
-
+	public SaveUser saveHistory(SaveUser saveuser) {
+		findHistoryRepo.save(saveuser);
+		return null;
 	}
+
 
 }
