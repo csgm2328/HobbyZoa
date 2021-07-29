@@ -44,7 +44,6 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping(value = "/auth")
 public class LoginController {
 
-	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
 
 	@Autowired
@@ -61,13 +60,11 @@ public class LoginController {
 		HttpStatus status = null;
 		try {
 			Optional<User> userOpt = userService.findUserByEmailAndPassword(request.getEmail(), request.getPassword());
-			if (userOpt.isPresent()) { // 로그인 성공하면 이메일 정보로 토큰만들기
-				System.out.println("[ " + userOpt.get().getEmail() + " ] 님 로그인 성공");
-				String token = jwtService.create("email", userOpt.get().getEmail(), "access-token");// key, data,
-
+			if (userOpt.isPresent()) { // 이메일 정보로 토큰 생성
+				//System.out.println("[ " + userOpt.get().getEmail() + " ] 님 로그인 성공");
+				String token = jwtService.create("email", userOpt.get().getEmail(), "access-token");
 				resultMap.put("access-token", token);
 				status = HttpStatus.ACCEPTED;
-
 			} else {
 				resultMap.put("message", FAIL);
 				status = HttpStatus.ACCEPTED;
@@ -88,24 +85,19 @@ public class LoginController {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 		String getEmail = jwtService.get(request.getHeader("access-token"));
-//		String getEmail = jwtService.get(token);		
-		
+//		String getEmail = jwtService.get(token);				
 //		if (jwtService.isUsable(token)) {
 			if (jwtService.isUsable(request.getHeader("access-token"))){ //request헤더의 "access토큰 항목"가져오기			
 			try {
 				//String email = jwtService.get(token);
 				Optional<User> user = userService.findById(getEmail);
 				resultMap.put("userInfo", user);
-				resultMap.put("message", SUCCESS);
-
 				status = HttpStatus.ACCEPTED;
 			} catch (Exception e) {
-
 				resultMap.put("message", e.getMessage());
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 			}
 		} else {
-
 			resultMap.put("message", FAIL);
 			status = HttpStatus.ACCEPTED;
 		}
