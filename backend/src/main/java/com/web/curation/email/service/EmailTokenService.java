@@ -9,6 +9,7 @@ public interface EmailTokenService {
 	Optional<EmailToken> findById(String confirmationTokenId);
 	
 	String createEmailConfirmationToken(String userEmail, String receiverEmail);
+	void NotifyEmailPasswordChange(String userEmail);
 	boolean confirmEmail(String token);
 	void reCreateToken(String userEmail, String recieverEmail);
 }

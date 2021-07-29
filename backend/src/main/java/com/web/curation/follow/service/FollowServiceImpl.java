@@ -35,7 +35,7 @@ public class FollowServiceImpl implements FollowService {
 		Optional<Follow> e = followRepo.findByFromemailAndToemail(from, to);
 		if(e.isPresent()) {
 			if(followRepo.deleteByFromemailAndToemail(from,to) != 0) {
-				System.out.println("[" + from + "] 가 [" + to + "]를 더이상 팔로우하지 않음");
+//				System.out.println("[" + from + "] 가 [" + to + "]를 더이상 팔로우하지 않음");
 			}
 			return null;
 		}

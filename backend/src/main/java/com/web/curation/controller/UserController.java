@@ -122,7 +122,6 @@ public class UserController {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
 		// 기존 토큰 삭제 후 재 생성
-//		userService.reCreateToken(userEmail, recieverEmail);
 		confirmationTokenService.reCreateToken(userEmail, recieverEmail);
 		result.status = true;
 		result.data = "success";
@@ -151,10 +150,14 @@ public class UserController {
 		User user = userService.findById(email).get();
 		// PK인 email 빼고 전부다 변경가능
 		user.setNickname(UpdateInfo.getNickname());
+		// 비밀번호 변경시 안내 메일 전송
+		if(!user.getPassword().equals(UpdateInfo.getPassword()))
+			confirmationTokenService.NotifyEmailPasswordChange(email);
 		user.setPassword(UpdateInfo.getPassword());
 		user.setPhone(UpdateInfo.getPhone());
 		if (UpdateInfo.getComment() != null)
 			user.setComment(UpdateInfo.getComment());
+		//jpa hibernate sync 기능으로 이미 존재하는 컬럼 변경이후 find시 컬럼 수정
 		result.object = userService.findById(UpdateInfo.getEmail()).get();
 
 		if (result.object != null) {

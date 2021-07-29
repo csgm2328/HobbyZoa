@@ -2,6 +2,7 @@ package com.web.curation.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -21,6 +22,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 
 @ApiResponses(value = { @ApiResponse(code = 400, message = "Bad Request", response = BasicResponse.class) })
@@ -29,6 +32,13 @@ import org.springframework.stereotype.Controller;
 //@RequestMapping(value = "app")
 @CrossOrigin(origins = { "*" })
 public class NotifyController {
+	
+//	@Autowired
+//	WebSocketHandler webSocketHandler;
+//	@Autowired
+//	WebSocketEventListener webSocketEventListener;
+	@Autowired
+    private SimpMessageSendingOperations messagingTemplate;
 
 	@MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
@@ -50,9 +60,11 @@ public class NotifyController {
         return chatMessage;
     }
     @MessageMapping("/profile.doFollow")
-    @SendTo("/topic/private/{email}")
-    public Message Follow(@Payload Message FollowMessage,String to) {
-    	
+    @SendToUser("queue/follow")
+    public Message Follow(@Payload Message FollowMessage, String to) {
+    	System.out.println("팔로우 타겟:" + FollowMessage.getContent());
+    	System.out.println(to);
+    	messagingTemplate.convertAndSend("user/queue/follow", FollowMessage); //왜 안됨?
     	return FollowMessage;
     }
 }

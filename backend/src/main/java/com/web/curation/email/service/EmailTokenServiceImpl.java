@@ -51,7 +51,20 @@ public class EmailTokenServiceImpl implements EmailTokenService{
         
         return emailConfirmationToken.getId();
     }
-
+	@Override
+	public void NotifyEmailPasswordChange(String userEmail) {
+		Assert.hasText(userEmail,"userEmail는 필수 입니다.");
+        
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(userEmail);
+        mailMessage.setSubject("Hobby Zoa 비밀번호 변경 알림");
+        // vue 인증 페이지로 링크
+        mailMessage.setText("안녕하세요 " + userEmail + "님.\n"
+        		+ " Hobby Zoa 알림 : 회원님의 비밀번호가 변경되었음을 알려드립니다.\n"
+        		+ " 본인의 활동이 아니라면 즉시 조치를 취하세요! ");
+   
+        emailSenderService.sendEmail(mailMessage);
+	}
 	@Override
 	// 유효한 토큰 가져오기
     public EmailToken findByIdAndExpirationDateAfterAndExpired(String confirmationTokenId){
@@ -84,4 +97,6 @@ public class EmailTokenServiceImpl implements EmailTokenService{
 			throw new NullPointerException();
 		createEmailConfirmationToken(userEmail,recieverEmail);
 	}
+
+	
 }
