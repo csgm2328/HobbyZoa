@@ -18,7 +18,7 @@
         </v-carousel>
         <h2 class="ms-1">{{ feed.feed.nickname }}</h2>
         <h4 class="ms-1">{{ feed.feed.comment }}</h4>
-        <div v-if="!isMyFeed">
+        <div v-if="!isMyFeed" class="d-flex justify-end">
           <v-btn
             to="/update"
             color="info"

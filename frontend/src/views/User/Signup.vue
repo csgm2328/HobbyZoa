@@ -17,6 +17,7 @@
             v-model="email"
             label="Email"
             outlined
+            autocapitalize="off"
             :rules="[rules.required, rules.email]"
           >
           </v-text-field>

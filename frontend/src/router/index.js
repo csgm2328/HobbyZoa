@@ -11,6 +11,7 @@ import UserSetting from '@/views/User/UserSetting.vue'
 import FeedCreate from '@/views/Feed/CreateFeed.vue'
 import FeedUpdate from '@/views/Feed/FeedUpdate.vue'
 import FeedDetail from '@/views/Feed/FeedDetail.vue'
+import NotFoundPage from '@/views/NotFoundPage.vue'
 
 Vue.use(VueRouter)
 
@@ -69,6 +70,15 @@ const routes = [
     path: '/feed/:feedcode',
     name: 'FeedDetail',
     component: FeedDetail
+  },
+  {
+    path: "/404",
+    name: "NotFoundPage",
+    component: NotFoundPage
+  },
+  {
+    path: '*',
+    redirect: "/404"
   },
 ]
 

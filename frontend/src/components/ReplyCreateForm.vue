@@ -9,6 +9,7 @@
       clearable
       label="댓글 달기"
       type="text"
+      :rules="[rules.required]"
       @click:append-outer="createReply"
       @click:clear="clearMessage"
     ></v-text-field>
@@ -21,17 +22,23 @@ export default {
   data() {
     return {
       message: '',
+      rules: {
+        required: value => !!value || '댓글을 입력해주세요.',
+      },
     }
   },
 
   computed: {
    feedcode() {
      return this.$store.getters.getFeedDetail.feed.feedcode
-   }
+   },
   },
 
   methods: {
     createReply () {
+      if (this.message.length === 0) {
+        return
+      } 
       const form = new FormData()
       form.append('email', localStorage.getItem('email'))
       form.append('nickname', localStorage.getItem('user'))

@@ -3,6 +3,7 @@
     <v-card
       hover
       :to='feedpage'
+      class="my-3"
     >
       <v-img
         :src="src"

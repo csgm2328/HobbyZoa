@@ -94,7 +94,7 @@
           
         </v-list-item-group>
       </v-list>
-      <div v-if="isLogin" class="ma-3 pa-2" style="position: absolute; bottom: 0px; width: 100%;">
+      <div v-if="isLogin" class="ma-3 pa-2" style="position: absolute; top: 85vh">
         <v-divider class="my-3 me-5"></v-divider>
         <div>
           <v-btn
@@ -207,7 +207,7 @@ export default {
 
   methods: {
     setting() {
-      this.$router.push('/setting')
+      this.$router.push({ name: 'UserSetting'})
     },
     logout() {
       this.$store.commit('AUTH_LOGOUT')
