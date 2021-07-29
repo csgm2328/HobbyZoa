@@ -78,8 +78,8 @@ public class JwtServiceImpl implements JwtService {
 		// 디코딩
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getRequest();
-		//String jwt = request.getHeader("access-token");
-		String jwt = key;
+		String jwt = request.getHeader("access-token");
+		//String jwt = key;
 		Jws<Claims> claims = null;
 
 		try {
