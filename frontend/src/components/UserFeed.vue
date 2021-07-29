@@ -2,9 +2,10 @@
   <div
     style="margin: 20px;"
   >
-    <div v-for="(item) in items" :key="item.uid" class="mx-auto">
+    {{ feeds }}
+    <div v-for="(feed) in feeds" :key="feed.feedcode" class="mx-auto">
+      {{ feed }}
       <v-card
-        :loading="loading"
         class="mx-auto my-12"
         max-width="374"
       >
@@ -18,9 +19,8 @@
 
         <v-img
           height="250"
-          src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+          :src="feed.imgpath"
         ></v-img>
-
         <v-card-text>
 
           <div class="my-2 text-subtitle-1">
@@ -38,7 +38,7 @@
             text
             @click="reserve"
           >
-            Reserve
+            더보기
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -48,26 +48,32 @@
 
 <script>
 export default {
-    name: "UserFeed",
-    data () {
-      return {
-        loading: false,
-        selection: 1,
-        // tmp data
-        likedCount: 12,
-        comment: "멋지군요!(코멘트 보여주기란)",
-        items: [{text: 'abc'}, {text: 'abc'},{text: 'abc'},{text: 'abc'},{text: 'xyz'},]
-      }
-    },
-    // components: { 'virtual-list': VirtualList },
+  name: "UserFeed",
+  data () {
+    return {
+      username: this.$route.params.username,
+      loading: false,
+      selection: 1,
+      // tmp data
+      likedCount: 12,
+      comment: "멋지군요!(코멘트 보여주기란)",
+      items: [{text: 'abc'}, {text: 'abc'},{text: 'abc'},{text: 'abc'},{text: 'xyz'},]
+    }
+  },
+  created() {
+    this.$store.dispatch('profileStore/fetchUserFeed', this.username)
+  },
+  computed: {
+    feeds() {
+      return this.$store.getters['profileStore/getUserFeed']
+    }
+  },
 
-    methods: {
-      reserve () {
-        this.loading = true
-
-        setTimeout(() => (this.loading = false), 2000)
-      },
+  methods: {
+    reserve () {
+      setTimeout(() => (this.loading = false), 2000)
     },
+  },
 }
 </script>
 

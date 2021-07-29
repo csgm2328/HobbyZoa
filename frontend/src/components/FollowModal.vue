@@ -18,7 +18,6 @@ export default {
   props: ['visible'],
 
   created() {
-    console.log(this.username)
     this.$store.dispatch('profileStore/fetchFollowing', this.username)
   },
   data() {

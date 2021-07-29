@@ -16,10 +16,8 @@
 <script>
 export default {
   props: ['visible'],
-  created() {
-    console.log(this.username)
+  created() { 
     this.$store.dispatch('profileStore/fetchFollower', this.username)
-    // this.$store.dispatch('profileStore/fetchFollowing', this.username)
   },
   data() {
     return {
