@@ -5,6 +5,8 @@ import getters from './getters'
 import actions from './actions'
 import mutations from './mutations'
 import profileStore from '././modules/profileStore'
+import searchStore from '././modules/searchStore'
+import followStore from '././modules/followStore'
 
 Vue.use(Vuex)
 
@@ -29,6 +31,8 @@ export default new Vuex.Store({
   getters,
   actions,
   modules: {
-    profileStore
+    profileStore,
+    searchStore,
+    followStore
   }
 })

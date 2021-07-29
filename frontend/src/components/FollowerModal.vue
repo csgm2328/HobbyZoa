@@ -21,7 +21,7 @@
 export default {
   props: ['visible'],
   created() { 
-    this.$store.dispatch('profileStore/fetchFollower', this.username)
+    this.$store.dispatch('followStore/fetchFollower', this.username)
   },
   data() {
     return {
@@ -30,7 +30,7 @@ export default {
   },
   computed: {
     follower_list() {
-      return this.$store.getters['profileStore/getFollowerList']
+      return this.$store.getters['followStore/getFollowerList']
     },
     show: {
       get () {

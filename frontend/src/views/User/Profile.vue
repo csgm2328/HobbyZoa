@@ -179,18 +179,21 @@
     data() {
       return {
         username: this.$route.params.username,
-        isLiked: false,
         selected: "posts",
         showFollowModal: false,
         showFollowerModal: false,
         requestuser_email: null,
+        isLiked: null,
       }
     },
     created() {
-      this.$store.dispatch('profileStore/fetchProfile', this.username)
       this.requestuser_email = localStorage.email
+      this.checkFollow()
+      this.$store.dispatch('profileStore/fetchProfile', this.username)
+      this.isLiked = this.$store.getters['followStore/getCheckFollow']
     },
     computed: {
+
       email() {
         return this.$store.getters['profileStore/getEmail']
       },
@@ -209,9 +212,12 @@
       comment() {
         return this.$store.getters['profileStore/getComment']
       },
-      checkLike() {
-        return this.$store.getters['profileStore/getCheckFollow']
-      }
+      
+      checkfollow() {
+        
+        console.log('gere',this.$store.getters['followStore/getCheckFollow'])
+        return this.$store.getters['followStore/getCheckFollow']
+      },
     },
     methods: {
       changeLike() {
@@ -222,11 +228,17 @@
           this.isLiked = true
         }
         const params = [ this.requestuser_email, this.username ]
-        this.$store.dispatch('profileStore/follow', params)
+        this.$store.dispatch('followStore/follow', params)
       },
       UserSelected(message) {
         this.selected = message
       },
+      checkFollow() {
+        
+        const params = [ this.requestuser_email, this.username ]
+        console.log(params)
+        this.$store.dispatch('followStore/checkFollow', params)
+      }
     }
   }
 </script>

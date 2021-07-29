@@ -152,6 +152,28 @@
           <v-icon>mdi-magnify</v-icon>
         </button>
       </div>
+        <v-list v-if="searchhistory.length != 0" rounded>
+          <v-subheader>최근 검색어</v-subheader>
+          <v-list-item-group
+            color="primary"
+          >
+            <v-list-item
+              v-for="(history, idx) in searchhistory" :key="idx"
+            >
+              <v-list-item-content
+                class="d-flex justify-center"
+              >
+                <v-list-item-title
+                  :to="'/user/' + history.email" @click="refreshAll"
+                  class="ma-0 d-inline"
+                  v-text="history.nickname"
+                ></v-list-item-title>
+                
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+        <!-- 검색 결과 -->
         <v-list v-if="results.length != 0" rounded>
           <v-subheader>검색 결과는 다음과 같습니다</v-subheader>
           <v-list-item-group
@@ -159,7 +181,8 @@
           >
             <v-list-item
               v-for="(result, idx) in results" :key="idx"
-            >
+            > 
+            <!-- this.$router.push('/signup') -->
             
               <v-list-item-content
                 class="d-flex justify-center"
@@ -174,9 +197,9 @@
             </v-list-item>
           </v-list-item-group>
         </v-list>
-        <v-list v-else>
-          <v-subheader>검색 결과가 없습니다</v-subheader>
-        </v-list>
+      <v-list v-else>
+        <v-subheader>검색 결과가 없습니다</v-subheader>
+      </v-list>
     </v-navigation-drawer>
 
   </v-sheet>
@@ -192,6 +215,7 @@ export default {
     search: '',
   }),
   created() {
+    this.$store.dispatch('searchStore/findHistory', localStorage.getItem('email'))
   },
   watch: {
     group () {
@@ -228,9 +252,11 @@ export default {
       return 'user/' + this.$store.getters.getEmail
     },
     results() {
-      return this.$store.getters['profileStore/getSearchResult']
+      return this.$store.getters['searchStore/getSearchResult']
+    },
+    searchhistory() {
+      return this.$store.getters['searchStore/getSearchHistory']
     }
-
   },
   methods: {
     setting() {
@@ -242,7 +268,7 @@ export default {
     },
     searchUser() {
       const params = [this.search, this.request_user]
-      this.$store.dispatch('profileStore/findUser', params)
+      this.$store.dispatch('searchStore/findUser', params)
     },
     refreshAll() {
         // 새로고침
