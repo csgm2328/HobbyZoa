@@ -18,13 +18,14 @@
         </v-carousel>
         <h2 class="ms-1">{{ feed.feed.nickname }}</h2>
         <h4 class="ms-1">{{ feed.feed.comment }}</h4>
-        <div v-if="isMyFeed">
+        <div v-if="!isMyFeed">
           <v-btn
             to="/update"
             color="info"
           >수정</v-btn>
           <v-btn
             color="error"
+            @click="deleteFeed"
           >삭제</v-btn>
         </div>
         <v-divider
@@ -63,10 +64,10 @@ export default {
       })
   },
   methods: {
-    delete() {
+    deleteFeed() {
       this.$store.dispatch('DELETE_FEED', this.feedcode)
         .then(() => {
-          this.$store.dispatch('FETCH_FEED_DETAIL', this.feedcode)
+          this.$router.push('/main')
         })
     }
   },
