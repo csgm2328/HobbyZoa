@@ -26,10 +26,10 @@
       <v-spacer></v-spacer>
 
       <v-btn icon color="secondary">
-        <v-icon>mdi-dots-vertical</v-icon>
+        <v-icon>mdi-bell-outline</v-icon>
       </v-btn>
       
-      <v-btn icon color="secondary">
+      <v-btn icon color="secondary" @click.stop="searchbar = !searchbar">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
@@ -75,34 +75,85 @@
             </router-link>
           </div>
             
-          <div v-else>
-            {{ nickname }}
-            <v-btn
-              text
-              @click="logout"
-            >
-              Logout
+          <div v-else class="ms-2" :to="profile">
+            <v-btn text :to="profile">
+              <v-icon>mdi-account-circle</v-icon>
+              <span class="font-weight-black">{{ nickname }}</span> 님
             </v-btn>
+            
           </div>
-
+          <v-divider class="my-3"></v-divider>
           <v-list-item>
-            <v-list-item-title>Foo</v-list-item-title>
+            <v-list-item-title><h1>Feed</h1></v-list-item-title>
           </v-list-item>
 
           <v-list-item>
-            <v-list-item-title>Bar</v-list-item-title>
+            <v-list-item-title><h1>Hobby</h1></v-list-item-title>
           </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title>Fizz</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title>Buzz</v-list-item-title>
-          </v-list-item>
+          
+          
         </v-list-item-group>
       </v-list>
+      <div v-if="isLogin" class="ma-3 pa-2" style="position: absolute; bottom: 0px; width: 100%;">
+        <v-divider class="my-3 me-5"></v-divider>
+        <div>
+          <v-btn
+            text
+            @click="setting"
+          >
+            SETTING
+          </v-btn>
+          <v-divider :vertical="true"></v-divider>
+          <v-btn
+            text
+            @click="logout"
+          >
+            Logout
+          </v-btn>
+        </div>
+      </div>
     </v-navigation-drawer>
+
+    <!-- search nav bar -->
+    <!-- v-navigation-drawer absolute -> fixed -->
+    <v-navigation-drawer
+      fixed
+      v-model="searchbar"
+      right
+      temporary
+      style="min-width: 80%;"
+      :class="{ phone : is_phone }"
+    > 
+      <div
+        class=" d-flex justify-end align-center"
+      >
+        <v-btn
+          class="ma-1"
+          color="grey"
+          plain
+          @click.stop="searchbar = !searchbar"
+        >
+          Cancel
+        </v-btn>
+      </div>
+      <div style="width: 90%; max-width: 700px;" class="my-4 mx-auto d-flex justify-center align-start">
+        <v-text-field
+          hint="example@naver.com"
+          v-model="search"
+          placeholder="Search User"
+          filled
+          dense
+          rounded
+          pa-0
+          class="mx-3"
+          @keyup.enter="searchUser"
+        ></v-text-field>
+        <button icon color="secondary" class="mt-2 mx-1" @click="searchUser">
+          <v-icon>mdi-magnify</v-icon>
+        </button>
+      </div>
+    </v-navigation-drawer>
+
   </v-sheet>
 </template>
 
@@ -112,11 +163,23 @@ export default {
   data: () => ({
     drawer: false,
     group: null,
+    searchbar: false,
+    search: '',
+  
   }),
 
   watch: {
     group () {
       this.drawer = false
+    },
+    is_phone() {
+      if (window.innerWidth < 1100) {
+        return true
+      }
+      else {
+        console.log(window.innerWidth)
+        return false
+      }
     },
   },
 
@@ -126,13 +189,34 @@ export default {
     },
     nickname() {
       return this.$store.getters.getUsername
+    },
+    is_phone() {
+      if (window.innerWidth < 1100) {
+        return true
+      }
+      else {
+        console.log(window.innerWidth)
+        return false
+      }
+    },
+    profile() {
+      return 'user/' + this.$store.getters.getEmail
     }
+
   },
 
   methods: {
+    setting() {
+      this.$router.push('/setting')
+    },
     logout() {
       this.$store.commit('AUTH_LOGOUT')
-    }
+      this.$router.push('/login')
+    },
+    searchUser() {
+      console.log(this.search)
+    },
+
   }
 }
 </script>

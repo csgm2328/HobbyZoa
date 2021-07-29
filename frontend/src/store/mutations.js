@@ -12,6 +12,7 @@ export default {
   },
   FETCH_NICKNAME(state, nickname) {
     state.nickname = nickname
+    localStorage.setItem('user', nickname)
   },
   AUTH_LOGOUT(state) {
     state.token = ''
@@ -27,5 +28,8 @@ export default {
   },
   FETCH_FEED_DETAIL(state, feedDetail) {
     state.feedDetail = feedDetail
+  },
+  FETCH_USER_SETTING(state, user) {
+    state.user = user
   }
 }

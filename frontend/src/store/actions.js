@@ -118,8 +118,20 @@ export default {
       }
 
     }
-
     const response = await axios.put(UPDATE_REPLY_URL, form)
     console.log(commit, response)
+  },
+  // get user setting
+  async FETCH_USER_SETTING({ commit }, email) {
+    const FETCH_USER_URL = `/user/${email}`
+    const response = await axios.get(FETCH_USER_URL)
+    commit('FETCH_USER_SETTING', response.data.object)
+  },
+  // update user setting
+  async UPDATE_USER_SETTING({ commit }, user) {
+    const UPDATE_USER_URL = `/user/${user.email}`
+    const response = await axios.put(UPDATE_USER_URL, user)
+    commit('FETCH_USER_SETTING', response.data.object)
+    commit('FETCH_NICKNAME', response.data.object.nickname)
   }
 }

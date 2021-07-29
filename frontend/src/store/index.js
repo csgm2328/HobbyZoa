@@ -12,11 +12,13 @@ Vue.use(Vuex)
 axios.defaults.baseURL = 'http://localhost:9990'
 
 const state = {
+  user: [],
   signupEmail: '',
   signupError: '',
   loginError: '',
   token: localStorage.getItem('token'),
   nickname: localStorage.getItem('user'),
+  email: localStorage.getItem('email'),
   feedList: [],
   feedDetail: [],
 }
