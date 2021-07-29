@@ -35,7 +35,11 @@
 export default {
   data: {
     search: '',
-    result: []
+  },
+  computed: {
+    result() {
+      return this.$store.getters['profileStore/getSearchResult']
+    }
   },
   methods: {
     searchUser() {

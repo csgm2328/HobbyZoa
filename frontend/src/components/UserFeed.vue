@@ -50,12 +50,6 @@ export default {
   data () {
     return {
       username: this.$route.params.username,
-      loading: false,
-      selection: 1,
-      // tmp data
-      likedCount: 12,
-      comment: "멋지군요!(코멘트 보여주기란)",
-      items: [{text: 'abc'}, {text: 'abc'},{text: 'abc'},{text: 'abc'},{text: 'xyz'},]
     }
   },
   created() {
