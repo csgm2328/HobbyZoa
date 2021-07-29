@@ -18,6 +18,6 @@ public interface FeedService {
 	void deleteByFeedcode(Integer feedcode);
 	Feed save(Feed feed, List<MultipartFile> files ) throws Exception;
 	void updateByFeedcode(Integer feedcode, Feed feed, List<MultipartFile> files) throws Exception;
-	
-	
+	List<String> ShowLikesList(Integer feedcode);
+	String LikeFeed(String email ,Integer feedcode);
 }

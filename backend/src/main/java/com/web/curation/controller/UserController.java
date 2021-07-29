@@ -158,7 +158,7 @@ public class UserController {
 		if (UpdateInfo.getComment() != null)
 			user.setComment(UpdateInfo.getComment());
 		//jpa hibernate sync 기능으로 이미 존재하는 컬럼 변경이후 find시 컬럼 수정
-		result.object = userService.findById(UpdateInfo.getEmail()).get();
+		result.object = userService.findById(email).get();
 
 		if (result.object != null) {
 			result.status = true;
