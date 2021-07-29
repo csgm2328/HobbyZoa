@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +30,7 @@ public class FeedServiceImpl implements FeedService{
 	@Override
 	public List<Feed> findAllFeeds() { //전체 레코드 불러오기 findAll()
 		List<Feed> feeds = new ArrayList<Feed>();
-		feedRepo.findAll().forEach(e -> feeds.add(e));
+		feedRepo.findAll(Sort.by(Sort.Direction.DESC, "regtime")).forEach(e -> feeds.add(e));
 
 		for (int i = 0; i < feeds.size(); i++) {
 			List<Image> images = new ArrayList<Image>();
@@ -41,7 +42,7 @@ public class FeedServiceImpl implements FeedService{
 
 
 	@Override
-	public List<Feed> findByEmail(String email) {
+	public List<Feed> findByEmail(String email) { //해당 계정 피드 모아보기
 		List<Feed> feeds = feedRepo.findByEmail(email);
 		for (int i = 0; i < feeds.size(); i++) {
 			List<Image> images = new ArrayList<Image>();
