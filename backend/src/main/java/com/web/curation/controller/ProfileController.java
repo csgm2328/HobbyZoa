@@ -126,12 +126,15 @@ public class ProfileController {
 		else
 			result.data = "success:" + "[" + from + "] 가 [" + to + "]를 더이상 팔로우하지 않습니다.";
 		response = new ResponseEntity<>(result, HttpStatus.OK);
+		
+		// follow 알림 보내기
 		Message FollowMessage = new Message();
 		FollowMessage.setContent(result.data);
 		FollowMessage.setSender(from);
 		FollowMessage.setType(MessageType.FOLLOW);
 				
-		notifyController.Follow(FollowMessage,to);
+		Message x =notifyController.Follow(FollowMessage, to);
+		System.out.println(x.getContent());
 		return response;
 	}
 

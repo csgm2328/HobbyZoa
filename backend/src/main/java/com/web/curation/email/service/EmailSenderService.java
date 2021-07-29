@@ -18,8 +18,8 @@ public class EmailSenderService {
 	private JavaMailSender javaMailSender;
 	
 	@Async
-	public void sendEmail(SimpleMailMessage email) {
+	public void sendEmail(SimpleMailMessage msg) {
 //		System.out.println("전송된 내용:\n"+email);
-		javaMailSender.send(email);
+		javaMailSender.send(msg);
 	}
 }
