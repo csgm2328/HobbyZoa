@@ -1,6 +1,14 @@
 <template>
   <v-container>
     <v-alert
+      v-if="errormessage"
+      dense
+      outlined
+      type="error"
+    >
+      내용을 입력해주세요.
+    </v-alert>
+    <v-alert
       v-if="isChange"
       dense
       text
@@ -28,6 +36,7 @@ export default {
   data() {
     return {
       comment: '',
+      errormessage: false,
       isChange: false,
     }
   },
@@ -38,6 +47,12 @@ export default {
   },
   methods: {
     updateUser() {
+      if (this.comment.length === 0) {
+        this.errormessage = true
+        return
+      } else {
+        this.errormessage = false
+      }
       const data = this.user
       data.comment = this.comment
       this.$store.dispatch('UPDATE_USER_SETTING', data)

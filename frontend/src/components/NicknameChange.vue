@@ -2,6 +2,14 @@
   <div>
     <v-container>
       <v-alert
+        v-if="errormessage"
+        dense
+        outlined
+        type="error"
+      >
+        내용을 입력해주세요.
+      </v-alert>
+      <v-alert
         v-if="isChange"
         dense
         text
@@ -13,7 +21,7 @@
         v-model="nickname"
         label="Nickname"
         outlined
-        :rules="[]"
+        :rules="[required]"
       >
       </v-text-field>
       <div class="d-flex justify-end">
@@ -34,6 +42,7 @@ export default {
       rules: {
       },
       isChange: false,
+      errormessage: false,
     }
   },
   computed: {
@@ -43,6 +52,12 @@ export default {
   },
   methods: {
     updateUser() {
+      if (this.nickname.length === 0) {
+        this.errormessage = true
+        return
+      } else {
+        this.errormessage = false
+      }
       const data = this.user
       data.nickname = this.nickname
       this.$store.dispatch('UPDATE_USER_SETTING', data)
