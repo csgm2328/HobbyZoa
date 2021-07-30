@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.web.curation.find.model.SaveUser;
+import com.web.curation.find.model.History;
 import com.web.curation.find.repo.FindHistoryRepo;
 import com.web.curation.find.repo.FindRepo;
 import com.web.curation.user.model.User;
@@ -21,19 +21,19 @@ public class FindServiceImpl implements FindService {
 	FindHistoryRepo findHistoryRepo;
 
 	@Override
-	public List<User> findNickname(String nickname) {
+	public List<User> findSearchWord(String nickname) {
 		List<User> list = findRepo.findBynicknameContaining(nickname);
 		return list;
 	}
 
 	@Override
-	public List<SaveUser> showHistory(String email) {
-		List<SaveUser> list = findHistoryRepo.findBySaveEmail(email);
+	public List<History> showHistory(String email) {
+		List<History> list = findHistoryRepo.findByEmail(email);
 		return list;
 	}
 
 	@Override
-	public SaveUser saveHistory(SaveUser saveuser) {
+	public History saveHistory(History saveuser) {
 		findHistoryRepo.save(saveuser);
 		return null;
 	}

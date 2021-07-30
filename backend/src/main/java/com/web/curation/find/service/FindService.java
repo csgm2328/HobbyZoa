@@ -2,15 +2,15 @@ package com.web.curation.find.service;
 
 import java.util.List;
 
-import com.web.curation.find.model.SaveUser;
+import com.web.curation.find.model.History;
 import com.web.curation.user.model.User;
 
 public interface FindService {
 
-	List<User> findNickname(String nickname);
+	List<User> findSearchWord(String nickname);
 
-	SaveUser saveHistory(SaveUser saveuser);
+	History saveHistory(History saveuser);
 	
-	List<SaveUser> showHistory(String email);
+	List<History> showHistory(String email);
 
 }
