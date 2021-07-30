@@ -70,17 +70,7 @@
                 v-if="requestuser_email != email"
                 cols="12" class="relative ma-0 pa-0">
                 <v-btn
-                  v-if="isLiked" @click="changeLike"
-                  elevation="2"
-                  plain
-                  raised
-                  rounded
-                  class="mt-2"
-                  color="primary"
-                  depressed
-                >Follow</v-btn>
-                <v-btn
-                  v-else @click="changeLike"
+                  v-if="isLiked"  @click="changeLike"
                   elevation="2"
                   plain
                   raised
@@ -89,6 +79,16 @@
                   depressed
                   color="error"
                 >Unfollow</v-btn>
+                <v-btn
+                  v-else @click="changeLike"
+                  elevation="2"
+                  plain
+                  raised
+                  rounded
+                  class="mt-2"
+                  color="primary"
+                  depressed
+                >Follow</v-btn>
               </v-col>
             </v-row>
           </v-col>
@@ -190,7 +190,6 @@
       this.requestuser_email = localStorage.email
       this.checkFollow()
       this.$store.dispatch('profileStore/fetchProfile', this.username)
-      this.isLiked = this.$store.getters['followStore/getCheckFollow']
     },
     computed: {
 
@@ -212,12 +211,6 @@
       comment() {
         return this.$store.getters['profileStore/getComment']
       },
-      
-      checkfollow() {
-        
-        console.log('gere',this.$store.getters['followStore/getCheckFollow'])
-        return this.$store.getters['followStore/getCheckFollow']
-      },
     },
     methods: {
       changeLike() {
@@ -236,8 +229,13 @@
       checkFollow() {
         
         const params = [ this.requestuser_email, this.username ]
-        console.log(params)
         this.$store.dispatch('followStore/checkFollow', params)
+          .then(() => {
+            this.isLiked = this.$store.getters['followStore/getCheckFollow']
+          })
+          .catch(() => {
+
+          })
       }
     }
   }

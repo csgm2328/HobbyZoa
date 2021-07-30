@@ -21,7 +21,7 @@ const followStore = {
       return state.feeds
     },
     getCheckFollow(state) {
-      console.log(state.checkfollow)
+      console.log('js', state.checkfollow)
       return state.checkfollow
     },
   },
@@ -36,7 +36,7 @@ const followStore = {
       state.message = '요청이 성공적으로 처리되었습니다.'
     },
     CHECK_FOLLOW(state, res) {
-      console.log(state.checkfollow)
+      console.log('change', state.checkfollow)
       state.checkfollow = res
     },
   },
@@ -70,21 +70,44 @@ const followStore = {
         }) 
         .catch(err => console.log(err))
     },
-    checkFollow({ commit }, follow_info) {
-      const CHECK_FOLLOW_URL = SERVER_URL + '/profile/checkfollow'
-      console.log(follow_info[0], follow_info[1])
-      axios.get(CHECK_FOLLOW_URL, {
-        params: {
-          from: follow_info[0],
-          to: follow_info[1],
-        }
+    // checkFollow({ commit }, follow_info) {
+    //   const CHECK_FOLLOW_URL = SERVER_URL + '/profile/checkfollow'
+    //   console.log(follow_info[0], follow_info[1])
+    //   axios.get(CHECK_FOLLOW_URL, {
+    //     params: {
+    //       from: follow_info[0],
+    //       to: follow_info[1],
+    //     }
+    //   })
+    //     .then((res) => {
+    //       console.log('res', res)
+    //       commit('CHECK_FOLLOW', res.data.status)
+    //     }) 
+    //     .catch((err) => {
+    //       console.log(err)
+    //       commit('CHECK_FOLLOW', false)})
+    // },
+
+
+    async checkFollow({ commit }, follow_info) {
+      return new Promise((resolve, reject) => {
+        const CHECK_FOLLOW_URL = SERVER_URL + '/profile/checkfollow'
+        const data = follow_info
+        axios.get(CHECK_FOLLOW_URL, {
+          params: {
+            from: data[0],
+            to: data[1]
+          }
+        })
+          .then((res) => {
+            commit('CHECK_FOLLOW', res.data.status)
+            resolve()
+          })
+          .catch((err) => {
+            console.log(err)
+            reject()
+          })
       })
-        .then((res) => {
-          commit('CHECK_FOLLOW', res.data.status)
-        }) 
-        .catch((err) => {
-          console.log(err)
-          commit('CHECK_FOLLOW', false)})
     },
   }
 }
