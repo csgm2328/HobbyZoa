@@ -74,5 +74,5 @@
 
 - 설계(API)
 
-![](/images/localhost_9990_swagger-ui.html (1).png)
+![](/images/swagger.png)
 
