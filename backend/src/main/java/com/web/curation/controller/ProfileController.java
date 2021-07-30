@@ -150,12 +150,11 @@ public class ProfileController {
 		if (followService.Check(from, to)) {
 			result.status = true;
 			result.data = "success: " + "[" + from + "] 가 [" + to + "]를 팔로우 중입니다.";
-			response = new ResponseEntity<>(result, HttpStatus.OK);
 		} else {
 			result.status = false;
 			result.data = "Fail: " + "[" + from + "] 가 [" + to + "]를 팔로우 중이 아닙니다.";
-			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
+		response = new ResponseEntity<>(result, HttpStatus.OK);
 		return response;
 	}
 
