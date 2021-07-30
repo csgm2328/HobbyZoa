@@ -137,8 +137,8 @@ public class FeedServiceImpl implements FeedService{
 
 	@Override
 	public String LikeFeed(String email, Integer feedcode) {
-		Like like = likeRepo.findByEmailandFeedcode(email, feedcode);
-		if(like != null) //이미 좋아요 했다면 취소
+		Optional<Like> e = likeRepo.findByEmailAndFeedcode(email, feedcode);
+		if(e.isPresent()) //이미 좋아요 했다면 취소
 			if(likeRepo.deleteByFeedcode(feedcode) != 0)
 				return "좋아요 취소";
 		likeRepo.save(
