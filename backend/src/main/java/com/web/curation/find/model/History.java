@@ -27,8 +27,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Entity(name = "saveuser")
-public class SaveUser {
+@Entity(name = "history")
+public class History {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,25 +36,36 @@ public class SaveUser {
 	private String id;
 
 	@Column(name = "email")
-	private String saveEmail;
+	private String email;
 
-	@Column(name = "nickname")
-	private String saveNickname;
+	@Column(name = "searchword")
+	private String searchWord;
 
-	public String getSaveEmail() {
-		return saveEmail;
+	public String getId() {
+		return id;
 	}
 
-	public void setSaveEmail(String saveEmail) {
-		this.saveEmail = saveEmail;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public String getSaveNickname() {
-		return saveNickname;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setSaveNickname(String saveNickname) {
-		this.saveNickname = saveNickname;
+	public void setEmail(String email) {
+		this.email = email;
 	}
+
+	public String getSearchWord() {
+		return searchWord;
+	}
+
+	public void setSearchWord(String searchWord) {
+		this.searchWord = searchWord;
+	}
+	
+	
+
 
 }
