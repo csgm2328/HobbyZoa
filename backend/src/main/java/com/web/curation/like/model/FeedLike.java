@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @Getter
-public class Like {
+public class FeedLike {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int code;
