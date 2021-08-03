@@ -76,12 +76,19 @@
               </v-btn>
             </router-link>
           </div>
-            
+          
           <div v-else class="ms-2" :to="profile">
-            <v-btn text :to="profile">
+            <!-- <v-btn text :to="profile">
               <v-icon>mdi-account-circle</v-icon>
               <span class="font-weight-black">{{ nickname }}</span> 님
-            </v-btn>
+            </v-btn> -->
+            
+            <router-link
+              :to="{ name: 'Profile', params: { username: request_user }}"
+              >
+              <v-icon>mdi-account-circle</v-icon>
+              <span class="font-weight-black">{{ nickname }}</span> 님
+            </router-link>
             
           </div>
           <v-divider class="my-3"></v-divider>
@@ -134,6 +141,7 @@
           color="grey"
           plain
           @click.stop="searchbar = !searchbar"
+          @click="cancle"
         >
           Cancel
         </v-btn>
@@ -144,17 +152,50 @@
           v-model="search"
           placeholder="Search User"
           filled
-          dense
+          denses
           rounded
           pa-0
           class="mx-3"
-          @keyup.enter="searchUser"
+          type="text"
+          @keydown="submitAutoComplete"
+          @click="searchUser"
         ></v-text-field>
+
+
         <button icon color="secondary" class="mt-2 mx-1" @click="searchUser">
           <v-icon>mdi-magnify</v-icon>
         </button>
       </div>
-        <v-list v-if="searchhistory.length != 0" rounded>
+
+      <!-- 자동 검색어 -->
+      <!-- 자동 검색어 -->
+      <v-list class="autocomplete disabled" rounded>
+        <v-subheader>자동 완성</v-subheader>
+          <v-list-item-group
+            color="primary"
+          >
+            <v-list-item
+              v-for="(res, i) in autocompleteresult"
+              :key="i"
+            >
+              <v-list-item-content
+                class="d-flex justify-center"
+              >
+              
+                <v-list-item-title
+                  @click="searchUser(res.nickname)"
+                  class="ma-0 d-inline"
+                  v-text="res.nickname"
+                ></v-list-item-title>
+                
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+        
+
+
+        <v-list v-if="searchhistory.length != 0 && autocompleteresult.length == 0" rounded>
           <v-subheader>최근 검색어</v-subheader>
           <v-list-item-group
             color="primary"
@@ -219,6 +260,8 @@ export default {
     group: null,
     searchbar: false,
     search: '',
+    request_user_email: "",
+    autocompleteresult: [],
   }),
   created() {
     this.$store.dispatch('searchStore/findHistory', localStorage.getItem('email'))
@@ -257,8 +300,13 @@ export default {
     profile() {
       return 'user/' + this.$store.getters.getEmail
     },
-    results() {
-      return this.$store.getters['searchStore/getSearchResult']
+    results: {
+      get() {
+        return this.$store.getters['searchStore/getSearchResult']
+      },
+      set() {
+
+      }
     },
     searchhistory() {
       return this.$store.getters['searchStore/getSearchHistory']
@@ -293,7 +341,26 @@ export default {
     //     }
     //   );
     // }
-
+    cancle() {
+      this.search=""
+      this.results=null
+    },
+    submitAutoComplete() {
+      this.searchUser()
+    
+      console.log('go')
+      console.log(this.results)
+      const autocomplete = document.querySelector(".autocomplete");
+      if (this.search) {
+        autocomplete.classList.remove("disabled");
+        this.autocompleteresult = this.results.filter((result) => {
+          console.log(result, 'result임돠')
+          return result.nickname.match(new RegExp("^" + this.search, "i"));
+        });
+      } else {
+        autocomplete.classList.add("disabled");
+      }
+    },
   }
 }
 </script>
