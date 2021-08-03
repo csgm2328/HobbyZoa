@@ -27,7 +27,6 @@ public class FileHandler {
         List<Image> fileList = new ArrayList<>(); //return할 리스트
 
         if(multipartFiles.isEmpty()){
-//        	System.out.println("파일 비었음");
             return fileList;
         }
         
@@ -35,7 +34,7 @@ public class FileHandler {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         String current_date = simpleDateFormat.format(new Date());
 
-        String absolutePath = "C:\\subpjt2Img\\";
+        String absolutePath = new File("").getAbsolutePath() + "\\";
 
         String path = "images/feeds/" + current_date;
         File file = new File(absolutePath+path);
