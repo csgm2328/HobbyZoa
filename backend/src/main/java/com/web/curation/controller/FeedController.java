@@ -1,5 +1,6 @@
 package com.web.curation.controller;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -133,7 +134,8 @@ public class FeedController {
 	@GetMapping(value="{newname}", produces = MediaType.IMAGE_JPEG_VALUE)
 	public ResponseEntity<byte[]> imageSearch(@PathVariable("newname") String newname)throws IOException {
 		Image image = feedService.findByNewname(newname);
-		InputStream imageStream = new FileInputStream("C:\\subpjt2Img\\"+image.getImgpath());
+		String absolutePath = new File("").getAbsolutePath() + "\\";
+		InputStream imageStream = new FileInputStream(absolutePath+image.getImgpath());
 		byte[] imageByteArray = IOUtils.toByteArray(imageStream);
 		imageStream.close();
 		return new ResponseEntity<byte[]>(imageByteArray, HttpStatus.OK);
