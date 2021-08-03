@@ -34,7 +34,8 @@ public class FileHandler {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         String current_date = simpleDateFormat.format(new Date());
 
-        String absolutePath = new File("").getAbsolutePath() + "\\";
+//        String absolutePath = new File("").getAbsolutePath() + "\\";
+        String absolutePath = new File("").getAbsolutePath() + "/"; //리눅스 버전
 
         String path = "images/feeds/" + current_date;
         File file = new File(absolutePath+path);

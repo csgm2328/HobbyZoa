@@ -1,8 +1,6 @@
 package com.web.curation.email.model;
 
 import java.time.LocalDateTime;
-import java.util.Random;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,14 +12,17 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Data
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class EmailToken  {
 
@@ -42,13 +43,6 @@ public class EmailToken  {
     @Column
     private String userEmail;
     
-    public String getUserEmail() {
-		return userEmail;
-	}
-
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
-	}
 	@CreatedDate
     @Column(updatable = false)
     private LocalDateTime createDate;
