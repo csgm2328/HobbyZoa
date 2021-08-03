@@ -34,7 +34,7 @@
           <v-btn
             color="blue lighten-2"
             text
-            :to="`/feed/` + feed.feedcode"
+            :to="{ name: 'FeedDetail', params: { feedcode: feed.feedcode }}"
           >
             더보기
           </v-btn>

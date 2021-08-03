@@ -15,25 +15,24 @@ const profileStore = {
   },
   getters: {
     getEmail(state) {
-        return state.email
+      return state.email
     },
     getFeedNum(state) {
-        return state.feed
+      return state.feed
     },
     getFollowingNum(state) {
-        return state.following
+      return state.following
     },
     getFollowerNum(state) {
-        return state.follower
+      return state.follower
     },
     getImgpath(state) {
-        return state.imgpath
+      return state.imgpath
     },
     getComment(state) {
-        return state.comment
+      return state.comment
     },
     getUserFeed(state) {
-      console.log(state.feeds)
       return state.feeds
     },
     getUserSaved(state) {

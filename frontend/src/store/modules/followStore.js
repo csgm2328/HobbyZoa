@@ -21,7 +21,6 @@ const followStore = {
       return state.feeds
     },
     getCheckFollow(state) {
-      console.log('js', state.checkfollow)
       return state.checkfollow
     },
   },
@@ -36,7 +35,6 @@ const followStore = {
       state.message = '요청이 성공적으로 처리되었습니다.'
     },
     CHECK_FOLLOW(state, res) {
-      console.log('change', state.checkfollow)
       state.checkfollow = res
     },
   },
