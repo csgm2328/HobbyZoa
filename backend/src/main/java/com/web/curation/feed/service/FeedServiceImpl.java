@@ -14,7 +14,7 @@ import com.web.curation.feed.repo.FeedRepo;
 import com.web.curation.image.model.Image;
 import com.web.curation.image.repo.ImageRepo;
 import com.web.curation.image.service.FileHandler;
-import com.web.curation.like.model.Like;
+import com.web.curation.like.model.FeedLike;
 import com.web.curation.like.repo.LikeRepo;
 
 @Service
@@ -137,12 +137,12 @@ public class FeedServiceImpl implements FeedService{
 
 	@Override
 	public String LikeFeed(String email, Integer feedcode) {
-		Optional<Like> e = likeRepo.findByEmailAndFeedcode(email, feedcode);
+		Optional<FeedLike> e = likeRepo.findByEmailAndFeedcode(email, feedcode);
 		if(e.isPresent()) //이미 좋아요 했다면 취소
 			if(likeRepo.deleteByFeedcode(feedcode) != 0)
 				return "좋아요 취소";
 		likeRepo.save(
-				Like.builder().email(email).feedcode(feedcode).build());
+				FeedLike.builder().email(email).feedcode(feedcode).build());
 		return "좋아요";
 	}
 
