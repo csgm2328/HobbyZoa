@@ -31,5 +31,8 @@ export default {
   },
   FETCH_USER_SETTING(state, user) {
     state.user = user
+  },
+  FETCH_IS_SCRAP(state, isScrap) {
+    state.isScrap = isScrap
   }
 }

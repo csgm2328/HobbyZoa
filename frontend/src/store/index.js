@@ -11,7 +11,9 @@ import followStore from '././modules/followStore'
 Vue.use(Vuex)
 
 // axios 설정
-axios.defaults.baseURL = 'http://localhost:9990'
+
+axios.defaults.baseURL = 'http://i5c102.p.ssafy.io/api'
+// axios.defaults.baseURL = 'http://localhost:9990'
 
 const state = {
   user: [],
@@ -23,6 +25,7 @@ const state = {
   email: localStorage.getItem('email'),
   feedList: [],
   feedDetail: [],
+  isScrap: false,
 }
 
 export default new Vuex.Store({

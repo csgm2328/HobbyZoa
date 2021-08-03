@@ -93,6 +93,44 @@ export default {
     const response = await axios.delete(FEED_DELETE_URL)
     console.log(response, commit)
   },
+  // scrap 조회
+  async IS_SCRAP({ getters, commit }, feedcode) {
+    const email = getters.getEmail
+    if (email === null) {
+      commit('FETCH_IS_SCRAP', false)
+      return
+    }
+    var is_scrap = false
+    const SCRAP_FEED_URL = `/scrap`
+    const response = await axios.get(SCRAP_FEED_URL, {params: {email: email}})
+
+    for (const feed of response.data) {
+      console.log(feed)
+      console.log(feed.feedcode, feedcode)
+      if (feed.feedcode == feedcode) {
+        is_scrap = true
+        break
+      }
+    }
+    commit('FETCH_IS_SCRAP', is_scrap)
+  },
+  // scrap feed
+  async SCRAP_FEED({ commit }, data){
+    const FEED_SCRAP_URL = '/scrap'
+    const response = await axios.post(FEED_SCRAP_URL, data)
+    if (response.status == '204') {
+      commit('FETCH_IS_SCRAP', false)
+      this.SCRAP_DELETE_FEED(data)
+    } else {
+      commit('FETCH_IS_SCRAP', true)
+    }
+  },
+  // delete scrap
+  async SCRAP_DELETE_FEED({ commit }, data){
+    const FEED_SCRAP_URL = '/scrap'
+    const response = await axios.delete(FEED_SCRAP_URL, data)
+    console.log(response, commit)
+  },
   // create reply
   async CREATE_REPLY({ commit }, reply) {
     const CREATE_REPLY_URL = '/reply'
@@ -133,5 +171,5 @@ export default {
     const response = await axios.put(UPDATE_USER_URL, user)
     commit('FETCH_USER_SETTING', response.data.object)
     commit('FETCH_NICKNAME', response.data.object.nickname)
-  }
+  },
 }
