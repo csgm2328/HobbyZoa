@@ -7,8 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.web.curation.email.repo.EmailTokenRepository;
-import com.web.curation.email.service.EmailTokenServiceImpl;
+import com.web.curation.email.service.EmailTokenService;
 import com.web.curation.profile.service.ProfileService;
 import com.web.curation.user.model.User;
 import com.web.curation.user.repo.UserRepo;
@@ -25,9 +24,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	ProfileService profileService;
 	@Autowired
-	EmailTokenServiceImpl confirmationTokenService;
-	@Autowired
-	EmailTokenRepository confirmationTokenRepository;
+	EmailTokenService confirmationTokenService;
 
 	@Override
 	public Optional<User> findById(String email) {

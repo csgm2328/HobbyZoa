@@ -134,7 +134,8 @@ public class FeedController {
 	@GetMapping(value="{newname}", produces = MediaType.IMAGE_JPEG_VALUE)
 	public ResponseEntity<byte[]> imageSearch(@PathVariable("newname") String newname)throws IOException {
 		Image image = feedService.findByNewname(newname);
-		String absolutePath = new File("").getAbsolutePath() + "\\";
+//		String absolutePath = new File("").getAbsolutePath() + "\\";
+		String absolutePath = new File("").getAbsolutePath() + "/"; //리눅스 버전
 		InputStream imageStream = new FileInputStream(absolutePath+image.getImgpath());
 		byte[] imageByteArray = IOUtils.toByteArray(imageStream);
 		imageStream.close();
