@@ -26,7 +26,7 @@ public class EmailTokenServiceImpl implements EmailTokenService{
 	@Autowired
     private EmailTokenRepository confirmationTokenRepository;
 	@Autowired
-	private EmailSenderService emailSenderService;
+	private EmailSenderServiceImpl emailSenderService;
 	@Autowired
 	private UserRepo userRepo;
 	
