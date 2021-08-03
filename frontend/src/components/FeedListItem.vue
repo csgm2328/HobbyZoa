@@ -13,21 +13,6 @@
       >
       </v-img>
       <v-card-title v-text="feed.comment"></v-card-title>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-
-        <v-btn icon>
-          <v-icon>mdi-heart</v-icon>
-        </v-btn>
-
-        <v-btn icon>
-          <v-icon>mdi-bookmark</v-icon>
-        </v-btn>
-
-        <v-btn icon>
-          <v-icon>mdi-share-variant</v-icon>
-        </v-btn>
-      </v-card-actions>
     </v-card>
   </div>
 </template>
@@ -42,7 +27,8 @@ export default {
   },
   computed: {
     src() {
-      return `http://localhost:9990/feed/${this.feed.images[0].newname}`
+      // return `http://localhost:9990/feed/${this.feed.images[0].newname}`
+      return `http://i5c102.p.ssafy.io/api/feed/${this.feed.images[0].newname}`
     },
     feedpage() {
       return `feed/${this.feed.feedcode}`
