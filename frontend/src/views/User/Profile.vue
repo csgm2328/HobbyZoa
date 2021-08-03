@@ -47,7 +47,7 @@
                   <FollowerModal
                     :visible="showFollowerModal" @close="showFollowerModal=false"
                   />
-                  <span><span style="color: black; font-weight: bold;">팔로워</span><br/>{{ this.follower }}</span>
+                  <span><span style="color: black; font-weight: bold;">팔로워</span><br/>{{ this.follower + tmp }}</span>
                 </v-btn>
               </v-col>
               <!-- follow Modal -->
@@ -155,6 +155,7 @@
     />
   </div>
 
+
 </template>
 
 <script>
@@ -183,12 +184,15 @@
         showFollowerModal: false,
         requestuser_email: null,
         isLiked: null,
+        tmp: 0, 
+        
       }
     },
     created() {
       this.requestuser_email = localStorage.email
       this.checkFollow()
       this.$store.dispatch('profileStore/fetchProfile', this.username)
+    
     },
     watch: {
       $route(to, from) {
@@ -201,14 +205,18 @@
       email() {
         return this.$store.getters['profileStore/getEmail']
       },
-      feed() {
-        return this.$store.getters['profileStore/getFeedNum']
+      feed: {
+        get() {return this.$store.getters['profileStore/getFeedNum']
+        },
+        set( ) {}
       },
       follower() {
-        return this.$store.getters['profileStore/getFollowerNum']
+          return this.$store.getters['profileStore/getFollowerNum']
+      
       },
       following() {
-        return this.$store.getters['profileStore/getFollowingNum']
+          return this.$store.getters['profileStore/getFollowingNum']
+
       },
       imgpath() {
         return this.$store.getters['profileStore/getImgpath']
@@ -221,10 +229,14 @@
       changeLike() {
         if (this.isLiked) {
           this.isLiked = false
+          this.tmp -= 1
         }
         else {
           this.isLiked = true
+          this.tmp += 1
+          console.log(this.follower, typeof(this.follower+1))
         }
+        // $("profileBox").load(window.location.href + "profileBox");
         const params = [ this.requestuser_email, this.username ]
         this.$store.dispatch('followStore/follow', params)
       },
@@ -241,7 +253,7 @@
           .catch(() => {
 
           })
-      }
+      },
     }
   }
 </script>
