@@ -1,4 +1,6 @@
 <template>
+<div>
+
   <v-sheet
     class="mx-auto overflow-hidden"
     height="10vh"
@@ -164,7 +166,7 @@
                 class="d-flex justify-center"
               >
                 <v-list-item-title
-                  :to="'/user/' + history.email" @click="refreshAll"
+                  @click="searchHistoryUser(history.nickname)"
                   class="ma-0 d-inline"
                   v-text="history.nickname"
                 ></v-list-item-title>
@@ -186,13 +188,16 @@
             
               <v-list-item-content
                 class="d-flex justify-center"
-              >
+              > 
                 <v-list-item-title
-                  :to="'/user/' + result.email" @click="refreshAll"
                   class="ma-0 d-inline"
                   v-text="result.nickname"
                 ></v-list-item-title>
-                
+                <router-link
+                  :to="{ name: 'Profile', params: { username: result.email }}"
+                  >
+                  {{ result.email }}
+                </router-link>
               </v-list-item-content>
             </v-list-item>
           </v-list-item-group>
@@ -201,8 +206,9 @@
         <v-subheader>검색 결과가 없습니다</v-subheader>
       </v-list>
     </v-navigation-drawer>
-
   </v-sheet>
+  <router-view :key="$route.fullPath"/>
+  </div>
 </template>
 
 <script>
@@ -270,10 +276,24 @@ export default {
       const params = [this.search, this.request_user]
       this.$store.dispatch('searchStore/findUser', params)
     },
+    searchHistoryUser(historysearch) {
+      const params = [historysearch, this.request_user]
+      this.$store.dispatch('searchStore/findUser', params)
+    },
     refreshAll() {
         // 새로고침
       this.$router.go();
     },
+    // load(href) {
+    //   this.$router.push('/blank-for-reload', {
+    //     skipLocationChange: true,
+    //   }).then(
+    //     () => {
+    //       this.$router.push(href);
+    //     }
+    //   );
+    // }
+
   }
 }
 </script>

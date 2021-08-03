@@ -1,6 +1,5 @@
 <template>
-  <div
-  >
+  <div>
     <Header/>
     <div>
       <!-- profile box -->
@@ -190,6 +189,12 @@
       this.requestuser_email = localStorage.email
       this.checkFollow()
       this.$store.dispatch('profileStore/fetchProfile', this.username)
+    },
+    watch: {
+      $route(to, from) {
+        console.log(to.params.username, from)
+        // react to route changes...
+      }
     },
     computed: {
 

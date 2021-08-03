@@ -27,7 +27,6 @@ const searchStore = {
     findUser({ commit }, params) {
       const search = params[0]
       const request_user = params[1]
-      console.log(request_user, search)
       const SEARCH_URL = SERVER_URL + '/find/' + search
         axios.get(SEARCH_URL, {
           params: {
@@ -46,8 +45,7 @@ const searchStore = {
           }
         })
         .then((res) => {
-          console.log(res.data)
-          commit('FIND_HISTORY', res.data)
+          commit('FIND_HISTORY', res.data.slice(0, 5))
         })
         .catch(err => console.log(err))
     }
