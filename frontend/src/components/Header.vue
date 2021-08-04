@@ -78,11 +78,6 @@
           </div>
           
           <div v-else class="ms-2" :to="profile">
-            <!-- <v-btn text :to="profile">
-              <v-icon>mdi-account-circle</v-icon>
-              <span class="font-weight-black">{{ nickname }}</span> 님
-            </v-btn> -->
-            
             <router-link
               :to="{ name: 'Profile', params: { username: request_user }}"
               >
