@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,7 +42,7 @@ public class HobbyController {
 	
 	@PostMapping
 	@ApiOperation(value="취미 생성", notes="email, name(취미이름)을 입력받아 uri를 반환")
-	public ResponseEntity<?> createHobby(@RequestParam String email, String name) throws URISyntaxException{
+	public ResponseEntity<?> createHobby(@RequestParam String email, @RequestParam String name) throws URISyntaxException{
 		Hobby hobby = hobbyService.save(Hobby.builder()
 				.email(email)
 				.name(name)
@@ -56,4 +58,16 @@ public class HobbyController {
 		URI uriLocation = new URI("/hobby/" + hobby.getHobbycode());
 		return ResponseEntity.created(uriLocation).body("{}");
 	}
+	
+	@GetMapping(value="/badge")
+	@ApiOperation(value="해당 계정의 취미별 배지 모두 보기", notes="email을 입력받아 배지담긴 취미 리스트를 반환")
+	public ResponseEntity<List<Hobby>> getAllHobbies(@RequestParam String email){
+		List<Hobby> hobbies = hobbyService.findAllByEmail(email);
+		for (int i = 0; i < hobbies.size(); i++) {
+			List<Badge> badges = badgeService.findAllByHobby(hobbies.get(i));
+			hobbies.get(i).setBadges(badges);
+		}
+		return new ResponseEntity<List<Hobby>>(hobbies, HttpStatus.OK);
+	}
+	
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.web.curation.badge.model.Badge;
 
 import lombok.*;
@@ -26,5 +27,6 @@ public class Hobby {
 	private String email; //(fk)
 	
 	@OneToMany(mappedBy = "hobby", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference
 	private List<Badge> badges;
 }

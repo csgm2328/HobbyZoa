@@ -2,6 +2,7 @@ package com.web.curation.badge.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.web.curation.hobby.model.Hobby;
 
 import lombok.*;
@@ -22,5 +23,6 @@ public class Badge {
 	
 	@ManyToOne
 	@JoinColumn(name = "hobbycode")
+	@JsonBackReference
 	private Hobby hobby;
 }
