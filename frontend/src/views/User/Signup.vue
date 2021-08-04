@@ -1,9 +1,18 @@
 <template>
-  <div style="height: 100%">
+  <div style="height: 80%">
+    <v-btn
+      class="ma-4"
+      text
+      icon
+      @click="goBack"
+    >
+      <v-icon
+        x-large
+      >mdi-arrow-left</v-icon>
+    </v-btn>
     <v-container fluid fill-height>
-
       <v-layout column align-center justify-center>
-        <h1>Sign Up</h1>
+        <h1 class="my-3">Sign Up</h1>
         <v-form ref="form" lazy-validation>
           <v-alert
             v-if="signupError"
@@ -121,6 +130,9 @@ export default {
           })
           
       }
+    },
+    goBack() {
+      this.$router.go(-1)
     }
   },
   watch: {

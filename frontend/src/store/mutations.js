@@ -34,5 +34,8 @@ export default {
   },
   FETCH_IS_SCRAP(state, isScrap) {
     state.isScrap = isScrap
+  },
+  FETCH_IS_LIKE(state, isLike) {
+    state.isLike = isLike
   }
 }

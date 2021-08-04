@@ -3,9 +3,12 @@
     <Header/>
     <v-container>
       <v-layout column justify-center>
-        <div class="d-flex justify-end">
+        {{ feed.feed }}
+        <div 
+          v-if="isMyFeed"
+          class="d-flex justify-end"
+        >
           <v-menu
-            v-if="!isMyFeed"
             bottom
             left
           >
@@ -49,8 +52,13 @@
         <h2 class="ms-1">{{ feed.feed.nickname }}</h2>
         <h4 class="ms-1">{{ feed.feed.comment }}</h4>
         <div class="d-flex justify-end">
-          <v-btn icon>
-            <v-icon>mdi-heart</v-icon>
+          
+          <v-btn icon class="me-2" @click="likeFeed">
+            <v-icon v-if="isLike" color="red">mdi-heart</v-icon>
+            <v-icon v-else>mdi-heart</v-icon>
+            <div>
+              {{ likes }}
+            </div>
           </v-btn>
 
           <v-btn
@@ -68,9 +76,70 @@
             <v-icon>mdi-bookmark-outline</v-icon>
           </v-btn>
 
-          <v-btn icon>
-            <v-icon>mdi-share-variant</v-icon>
-          </v-btn>
+          <v-dialog
+            transition="dialog-bottom-transition"
+            max-width="600"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-bind="attrs"
+                v-on="on"
+                icon
+              >
+                <v-icon>mdi-share-variant</v-icon>
+              </v-btn>
+            </template>
+            <template v-slot:default="dialog">
+              <v-card>
+                <v-toolbar
+                  color="primary"
+                  dark
+                  class="d-flex justify-center"
+                >
+                  <div>
+                    공유하기
+                  </div>
+                </v-toolbar>
+                <v-card-text>
+                  <v-row 
+                    class="mt-3"
+                    justify="center"
+                    align="center"
+                  >
+                    <v-col
+                      cols="10"
+                    >
+                      <v-text-field
+                        :value="address"
+                        label="Solo"
+                        solo
+                        readonly
+                        hide-details	
+                        class="ma-0 pa-0"
+                        id="urlInput"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="auto"
+                    >
+                      <v-btn
+                        icon
+                        @click="clipboardCopy"
+                      >
+                        <v-icon>mdi-content-copy</v-icon>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+                <v-card-actions class="justify-end">
+                  <v-btn
+                    text
+                    @click="dialog.value = false"
+                  >Close</v-btn>
+                </v-card-actions>
+              </v-card>
+            </template>
+          </v-dialog>
         </div>
 
         <v-snackbar
@@ -125,6 +194,7 @@ export default {
     this.$store.dispatch('FETCH_FEED_DETAIL', feedcode)
       .then(() => {
         this.$store.dispatch('IS_SCRAP', feedcode)
+        this.$store.dispatch('IS_LIKE', feedcode)
         for (const image of this.$store.getters.getFeedDetail.images) {
           // this.imagesPath.push(`http://localhost:9990/feed/${image.newname}`)
           this.imagesPath.push(`http://i5c102.p.ssafy.io/api/feed/${image.newname}`)
@@ -138,6 +208,18 @@ export default {
           this.$router.push('/main')
         })
     },
+    likeFeed(){
+      const feedcode = this.feedcode
+      const data = {
+        email: localStorage.getItem('email'),
+        feedcode: feedcode
+      }
+      this.$store.dispatch('LIKE_FEED', data)
+        .then(() => {
+          this.$store.dispatch('FETCH_FEED_DETAIL', feedcode)
+          this.$store.dispatch('IS_LIKE', feedcode)
+        })
+    },
     scrapFeed() {
       const form = new FormData()
       form.append('email', localStorage.getItem('email'))
@@ -149,17 +231,31 @@ export default {
         this.message = "스크랩 완료"
       }
       this.snackbar = true
-    }
+    },
+    clipboardCopy() {
+      const urlInput = document.getElementById("urlInput")
+      urlInput.select()
+      document.execCommand('copy')
+    },
   },
   computed: {
     feed() {
       return this.$store.getters.getFeedDetail
     },
     isMyFeed() {
-      return localStorage.getItem('email') === this.feed.email ? true : false
+      return localStorage.getItem('email') === this.feed.feed.email ? true : false
     },
     isScraped() {
       return this.$store.getters.getIsScrap
+    },
+    isLike() {
+      return this.$store.getters.getIsLike
+    },
+    likes() {
+      return this.$store.getters.getFeedDetail.feed.likes
+    },
+    address() {
+      return window.location.href
     }
   }
 }

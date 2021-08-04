@@ -105,8 +105,6 @@ export default {
     const response = await axios.get(SCRAP_FEED_URL, {params: {email: email}})
 
     for (const feed of response.data) {
-      console.log(feed)
-      console.log(feed.feedcode, feedcode)
       if (feed.feedcode == feedcode) {
         is_scrap = true
         break
@@ -130,6 +128,21 @@ export default {
     const FEED_SCRAP_URL = '/scrap'
     const response = await axios.delete(FEED_SCRAP_URL, data)
     console.log(response, commit)
+  },
+  // like 조회
+  async IS_LIKE({ getters, commit }, feedcode) {
+    const email = getters.getEmail
+    const IS_LIKE_URL = `/feed/checklike/${email}/${feedcode}`
+    const response = await axios.get(IS_LIKE_URL)
+    commit('FETCH_IS_LIKE', response.data.status)
+  },
+  // like
+  async LIKE_FEED({ commit }, data) {
+    const email = data.email
+    const feedcode = data.feedcode
+    const LIKE_FEED_URL = `/feed/like/${email}/${feedcode}`
+    await axios.get(LIKE_FEED_URL)
+    console.log(commit)
   },
   // create reply
   async CREATE_REPLY({ commit }, reply) {
