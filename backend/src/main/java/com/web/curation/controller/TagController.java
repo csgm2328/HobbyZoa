@@ -32,19 +32,23 @@ public class TagController {
 	public ResponseEntity<BasicResponse> saveTag(@RequestParam("tagname") String tagname) {
 
 		Tag tagCheck = tagService.check(tagname);
-
+		ResponseEntity<BasicResponse> response = null;
+		
+		
 		if (tagCheck == null) {
 			System.out.println("새로운 취미 추가");
 			Tag tag = new Tag();
 			tag.setTagname(tagname);
 			tag.setCnt(1);
 			tagService.saveTag(tag);
+			response = new ResponseEntity<>(HttpStatus.OK);
 		} else {
 			System.out.println("이미 있는 취미");
 			tagService.updateTagCnt(tagCheck);
+			response = new ResponseEntity<>(HttpStatus.OK);		
 		}
 
-		return null;
+		return response;
 
 	}
 
