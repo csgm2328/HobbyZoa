@@ -47,7 +47,7 @@
                   <FollowerModal
                     :visible="showFollowerModal" @close="showFollowerModal=false"
                   />
-                  <span><span style="color: black; font-weight: bold;">팔로워</span><br/>{{ this.follower + tmp }}</span>
+                  <span><span style="color: black; font-weight: bold;">팔로워</span><br/>{{ follower }}</span>
                 </v-btn>
               </v-col>
               <!-- follow Modal -->
@@ -184,7 +184,6 @@
         showFollowerModal: false,
         requestuser_email: null,
         isLiked: null,
-        tmp: 0, 
         
       }
     },
@@ -212,11 +211,9 @@
       },
       follower() {
           return this.$store.getters['profileStore/getFollowerNum']
-      
       },
       following() {
           return this.$store.getters['profileStore/getFollowingNum']
-
       },
       imgpath() {
         return this.$store.getters['profileStore/getImgpath']
@@ -227,18 +224,22 @@
     },
     methods: {
       changeLike() {
-        if (this.isLiked) {
-          this.isLiked = false
-          this.tmp -= 1
-        }
-        else {
-          this.isLiked = true
-          this.tmp += 1
-          console.log(this.follower, typeof(this.follower+1))
-        }
+        // if (this.isLiked) {
+        //   this.isLiked = false
+        // }
+        // else {
+        //   this.isLiked = true
+        //   console.log(this.follower, typeof(this.follower+1))
+        // }
         // $("profileBox").load(window.location.href + "profileBox");
         const params = [ this.requestuser_email, this.username ]
         this.$store.dispatch('followStore/follow', params)
+          .then(() => {
+            this.isLiked = this.$store.getters['followStore/getCheckFollow']
+          })
+          .catch(() => {
+
+          })
       },
       UserSelected(message) {
         this.selected = message
