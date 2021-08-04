@@ -42,6 +42,7 @@ const followStore = {
   actions: {
     follow({ dispatch, commit }, follow_info) {
       const FOLLOW_URL = SERVER_URL + '/profile/follow'
+      const username = follow_info[1]
       axios.get(FOLLOW_URL, {
         params: {
           from: follow_info[0],
@@ -51,7 +52,8 @@ const followStore = {
         .then(() => {
           commit('FOLLOW')
           // FETCH_PROFILE 호출하기
-          dispatch('fetchProfile')
+          dispatch('followStore/checkFollow', follow_info, { root: true })
+          dispatch('profileStore/fetchProfile', username , { root: true })
         }) 
         .catch(err => console.log(err))
     },

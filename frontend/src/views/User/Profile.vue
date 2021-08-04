@@ -237,8 +237,8 @@
           .then(() => {
             this.isLiked = this.$store.getters['followStore/getCheckFollow']
           })
-          .catch(() => {
-
+          .catch((err) => {
+            console.log(err)
           })
       },
       UserSelected(message) {

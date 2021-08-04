@@ -136,7 +136,6 @@
           color="grey"
           plain
           @click.stop="searchbar = !searchbar"
-          @click="cancle"
         >
           Cancel
         </v-btn>
@@ -152,45 +151,14 @@
           pa-0
           class="mx-3"
           type="text"
-          @keydown="submitAutoComplete"
-          @click="searchUser"
+          @input="searchUser"
         ></v-text-field>
-
-
         <button icon color="secondary" class="mt-2 mx-1" @click="searchUser">
           <v-icon>mdi-magnify</v-icon>
         </button>
       </div>
 
-      <!-- 자동 검색어 -->
-      <!-- 자동 검색어 -->
-      <v-list class="autocomplete disabled" rounded>
-        <v-subheader>자동 완성</v-subheader>
-          <v-list-item-group
-            color="primary"
-          >
-            <v-list-item
-              v-for="(res, i) in autocompleteresult"
-              :key="i"
-            >
-              <v-list-item-content
-                class="d-flex justify-center"
-              >
-              
-                <v-list-item-title
-                  @click="searchUser(res.nickname)"
-                  class="ma-0 d-inline"
-                  v-text="res.nickname"
-                ></v-list-item-title>
-                
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-        
-
-
-        <v-list v-if="searchhistory.length != 0 && autocompleteresult.length == 0" rounded>
+        <v-list v-if="searchhistory.length != 0 && this.results.length == 0" rounded>
           <v-subheader>최근 검색어</v-subheader>
           <v-list-item-group
             color="primary"
@@ -202,7 +170,7 @@
                 class="d-flex justify-center"
               >
                 <v-list-item-title
-                  @click="searchHistoryUser(history.nickname)"
+                  @click="searchUser(history.nickname)"
                   class="ma-0 d-inline"
                   v-text="history.nickname"
                 ></v-list-item-title>
@@ -212,8 +180,9 @@
           </v-list-item-group>
         </v-list>
         <!-- 검색 결과 -->
-        <v-list v-if="results.length != 0" rounded>
+        <v-list v-if="results.length != 0" class="autocomplete disabled" rounded>
           <v-subheader>검색 결과는 다음과 같습니다</v-subheader>
+
           <v-list-item-group
             color="primary"
           >
@@ -247,6 +216,7 @@
   </div>
 </template>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
 
 export default {
@@ -299,9 +269,7 @@ export default {
       get() {
         return this.$store.getters['searchStore/getSearchResult']
       },
-      set() {
-
-      }
+      set() {}
     },
     searchhistory() {
       return this.$store.getters['searchStore/getSearchHistory']
@@ -316,45 +284,17 @@ export default {
       this.$router.push('/login')
     },
     searchUser() {
+      if (this.search.trim().length) {
       const params = [this.search, this.request_user]
       this.$store.dispatch('searchStore/findUser', params)
+      }
+      else {
+        []
+      }
     },
     searchHistoryUser(historysearch) {
       const params = [historysearch, this.request_user]
-      this.$store.dispatch('searchStore/findUser', params)
-    },
-    refreshAll() {
-        // 새로고침
-      this.$router.go();
-    },
-    // load(href) {
-    //   this.$router.push('/blank-for-reload', {
-    //     skipLocationChange: true,
-    //   }).then(
-    //     () => {
-    //       this.$router.push(href);
-    //     }
-    //   );
-    // }
-    cancle() {
-      this.search=""
-      this.results=null
-    },
-    submitAutoComplete() {
-      this.searchUser()
-    
-      console.log('go')
-      console.log(this.results)
-      const autocomplete = document.querySelector(".autocomplete");
-      if (this.search) {
-        autocomplete.classList.remove("disabled");
-        this.autocompleteresult = this.results.filter((result) => {
-          console.log(result, 'result임돠')
-          return result.nickname.match(new RegExp("^" + this.search, "i"));
-        });
-      } else {
-        autocomplete.classList.add("disabled");
-      }
+      this.$store.dispatch('searchStore/findHistory', params)
     },
   }
 }
