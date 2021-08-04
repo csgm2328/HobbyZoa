@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -136,10 +138,11 @@ public class FeedServiceImpl implements FeedService{
 	}
 
 	@Override
+	@Transactional
 	public String LikeFeed(String email, Integer feedcode) {
 		Optional<FeedLike> e = likeRepo.findByEmailAndFeedcode(email, feedcode);
 		if(e.isPresent()) //이미 좋아요 했다면 취소
-			if(likeRepo.deleteByFeedcode(feedcode) != 0)
+			if(likeRepo.deleteByEmailAndFeedcode(email, feedcode) != 0)
 				return "좋아요 취소";
 		likeRepo.save(
 				FeedLike.builder().email(email).feedcode(feedcode).build());
