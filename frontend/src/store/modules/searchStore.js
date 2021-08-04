@@ -45,7 +45,8 @@ const searchStore = {
           }
         })
         .then((res) => {
-          commit('FIND_HISTORY', res.data.slice(0, 5))
+          const long = res.data.length
+          commit('FIND_HISTORY', res.data.slice(long-5, long))
         })
         .catch(err => console.log(err))
     }
