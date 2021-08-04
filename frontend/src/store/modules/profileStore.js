@@ -56,27 +56,63 @@ const profileStore = {
     },
   },
   actions: {
-    fetchProfile({ commit }, username) {
-      axios.get(SERVER_URL + '/profile/' + username)
-        .then((res) => {
-          const info = res.data.object
-          commit('FETCH_PROFILE', info)
-        }) 
-        .catch(err => console.log(err))
-    },
-    fetchUserFeed({ commit }, username) {
-      const USER_FEED_USER = SERVER_URL + '/feed/mine'
-      axios.get(USER_FEED_USER, {
-        params: {
-          email: username,
-        }
+    // fetchProfile({ commit }, username) {
+    //   axios.get(SERVER_URL + '/profile/' + username)
+    //     .then((res) => {
+    //       const info = res.data.object
+    //       commit('FETCH_PROFILE', info)
+    //     }) 
+    //     .catch(err => console.log(err))
+    // },
+
+    async fetchProfile({ commit }, username) {
+      return new Promise((resolve, reject) => {
+        axios.get(SERVER_URL + '/profile/' + username)
+          .then((res) => {
+            const info = res.data.object
+            commit('FETCH_PROFILE', info)
+            resolve()
+          })
+          .catch((err) => {
+            console.log(err)
+            reject()
+          })
       })
-        .then((res) => {
-          const info = res.data
-          commit('FETCH_USER_FEED', info)
-        })
-        .catch(err => console.log(err))
     },
+
+    // fetchUserFeed({ commit }, username) {
+    //   const USER_FEED_USER = SERVER_URL + '/feed/mine'
+    //   axios.get(USER_FEED_USER, {
+    //     params: {
+    //       email: username,
+    //     }
+    //   })
+    //     .then((res) => {
+    //       const info = res.data
+    //       commit('FETCH_USER_FEED', info)
+    //     })
+    //     .catch(err => console.log(err))
+    // },
+
+    async fetchUserFeed({ commit }, username) {
+      return new Promise((resolve, reject) => {
+        axios.get(SERVER_URL + '/feed/mine', {
+          params: {
+            email: username,
+          }
+        })
+          .then((res) => {
+            const info = res.data
+            commit('FETCH_USER_FEED', info)
+            resolve()
+          })
+          .catch((err) => {
+            console.log(err)
+            reject()
+          })
+      })
+    },
+
     fetchUserSaved({ commit }, username) {
       const USER_SAVED_URL = SERVER_URL + '/scrap'
       axios.get(USER_SAVED_URL, {
