@@ -8,12 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.web.curation.badge.model.Badge;
 import com.web.curation.badge.service.BadgeService;
@@ -70,4 +65,10 @@ public class HobbyController {
 		return new ResponseEntity<List<Hobby>>(hobbies, HttpStatus.OK);
 	}
 	
+	@DeleteMapping(value="/{hobbycode}")
+	@ApiOperation(value="취미 삭제", notes="hobbycode입력받아 취미 삭제")
+	public ResponseEntity<Void> deleteHobby(@PathVariable Integer hobbycode){
+		hobbyService.deleteByHobbycode(hobbycode);
+		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
 }

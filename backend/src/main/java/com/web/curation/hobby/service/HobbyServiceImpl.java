@@ -24,4 +24,9 @@ public class HobbyServiceImpl implements HobbyService {
 		return hobbyRepo.findAllByEmail(email);
 	}
 
+	@Override
+	public void deleteByHobbycode(Integer hobbycode) {
+		hobbyRepo.deleteById(hobbycode);
+	}
+
 }
