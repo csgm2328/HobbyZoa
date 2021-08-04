@@ -19,6 +19,8 @@ import com.web.curation.image.service.FileHandler;
 import com.web.curation.like.model.FeedLike;
 import com.web.curation.like.repo.LikeRepo;
 
+import io.swagger.models.auth.In;
+
 @Service
 public class FeedServiceImpl implements FeedService{
 
@@ -131,13 +133,6 @@ public class FeedServiceImpl implements FeedService{
 	}
 
 	@Override
-	public List<String> ShowLikesList(Integer feedcode) {
-		List<String> likes = new ArrayList<String>();
-		likeRepo.findAllByFeedcode(feedcode).forEach(e -> likes.add(e.getEmail()));
-		return likes;
-	}
-
-	@Override
 	@Transactional
 	public String LikeFeed(String email, Integer feedcode) {
 		Optional<FeedLike> e = likeRepo.findByEmailAndFeedcode(email, feedcode);
@@ -147,6 +142,20 @@ public class FeedServiceImpl implements FeedService{
 		likeRepo.save(
 				FeedLike.builder().email(email).feedcode(feedcode).build());
 		return "좋아요";
+	}
+
+
+	@Override
+	public boolean CheckLike(String email, Integer feedcode) {
+		return likeRepo.findByEmailAndFeedcode(email, feedcode).isPresent();
+	}
+
+
+	@Override
+	public List<String> ShowLikeList(Integer feedcode) {
+		List<String> likes = new ArrayList<String>();
+		likeRepo.findAllByFeedcode(feedcode).forEach(e -> likes.add(e.getEmail()));
+		return likes;
 	}
 
 }
