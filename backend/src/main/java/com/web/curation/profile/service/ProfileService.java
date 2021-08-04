@@ -10,6 +10,6 @@ import com.web.curation.profile.model.ProfileImage;
 
 public interface ProfileService {
 	Optional<ProfileImage> findProfileImageById(String email);
-	ProfileImage save(String email, MultipartFile file) throws IllegalStateException, IOException;
+	ProfileImage saveImage(String email, MultipartFile file) throws IllegalStateException, IOException;
 	Profile findProfileById(String email);
 }

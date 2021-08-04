@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,7 +45,7 @@ public class ProfileController {
 	NotifyController notifyController;
 
 	@GetMapping("{email}")
-	@ApiOperation(value = "프로필 보기", notes = "요청시 게시물 수, 팔로워, 팔로잉 수 업데이트 반영, 코멘트는 계정설정에서 가져옴")
+	@ApiOperation(value = "프로필 보기", notes = "요청시 게시물 수, 팔로워, 팔로잉 수 업데이트, 코멘트는 계정설정에서 가져옴")
 	public ResponseEntity<BasicResponse> ShowProfile(@PathVariable String email) {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
@@ -79,15 +80,15 @@ public class ProfileController {
 		return response;
 	}
 
-	@PostMapping("/image/{email}")
-	@ApiOperation(value = "프로필 이미지 설정", notes = "이미 존재시 수정, 프로필에서 수정가능한 건 이미지 뿐")
+	@PutMapping("/image/{email}")
+	@ApiOperation(value = "프로필 이미지 수정", notes = "프로필은 회원가입시 자동 생성 됨, 프로필에서 수정가능한 건 프로필 이미지 뿐")
 	public ResponseEntity<BasicResponse> SaveProfileImage(@PathVariable String email, @RequestBody MultipartFile file) {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
 		System.out.println(email);
 
 		try {
-			result.object = profileService.save(email, file);
+			result.object = profileService.saveImage(email, file);
 		} catch (IllegalStateException | IOException e) {
 			System.out.println("FAIL: 업로드 파일 오류");
 			e.printStackTrace();
@@ -149,10 +150,10 @@ public class ProfileController {
 
 		if (followService.Check(from, to)) {
 			result.status = true;
-			result.data = "success: " + "[" + from + "] 가 [" + to + "]를 팔로우 중입니다.";
+			result.data = "[" + from + "] 가 [" + to + "]를 팔로우 중입니다.";
 		} else {
 			result.status = false;
-			result.data = "Fail: " + "[" + from + "] 가 [" + to + "]를 팔로우 중이 아닙니다.";
+			result.data = "[" + from + "] 가 [" + to + "]를 팔로우 중이 아닙니다.";
 		}
 		response = new ResponseEntity<>(result, HttpStatus.OK);
 		return response;

@@ -149,4 +149,39 @@ public class FeedController {
 				+ feedService.LikeFeed(email, feedcode);
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
+	// 좋아요 여부 체크
+	@GetMapping("checklike/{email}/{feedcode}")
+	@ApiOperation(value = "좋아요 여부 체크", notes = "")
+	public ResponseEntity<BasicResponse> checkLike(@PathVariable("email") String email, @PathVariable("feedcode") Integer feedcode) {
+		ResponseEntity<BasicResponse> response = null;
+		final BasicResponse result = new BasicResponse();
+
+		if (feedService.CheckLike(email, feedcode)) {
+			result.status = true;
+			result.data = "[" + email + "] 가 [" + feedcode + "]를 좋아요 중입니다.";
+		} else {
+			result.status = false;
+			result.data = "[" + email + "] 가 [" + feedcode + "]를 좋아요 중이 아닙니다.";
+		}
+		response = new ResponseEntity<>(result, HttpStatus.OK);
+		return response;
+	}
+	// 해당 피드를 좋아요 누른 유저목록 반환
+	@GetMapping("/likelist/{feedcode}")
+	@ApiOperation(value = "좋아요 누른 유저들 보기", notes = "입력한 email 유저를 팔로우하는 from_email 리스트")
+	public ResponseEntity<BasicResponse> ShowLikeList(@PathVariable("feedcode") Integer feedcode) {
+		ResponseEntity<BasicResponse> response = null;
+		final BasicResponse result = new BasicResponse();
+		result.object = feedService.ShowLikeList(feedcode);
+		if (result.object != null) {
+			result.status = true;
+			result.data = "success";
+			response = new ResponseEntity<>(result, HttpStatus.OK);
+		} else {
+			result.status = false;
+			result.data = "fail: 좋아요 리스트  조회 오류";
+			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
 }
