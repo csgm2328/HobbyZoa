@@ -26,6 +26,7 @@ const state = {
   feedList: [],
   feedDetail: [],
   isScrap: false,
+  isLike: false,
 }
 
 export default new Vuex.Store({

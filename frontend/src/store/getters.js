@@ -29,6 +29,8 @@ export default {
   },
   getIsScrap(state) {
     return state.isScrap
+  },
+  getIsLike(state) {
+    return state.isLike
   }
-
 }
