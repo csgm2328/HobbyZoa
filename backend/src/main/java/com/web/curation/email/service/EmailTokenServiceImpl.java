@@ -42,10 +42,10 @@ public class EmailTokenServiceImpl implements EmailTokenService{
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(receiverEmail);
         mailMessage.setSubject("Hobby Zoa: 회원가입 이메일 인증");
-        // vue 인증 페이지로 링크
+        // vue 인증 페이지로 링크(배포버전)
         mailMessage.setText("안녕하세요 " + emailConfirmationToken.getUserEmail() + "님."
         		+ " Hobby Zoa에 오신 걸 환영합니다.\n\n아래 링크를 통해 이메일을 인증해주세요!\n" +
-        		"http://localhost:8080/signupconfirm?token="+emailConfirmationToken.getId());
+        		"http://i5c102.p.ssafy.io/signupconfirm?token="+emailConfirmationToken.getId());
         emailSenderService.sendEmail(mailMessage);
         
         return emailConfirmationToken.getId();

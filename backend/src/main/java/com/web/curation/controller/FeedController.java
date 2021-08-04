@@ -144,9 +144,9 @@ public class FeedController {
 	// 좋아요 & 좋아요 취소
 	@GetMapping("/like/{email}/{feedcode}")
 	@ApiOperation(value = "좋아요 기능", notes = "이미 좋아요 했다면 취소됨")
-	public ResponseEntity<Void> LikeFeed(@PathVariable("email") String email, @PathVariable("feedcode") Integer feedcode) {
-		System.out.println("피드번호: " +  feedcode + " "
-				+ feedService.LikeFeed(email, feedcode));
-		return new ResponseEntity<Void>(HttpStatus.OK);
+	public ResponseEntity<String> LikeFeed(@PathVariable("email") String email, @PathVariable("feedcode") Integer feedcode) {
+		String result = email + "님이 피드번호: " +  feedcode + "을 "
+				+ feedService.LikeFeed(email, feedcode);
+		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
 }
