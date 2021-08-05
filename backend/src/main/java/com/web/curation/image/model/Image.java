@@ -2,6 +2,7 @@ package com.web.curation.image.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.istack.NotNull;
 import com.web.curation.feed.model.Feed;
 
@@ -29,7 +30,8 @@ public class Image {
     private long imgsize;
 
     @ManyToOne
-    @JoinColumn(name = "feed_feedcode")
+    @JoinColumn(name = "feed_feedcode", insertable=false, updatable=false)
+    @JsonBackReference
     private Feed feed;
     
     public Image(Integer feedcode, String orgname, String newname, String imgpath, long imgsize) {
