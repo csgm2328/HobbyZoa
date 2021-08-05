@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 
 import com.web.curation.image.model.Image;
 import com.web.curation.reply.model.Reply;
@@ -35,6 +36,8 @@ public class Feed {
 	private String comment; //한줄설명
 	private Integer likes; //좋아요 수
 	private Integer scrap; //스크랩 수
+	private String tag; //태그
+	
 	
 	@OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Image> images;
@@ -42,25 +45,7 @@ public class Feed {
 	@OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Reply> replies;
 	
-	//likes, scrap 없는 생성자
-	public Feed(String email, int feedcode, String nickname, LocalDateTime regtime, String comment) {
-		super();
-		this.email = email;
-		this.feedcode = feedcode;
-		this.nickname = nickname;
-		this.regtime = regtime;
-		this.comment = comment;
-	}
-
-	//feedcode, regtime 없는 생성자
-	public Feed(String email, String nickname, String comment, int likes, int scrap) {
-		super();
-		this.email = email;
-		this.nickname = nickname;
-		this.comment = comment;
-		this.likes = likes;
-		this.scrap = scrap;
-	}
+	
 	
 	//default 0이거나 원래 값 넣어주기
 	@PrePersist
@@ -88,4 +73,5 @@ public class Feed {
 		replies.remove(reply);
 	    reply.setFeed(null);
 	}
+
 }

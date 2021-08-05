@@ -21,8 +21,8 @@ public class FindServiceImpl implements FindService {
 	FindHistoryRepo findHistoryRepo;
 
 	@Override
-	public List<User> findSearchWord(String nickname) {
-		List<User> list = findRepo.findBynicknameContaining(nickname);
+	public List<User> findSearchWord(String searchWord) {
+		List<User> list = findRepo.findByNicknameContaining(searchWord);
 		return list;
 	}
 
