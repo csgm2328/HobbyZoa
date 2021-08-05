@@ -106,7 +106,7 @@ public class UserController {
 			result.data = "success";
 			response = new ResponseEntity<>(result, HttpStatus.OK);
 		} else {
-			result.status = true;
+			result.status = false;
 			result.data = "fail: 이메일 인증 오류";
 			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
