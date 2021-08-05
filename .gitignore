@@ -172,7 +172,7 @@ node_modules/
 dist/
 npm-debug.log
 yarn-error.log
-
+frontend/package-lock.json
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
