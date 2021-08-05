@@ -73,6 +73,7 @@ export default {
   async FETCH_FEED_DETAIL({ commit }, feedcode) {
     const FEED_DETAIL_URL = `/feed/search/${feedcode}`
     const response = await axios.get(FEED_DETAIL_URL)
+    console.log(response.data)
     commit('FETCH_FEED_DETAIL', response.data)
   },
   // update feed
@@ -143,6 +144,12 @@ export default {
     const LIKE_FEED_URL = `/feed/like/${email}/${feedcode}`
     await axios.get(LIKE_FEED_URL)
     console.log(commit)
+  },
+  // like list
+  async FETCH_LIKE_LIST({ commit }, feedcode) {
+    const LIKE_LIST_URL = `/feed/likelist/${feedcode}`
+    const response = await axios.get(LIKE_LIST_URL)
+    console.log(response.data, commit)
   },
   // create reply
   async CREATE_REPLY({ commit }, reply) {

@@ -3,7 +3,6 @@
     <Header/>
     <v-container>
       <v-layout column justify-center>
-        {{ feed.feed }}
         <div 
           v-if="isMyFeed"
           class="d-flex justify-end"
@@ -56,10 +55,29 @@
           <v-btn icon class="me-2" @click="likeFeed">
             <v-icon v-if="isLike" color="red">mdi-heart</v-icon>
             <v-icon v-else>mdi-heart</v-icon>
-            <div>
-              {{ likes }}
-            </div>
           </v-btn>
+          <div>
+            <v-menu
+              bottom
+              left
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  text
+                  v-bind="attrs"
+                  v-on="on"
+                  plain
+                  min-width="1"
+                >
+                  {{ likes }}
+                </v-btn>
+              </template>
+
+              <v-list>
+
+              </v-list>
+            </v-menu>
+          </div>
 
           <v-btn
             v-if="isScraped"
@@ -192,14 +210,18 @@ export default {
     const feedcode = this.$route.params.feedcode
     this.feedcode = feedcode
     this.$store.dispatch('FETCH_FEED_DETAIL', feedcode)
-      .then(() => {
-        this.$store.dispatch('IS_SCRAP', feedcode)
-        this.$store.dispatch('IS_LIKE', feedcode)
-        for (const image of this.$store.getters.getFeedDetail.images) {
-          // this.imagesPath.push(`http://localhost:9990/feed/${image.newname}`)
-          this.imagesPath.push(`http://i5c102.p.ssafy.io/api/feed/${image.newname}`)
-        }
-      })
+    this.$store.dispatch('IS_SCRAP', feedcode)
+    this.$store.dispatch('IS_LIKE', feedcode)
+    this.$store.dispatch('FETCH_LIKE_LIST', feedcode)
+    for (const image of this.$store.getters.getFeedDetail.images) {
+      this.imagesPath.push(`http://localhost:9990/feed/${image.newname}`)
+      // this.imagesPath.push(`http://i5c102.p.ssafy.io/api/feed/${image.newname}`)
+    }
+      // .then(() => {
+      // })
+      // .catch(() => {
+      //   console.log('fail')
+      // })
   },
   methods: {
     deleteFeed() {

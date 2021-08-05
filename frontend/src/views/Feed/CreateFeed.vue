@@ -95,6 +95,7 @@
         this.text_error = false
       },
       addFiles() {
+        this.url.length = 0
         this.files.forEach(file => {
           this.url.push(URL.createObjectURL(file))
         });
@@ -128,6 +129,7 @@
           form.append('email', localStorage.getItem('email'))
           form.append('nickname', localStorage.getItem('user'))
           form.append('comment', this.text)
+          form.append('tags', '취미')
           this.$store.dispatch('CREATE_FEED', form)
             .then(() => {
               this.$router.push('/main')
