@@ -2,6 +2,7 @@
   <div>
     <Header/>
     <v-container>
+      
       <v-layout column justify-center>
         <div 
           v-if="isMyFeed"
@@ -214,8 +215,8 @@ export default {
     this.$store.dispatch('IS_LIKE', feedcode)
     this.$store.dispatch('FETCH_LIKE_LIST', feedcode)
     for (const image of this.$store.getters.getFeedDetail.images) {
-      this.imagesPath.push(`http://localhost:9990/feed/${image.newname}`)
-      // this.imagesPath.push(`http://i5c102.p.ssafy.io/api/feed/${image.newname}`)
+      // this.imagesPath.push(`http://localhost:9990/feed/${image.newname}`)
+      this.imagesPath.push(`http://i5c102.p.ssafy.io/api/feed/${image.newname}`)
     }
       // .then(() => {
       // })
