@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +40,6 @@ import com.web.curation.tag.model.Tag;
 import com.web.curation.tag.service.TagService;
 
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -73,8 +71,8 @@ public class FeedController {
             @Valid @RequestParam("nickname") String nickname,
             @RequestParam("comment") String comment,
             @Valid @RequestPart("files") List<MultipartFile> files,
-            @RequestParam("tags") List<String> tags
-    ) throws Exception { //swagger는 위에 List<MultipartFile> 대신 MultipartFile로 
+            @RequestParam(value="tags", required=false) List<String> tags
+    ) throws Exception { 
         
 		String tagnames = new String();
 		
