@@ -37,6 +37,8 @@ import com.web.curation.image.model.Image;
 import com.web.curation.reply.model.Reply;
 import com.web.curation.reply.service.ReplyService;
 import com.web.curation.response.BasicResponse;
+import com.web.curation.tag.model.Tag;
+import com.web.curation.tag.service.TagService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -60,6 +62,9 @@ public class FeedController {
 	@Autowired
 	ReplyService replyService;
 	
+	@Autowired
+	TagService tagService;
+	
 	// 피드 생성
 	@PostMapping
 	@ApiOperation(value="피드 생성", notes="email, nickname, comment와 file리스트를 입력받아 uri를 반환")
@@ -67,13 +72,34 @@ public class FeedController {
             @Valid @RequestParam("email") String email,
             @Valid @RequestParam("nickname") String nickname,
             @RequestParam("comment") String comment,
-            @Valid @RequestPart("files") List<MultipartFile> files
+            @Valid @RequestPart("files") List<MultipartFile> files,
+            @Valid @RequestParam("tags") List<String> tags
     ) throws Exception { //swagger는 위에 List<MultipartFile> 대신 MultipartFile로 
-        Feed feed = feedService.save(Feed.builder()
+        
+		String tagnames = new String();
+		
+		for (int i = 0; i < tags.size(); i++) {
+			String tagname = tags.get(i);
+			tagnames+=tagname;
+			Tag tagCheck = tagService.check(tagname);
+			
+			if (tagCheck != null) {
+				tagService.updateTagCnt(tagCheck);	
+			} else {
+				Tag tag = new Tag();
+				tag.setTagname(tagname);
+				tag.setCnt(1);
+				tagService.saveTag(tag);
+			}				
+		}
+
+		Feed feed = feedService.save(Feed.builder()
                 .email(email)
                 .nickname(nickname)
                 .comment(comment)
+                .tag(tagnames)
                 .build(), files);
+        		
 
         URI uriLocation = new URI("/feed/" + feed.getFeedcode());
         return ResponseEntity.created(uriLocation).body("{}");

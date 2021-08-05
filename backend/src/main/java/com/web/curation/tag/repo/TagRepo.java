@@ -20,5 +20,4 @@ public interface TagRepo extends JpaRepository<Tag, String> {
 	@Modifying
 	@Query(value = "update tags t set t.cnt=t.cnt+1 where t.tagname = :tagname")
 	void updateTagCnt(@Param("tagname") String tagname);
-
 }
