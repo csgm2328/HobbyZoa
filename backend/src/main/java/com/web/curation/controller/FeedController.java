@@ -73,7 +73,7 @@ public class FeedController {
             @Valid @RequestParam("nickname") String nickname,
             @RequestParam("comment") String comment,
             @Valid @RequestPart("files") List<MultipartFile> files,
-            @Valid @RequestParam("tags") List<String> tags
+            @RequestParam("tags") List<String> tags
     ) throws Exception { //swagger는 위에 List<MultipartFile> 대신 MultipartFile로 
         
 		String tagnames = new String();
