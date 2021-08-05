@@ -191,19 +191,39 @@
             > 
             <!-- this.$router.push('/signup') -->
             
-              <v-list-item-content
+
+              <!-- <v-list-item-content
                 class="d-flex justify-center"
               > 
                 <v-list-item-title
                   class="ma-0 d-inline"
                   v-text="result.nickname"
-                ></v-list-item-title>
+                ></v-list-item-title> -->
+                <div>
+                  {{ result.nickname | highlight(search) }}
+                  <!-- <div v-html="$options.filters.highlight(result.nickname, search)"></div> -->
+                </div>
+                <div>
+                  <text-highlight  :searchWords="search" :autoEscape="true"
+                    :textToHighlight="result.nickname">{{ result.nickname }}</text-highlight>
+                </div>
+<!-- 
+                <Highlighter class="my-highlight" :style="{ color: 'red' }"
+                  highlightClassName="highlight"
+                  :searchWords="search"
+                  :autoEscape="true"
+                  :textToHighlight="result.nickname"/> -->
+
+                <div>
+
                 <router-link
                   :to="{ name: 'Profile', params: { username: result.email }}"
                   >
+                  <br>
                   {{ result.email }}
                 </router-link>
-              </v-list-item-content>
+                </div>
+              <!-- </v-list-item-content> -->
             </v-list-item>
           </v-list-item-group>
         </v-list>
@@ -218,6 +238,8 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
+// import TextHighlight from 'vue-text-highlight';
+// import Highlighter from 'vue-highlight-words'
 
 export default {
   data: () => ({
@@ -228,6 +250,12 @@ export default {
     request_user_email: "",
     autocompleteresult: [],
   }),
+  components: {
+    // TextHighlight
+    // Highlighter
+  },
+  props: {
+  },
   created() {
     this.$store.dispatch('searchStore/findHistory', localStorage.getItem('email'))
   },
@@ -292,11 +320,19 @@ export default {
         []
       }
     },
-    searchHistoryUser(historysearch) {
-      const params = [historysearch, this.request_user]
-      this.$store.dispatch('searchStore/findHistory', params)
+    searchHistoryUser() {
+      this.$store.dispatch('searchStore/findHistory', this.request_user)
     },
-  }
+  },
+  filters: {
+    highlight: function(words, search) {
+    var iQuery = new RegExp(search, "ig");
+    console.log(iQuery)
+    return words.toString().replace(iQuery, function(matchedTxt, a, b){
+        console.log(words, search,'/', a, b)
+        return ('<span class=\'highlight\'>' + matchedTxt + '</span>') ;
+    });
+  }}
 }
 </script>
 
@@ -306,5 +342,8 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+.highlight {
+  color: yellow;
 }
 </style>

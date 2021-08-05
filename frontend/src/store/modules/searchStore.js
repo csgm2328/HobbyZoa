@@ -24,17 +24,19 @@ const searchStore = {
     }
   },
   actions: {
-    findUser({ commit }, params) {
+    findUser({ dispatch, commit }, params) {
       const search = params[0]
       const request_user = params[1]
       const SEARCH_URL = SERVER_URL + '/find/' + search
         axios.get(SEARCH_URL, {
           params: {
-            email: request_user
+            email: request_user,
+            // 여기서 추가적으로 사용자가 정말 검색을 한 건지 아님 자동 완성 기능 때문에 검색으로 처리가 된 건지를 보내주는 형태로??
           }
         })
         .then((res) => {
           commit('SEARCH_USER', res.data)
+          dispatch('searchStore/findHistory', request_user, { root: true })
         })
         .catch(err => console.log(err))
     },
