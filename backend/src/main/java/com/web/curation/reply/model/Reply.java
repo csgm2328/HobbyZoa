@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.web.curation.feed.model.Feed;
 
 import lombok.AccessLevel;
@@ -44,7 +45,8 @@ public class Reply {
 	private int feedcode;
 	
 	@ManyToOne
-	@JoinColumn(name = "feed_feedcode")
+	@JoinColumn(name = "feed_feedcode",insertable=false, updatable=false)
+	@JsonBackReference
 	private Feed feed;
 	
 }

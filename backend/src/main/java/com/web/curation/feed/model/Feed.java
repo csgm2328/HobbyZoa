@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.*;
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.web.curation.image.model.Image;
 import com.web.curation.reply.model.Reply;
 
@@ -40,9 +41,11 @@ public class Feed {
 	
 	
 	@OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference
 	private List<Image> images;
 	
 	@OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference
 	private List<Reply> replies;
 	
 	
