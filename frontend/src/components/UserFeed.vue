@@ -15,8 +15,9 @@
             indeterminate
           ></v-progress-linear>
         </template>
+        <!-- :src="'http://localhost:9990/feed/' + feed.images[0].newname" -->
         <v-img
-          :src="'http://localhost:9990/feed/' + feed.images[0].newname"
+          :src="'http://i5c102.p.ssafy.io/api/feed/' + feed.images[0].newname"
           height="250"
         ></v-img>
         <v-card-text>
