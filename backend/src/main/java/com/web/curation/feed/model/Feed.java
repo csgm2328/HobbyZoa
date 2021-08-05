@@ -48,11 +48,10 @@ public class Feed {
 	@JsonManagedReference
 	private List<Reply> replies;
 	
-	
-	
 	//default 0이거나 원래 값 넣어주기
 	@PrePersist
     public void prePersist() {
+		this.tag = this.tag == null? null: this.tag;
         this.likes = this.likes == null ? 0 : this.likes;
         this.scrap = this.scrap == null ? 0 : this.scrap;
     }
