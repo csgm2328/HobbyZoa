@@ -192,38 +192,33 @@
             <!-- this.$router.push('/signup') -->
             
 
-              <!-- <v-list-item-content
+              <v-list-item-content
                 class="d-flex justify-center"
               > 
                 <v-list-item-title
                   class="ma-0 d-inline"
-                  v-text="result.nickname"
-                ></v-list-item-title> -->
-                <div>
-                  {{ result.nickname | highlight(search) }}
-                  <!-- <div v-html="$options.filters.highlight(result.nickname, search)"></div> -->
-                </div>
-                <div>
-                  <text-highlight  :searchWords="search" :autoEscape="true"
-                    :textToHighlight="result.nickname">{{ result.nickname }}</text-highlight>
-                </div>
-<!-- 
-                <Highlighter class="my-highlight" :style="{ color: 'red' }"
-                  highlightClassName="highlight"
-                  :searchWords="search"
-                  :autoEscape="true"
-                  :textToHighlight="result.nickname"/> -->
+                >
+                  <!-- filter를 이용한 방법 -->
+                  <div>
+                    {{ result.nickname | highlight(search) }}
+                    <!-- <div v-html="$options.filters.highlight(result.nickname, search)"></div> -->
+                  </div>
+
+                  <!-- vue text highlight를 이용한 방법 -->
+                  <div>
+                    <text-highlight :queries="search">{{ result.nickname }}</text-highlight>
+                  </div>
+                </v-list-item-title>
 
                 <div>
-
-                <router-link
-                  :to="{ name: 'Profile', params: { username: result.email }}"
-                  >
-                  <br>
-                  {{ result.email }}
-                </router-link>
+                  <router-link
+                    :to="{ name: 'Profile', params: { username: result.email }}"
+                    >
+                    <br>
+                    {{ result.email }}
+                  </router-link>
                 </div>
-              <!-- </v-list-item-content> -->
+              </v-list-item-content>
             </v-list-item>
           </v-list-item-group>
         </v-list>
@@ -238,7 +233,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
-// import TextHighlight from 'vue-text-highlight';
+import TextHighlight from 'vue-text-highlight';
 // import Highlighter from 'vue-highlight-words'
 
 export default {
@@ -251,7 +246,7 @@ export default {
     autocompleteresult: [],
   }),
   components: {
-    // TextHighlight
+    TextHighlight,
     // Highlighter
   },
   props: {
@@ -327,9 +322,7 @@ export default {
   filters: {
     highlight: function(words, search) {
     var iQuery = new RegExp(search, "ig");
-    console.log(iQuery)
     return words.toString().replace(iQuery, function(matchedTxt, a, b){
-        console.log(words, search,'/', a, b)
         return ('<span class=\'highlight\'>' + matchedTxt + '</span>') ;
     });
   }}

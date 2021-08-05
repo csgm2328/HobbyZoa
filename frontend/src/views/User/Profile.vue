@@ -8,9 +8,10 @@
           <!-- profile img -->
           <v-col cols="4" offset-sm="0" sm="3" class="center d-flex justify-center align-center">
             <v-avatar color="indigo" height="77px" width="77px" id="profileImg">
+                <!-- :src="'http://localhost:9990/feed/' + imgpath" -->
               <img 
                 v-if="imgpath" 
-                :src="'http://localhost:9990/feed/' + imgpath"
+                :src="'http://i5c102.p.ssafy.io/api/feed/' + imgpath"
                 alt="profile img">
               <v-icon 
                 v-else
