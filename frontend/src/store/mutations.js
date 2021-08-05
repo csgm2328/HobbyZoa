@@ -37,5 +37,8 @@ export default {
   },
   FETCH_IS_LIKE(state, isLike) {
     state.isLike = isLike
+  },
+  FETCH_LIKE_LIST(state, likeList) {
+    state.likeList = likeList
   }
 }

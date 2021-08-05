@@ -15,11 +15,28 @@ import NotFoundPage from '@/views/NotFoundPage.vue'
 
 Vue.use(VueRouter)
 
+const requireAuth = function(to, from, next) {
+  if (localStorage.getItem('token')) {
+    next()
+  } else {
+    next('/login')
+  }
+}
+
+const requiredAuth = function(to, from, next) {
+  if (localStorage.getItem('token')) {
+    next('/main')
+  } else {
+    next()
+  }
+}
+
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    beforeEnter: requiredAuth
   },
   {
     path: '/main',
@@ -29,7 +46,8 @@ const routes = [
   {
     path: '/signup',
     name: 'Signup',
-    component: Signup
+    component: Signup,
+    beforeEnter: requiredAuth
   },
   {
     path: '/signupsuccess',
@@ -44,32 +62,38 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    beforeEnter: requiredAuth
   },
   {
     path: '/setting',
     name: 'UserSetting',
-    component: UserSetting
+    component: UserSetting,
+    beforeEnter: requireAuth
   },
   {
     path: '/user/:username',
     name: 'Profile',
     component: Profile,
+    beforeEnter: requireAuth
   },
   {
     path: '/create',
     name: 'FeedCreate',
-    component: FeedCreate
+    component: FeedCreate,
+    beforeEnter: requireAuth
   },
   {
     path: '/update',
     name: 'FeedUpdate',
-    component: FeedUpdate
+    component: FeedUpdate,
+    beforeEnter: requireAuth
   },
   {
     path: '/feed/:feedcode',
     name: 'FeedDetail',
-    component: FeedDetail
+    component: FeedDetail,
+    beforeEnter: requireAuth
   },
   {
     path: "/404",
@@ -87,5 +111,6 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
 
 export default router

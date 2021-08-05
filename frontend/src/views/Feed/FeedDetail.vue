@@ -2,7 +2,7 @@
   <div>
     <Header/>
     <v-container>
-      
+
       <v-layout column justify-center>
         <div 
           v-if="isMyFeed"
@@ -75,7 +75,12 @@
               </template>
 
               <v-list>
-
+                <v-list-item
+                  v-for="(email, i) in likeList"
+                  :key="i"
+                >
+                  {{ email }}
+                </v-list-item>
               </v-list>
             </v-menu>
           </div>
@@ -202,7 +207,7 @@ export default {
   data() {
     return {
       feedcode: '',
-      imagesPath: [],
+      // imagesPath: [],
       snackbar: false,
       message: '',
     }
@@ -211,18 +216,14 @@ export default {
     const feedcode = this.$route.params.feedcode
     this.feedcode = feedcode
     this.$store.dispatch('FETCH_FEED_DETAIL', feedcode)
-    this.$store.dispatch('IS_SCRAP', feedcode)
-    this.$store.dispatch('IS_LIKE', feedcode)
-    this.$store.dispatch('FETCH_LIKE_LIST', feedcode)
-    for (const image of this.$store.getters.getFeedDetail.images) {
-      // this.imagesPath.push(`http://localhost:9990/feed/${image.newname}`)
-      this.imagesPath.push(`http://i5c102.p.ssafy.io/api/feed/${image.newname}`)
-    }
-      // .then(() => {
-      // })
-      // .catch(() => {
-      //   console.log('fail')
-      // })
+    // this.$store.dispatch('IS_SCRAP', feedcode)
+    // this.$store.dispatch('IS_LIKE', feedcode)
+    // this.$store.dispatch('FETCH_LIKE_LIST', feedcode)
+    // for (const image of this.$store.getters.getFeedDetail.images) {
+    //   // this.imagesPath.push(`http://localhost:9990/feed/${image.newname}`)
+    //   this.imagesPath.push(`http://i5c102.p.ssafy.io/api/feed/${image.newname}`)
+    // }
+     
   },
   methods: {
     deleteFeed() {
@@ -266,7 +267,8 @@ export default {
       return this.$store.getters.getFeedDetail
     },
     isMyFeed() {
-      return localStorage.getItem('email') === this.feed.feed.email ? true : false
+      // return localStorage.getItem('email') === this.feed.feed.email ? true : false
+      return true
     },
     isScraped() {
       return this.$store.getters.getIsScrap
@@ -279,6 +281,18 @@ export default {
     },
     address() {
       return window.location.href
+    },
+    imagesPath() {
+      const imagepath = []
+      if (this.$store.getters.getFeedDetail) {
+        for (const image of this.$store.getters.getFeedDetail.images) {     
+          imagepath.push(`http://i5c102.p.ssafy.io/api/feed/${image.newname}`)
+        }
+      } 
+      return imagepath
+    },
+    likeList() {
+      return this.$store.getters.getLikeList
     }
   }
 }

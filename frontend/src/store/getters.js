@@ -32,5 +32,8 @@ export default {
   },
   getIsLike(state) {
     return state.isLike
+  },
+  getLikeList(state) {
+    return state.likeList
   }
 }

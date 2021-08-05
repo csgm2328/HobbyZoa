@@ -24,9 +24,10 @@ const state = {
   nickname: localStorage.getItem('user'),
   email: localStorage.getItem('email'),
   feedList: [],
-  feedDetail: [],
+  feedDetail: null,
   isScrap: false,
   isLike: false,
+  likeList: [],
 }
 
 export default new Vuex.Store({
