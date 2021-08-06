@@ -22,25 +22,45 @@ const searchStore = {
     }, 
     FIND_HISTORY(state, res) {
       state.search_history = res
+    },
+    DELETE_SEARCH(state) {
+      state.search_result = []
     }
   },
   actions: {
-    findUser({ dispatch, commit }, params) {
+    findUser({ commit }, params) {
       const search = params[0]
       const request_user = params[1]
-      const SEARCH_URL = SERVER_URL + '/find/' + search
-        axios.get(SEARCH_URL, {
-          params: {
-            email: request_user,
-            // 여기서 추가적으로 사용자가 정말 검색을 한 건지 아님 자동 완성 기능 때문에 검색으로 처리가 된 건지를 보내주는 형태로??
-          }
-        })
+      
+      // const form = new FormData()
+      // form.append('email', request_user)
+      // form.append('email', search)
+      
+      // const data = {
+      //   email: request_user,
+      //   searchNickname: search
+      // }
+      const SAVE_SEARCH_URL = SERVER_URL + '/find/savehistory/' + request_user + "/" +  search
+      axios.get(SAVE_SEARCH_URL)
         .then((res) => {
+          console.log('save', res)
           commit('SEARCH_USER', res.data)
-          dispatch('searchStore/findHistory', request_user, { root: true })
         })
         .catch(err => console.log(err))
     },
+
+    
+    autoSearch({ commit }, search) {
+      const SEARCH_URL = SERVER_URL + '/find/autocomplete/' + search
+        axios.get(SEARCH_URL)
+        .then((res) => {
+          console.log('notsave', res)
+          commit('SEARCH_USER', res.data)
+        })
+        .catch(err => console.log(err))
+    },
+
+
     findHistory({ commit }, user) {
       const FIND_HISTORY_URL = SERVER_URL + '/find/history/' + user
         axios.get(FIND_HISTORY_URL, {
@@ -52,6 +72,10 @@ const searchStore = {
           commit('FIND_HISTORY', res.data.slice(long-5, long))
         })
         .catch(err => console.log(err))
+    },
+
+    deleteSearch({ commit }) {
+      commit('DELETE_SEARCH')
     }
   }
 }

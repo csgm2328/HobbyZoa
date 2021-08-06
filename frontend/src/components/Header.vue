@@ -151,9 +151,10 @@
           pa-0
           class="mx-3"
           type="text"
-          @input="searchUser"
+          @input="autoSearch()"
+          @keyup.enter="searchUser(search)"
         ></v-text-field>
-        <button icon color="secondary" class="mt-2 mx-1" @click="searchUser">
+        <button icon color="secondary" class="mt-2 mx-1" @click="searchUser(search)">
           <v-icon>mdi-magnify</v-icon>
         </button>
       </div>
@@ -180,7 +181,7 @@
           </v-list-item-group>
         </v-list>
         <!-- 검색 결과 -->
-        <v-list v-if="results.length != 0" class="autocomplete disabled" rounded>
+        <v-list v-if="results.length !=  0" class="autocomplete disabled" rounded>
           <v-subheader>검색 결과는 다음과 같습니다</v-subheader>
 
           <v-list-item-group
@@ -199,15 +200,14 @@
                   class="ma-0 d-inline"
                 >
                   <!-- filter를 이용한 방법 -->
-                  <div>
-                    {{ result.nickname | highlight(search) }}
-                    <!-- <div v-html="$options.filters.highlight(result.nickname, search)"></div> -->
-                  </div>
+                    <!-- {{ result.nickname | highlight(search) }} -->
+                    <!-- <div v-html="highlight(result.nickname, search)"></div> -->
 
                   <!-- vue text highlight를 이용한 방법 -->
                   <div>
                     <text-highlight :queries="search">{{ result.nickname }}</text-highlight>
                   </div>
+
                 </v-list-item-title>
 
                 <div>
@@ -306,37 +306,43 @@ export default {
       this.$store.commit('AUTH_LOGOUT')
       this.$router.push('/login')
     },
-    searchUser() {
-      if (this.search.trim().length) {
-      const params = [this.search, this.request_user]
-      this.$store.dispatch('searchStore/findUser', params)
+    searchUser(tmp) {
+      console.log(tmp)
+      // 사실 여기에 대해 보호가 필요했다... vue는 제공을 안한다...
+      if (tmp.trim().length) {
+        const params = [tmp, this.request_user]
+        this.$store.dispatch('searchStore/findUser', params)
       }
       else {
-        []
+        this.$store.dispatch('searchStore/deleteSearch', this.search)
+      }
+    },
+    autoSearch() {
+      if (this.search.trim().length) {
+        this.$store.dispatch('searchStore/autoSearch', this.search)
+      }
+      else {
+        this.$store.dispatch('searchStore/deleteSearch', this.search)
       }
     },
     searchHistoryUser() {
       this.$store.dispatch('searchStore/findHistory', this.request_user)
     },
+    // highlight: function(words, search) {
+    //   const iQuery = new RegExp(search, "ig");
+    //   return words.toString().replace(iQuery, function(matchedTxt, a, b){
+    //     return ('<mark class="highlight">' + matchedTxt + '</mark>');
+    //   });
+    // }
   },
-  filters: {
-    highlight: function(words, search) {
-    var iQuery = new RegExp(search, "ig");
-    return words.toString().replace(iQuery, function(matchedTxt, a, b){
-        return ('<span class=\'highlight\'>' + matchedTxt + '</span>') ;
-    });
-  }}
 }
 </script>
 
-<style scoped>
+<style>
 .logo {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-.highlight {
-  color: yellow;
 }
 </style>

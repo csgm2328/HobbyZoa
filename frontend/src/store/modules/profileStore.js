@@ -116,12 +116,14 @@ const profileStore = {
 
     fetchUserSaved({ commit }, username) {
       const USER_SAVED_URL = SERVER_URL + '/scrap'
+      console.log(username)
       axios.get(USER_SAVED_URL, {
         params: {
           email: username
         }
       }) 
         .then((res) => {
+          console.log(res)
           commit('FETCH_USER_SAVED', res.data)
         }) 
         .catch(err => console.log(err))

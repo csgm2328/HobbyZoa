@@ -37,11 +37,15 @@ const followStore = {
       state.message = '요청이 성공적으로 처리되었습니다.'
     },
     CHECK_FOLLOW(state, res) {
+      console.log(res, 'state')
       state.checkfollow = res
     },
   },
   actions: {
-    follow({ dispatch, commit }, follow_info) {
+
+    
+    async follow({ dispatch, commit }, follow_info) {
+      return new Promise((resolve, reject) => {
       const FOLLOW_URL = SERVER_URL + '/profile/follow'
       const username = follow_info[1]
       axios.get(FOLLOW_URL, {
@@ -55,8 +59,14 @@ const followStore = {
           // FETCH_PROFILE 호출하기
           dispatch('followStore/checkFollow', follow_info, { root: true })
           dispatch('profileStore/fetchProfile', username , { root: true })
+          dispatch('followStore/fetchFollower', username , { root: true })
+          resolve()
         }) 
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err)
+          reject()
+        })
+      })
     },
     fetchFollower({ commit }, username) {
       axios.get(SERVER_URL + '/profile/followerlist/' + username)
