@@ -57,6 +57,7 @@ public class FeedServiceImpl implements FeedService{
 			List<Image> images = new ArrayList<Image>();
 			imageRepo.findAllByFeed(feeds.get(i)).forEach(e -> images.add(e));
 			feeds.get(i).setImages(images);
+			feeds.get(i).setLikes(likeRepo.countByFeedcode(feeds.get(i).getFeedcode()));
 		}
 		return feeds;
 	}
