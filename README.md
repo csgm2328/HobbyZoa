@@ -70,7 +70,7 @@
 
 [ERD Cloud에서 확인하기](https://www.erdcloud.com/d/Qfmif9Qqa6xj9jZXL)
 
-![](./images/ERD.PNG)
+![](./images/ERD.png)
 
 - 설계(API)
 
