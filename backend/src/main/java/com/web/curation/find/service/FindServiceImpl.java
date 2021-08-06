@@ -33,10 +33,8 @@ public class FindServiceImpl implements FindService {
 	}
 
 	@Override
-	public History saveHistory(History saveuser) {
-		findHistoryRepo.save(saveuser);
-		return null;
+	public History saveHistory(History history) {
+		return findHistoryRepo.save(history);
 	}
-
 
 }

@@ -44,6 +44,7 @@ public class FindController {
 			HttpServletResponse response) {
 		List<User> list = findService.findSearchWord(searchWord);
 		List<Map<String, Object>> searchList = new ArrayList<>();
+		System.out.println("검색단어: " + searchWord);
 
 		if (!list.isEmpty()) {
 			for (int i = 0; i < list.size(); i++) {
@@ -63,15 +64,16 @@ public class FindController {
 	}
 
 	
-	@PostMapping(value = "/savehistory/{email}")
+	@GetMapping(value = "/savehistory/{email}/{searchword}")
 	@ApiOperation(value = "검색 내역 저장", notes = "검색 버튼 누르면 history에 저장")
-	public ResponseEntity<BasicResponse> searchNickname(@PathVariable("email") String email, @RequestBody String searchNickname) {
+	public ResponseEntity<BasicResponse> searchNickname(@PathVariable("email") String email, @PathVariable("searchword") String searchword) {
 		ResponseEntity<BasicResponse> response = null;
 		List<Map<String, Object>> searchList = new ArrayList<>();
-		History saveduser = new History();
-		saveduser.setEmail(email);
-		saveduser.setSearchWord(searchNickname);
-		findService.saveHistory(saveduser);
+		System.out.println("저장할 단어: " + searchword);
+		History history = new History();
+		history.setEmail(email);
+		history.setSearchWord(searchword);
+		findService.saveHistory(history);
 
 		return response;
 	}
