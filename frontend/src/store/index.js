@@ -11,9 +11,7 @@ import followStore from '././modules/followStore'
 Vue.use(Vuex)
 
 // axios 설정
-
 axios.defaults.baseURL = 'http://i5c102.p.ssafy.io/api'
-// axios.defaults.baseURL = 'http://localhost:9990'
 
 const state = {
   user: [],

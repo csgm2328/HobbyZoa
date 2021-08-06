@@ -130,7 +130,6 @@
           form.append('nickname', localStorage.getItem('user'))
           form.append('comment', this.text)
           form.append('tags', [])
-          // form.append('tags', ['운동', '취미'])
           this.$store.dispatch('CREATE_FEED', form)
             .then(() => {
               this.$router.push('/main')
