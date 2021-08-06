@@ -61,7 +61,6 @@ public class UserController {
 		} else {
 			response = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		}
-		System.out.println(response);
 		return response;
 	}
 

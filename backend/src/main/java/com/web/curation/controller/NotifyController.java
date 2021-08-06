@@ -49,7 +49,6 @@ public class NotifyController {
 //		ObjectMapper objectMapper = new ObjectMapper();
 //		byte[] result = objectMapper.readValue(chatMessage.toString(), byte[].class);
 //		System.out.println(result);
-		//뭐지 갑자기 되늰데?
         return chatMessage;
     }
 

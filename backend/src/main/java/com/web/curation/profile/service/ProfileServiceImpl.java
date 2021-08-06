@@ -36,7 +36,7 @@ public class ProfileServiceImpl implements ProfileService {
 	UserRepo userRepo;
 
 	@Autowired
-	ProfileHandler profileHandler;
+	ProfileImageHandler profileHandler;
 
 	@Override
 	// 프로필 이미지 얻기
