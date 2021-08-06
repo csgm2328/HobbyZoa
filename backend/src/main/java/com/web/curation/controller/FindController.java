@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.find.model.History;
@@ -61,15 +62,15 @@ public class FindController {
 		return new ResponseEntity<List<Map<String, Object>>>(searchList, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/savehistory/{searchNickname}")
+	
+	@PostMapping(value = "/savehistory/{email}")
 	@ApiOperation(value = "검색 내역 저장", notes = "검색 버튼 누르면 history에 저장")
-	public ResponseEntity<BasicResponse> searchNickname(@Valid @RequestBody String searchNickname, String email) {
+	public ResponseEntity<BasicResponse> searchNickname(@PathVariable("email") String email, @RequestBody String searchNickname) {
 		ResponseEntity<BasicResponse> response = null;
 		List<Map<String, Object>> searchList = new ArrayList<>();
 		History saveduser = new History();
 		saveduser.setEmail(email);
 		saveduser.setSearchWord(searchNickname);
-		// 검색어와 본인 이메일을 find_history에 넣자
 		findService.saveHistory(saveduser);
 
 		return response;
