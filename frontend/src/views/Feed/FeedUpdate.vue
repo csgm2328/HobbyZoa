@@ -142,7 +142,6 @@
     async created() {
       this.text = this.$store.getters.getFeedDetail.feed.comment
       for (const image of this.$store.getters.getFeedDetail.images) {
-        // var imgurl = `http://localhost:9990/feed/${image.newname}`
         var imgurl = `http://i5c102.p.ssafy.io/api/feed/${image.newname}`
         const response = await fetch(imgurl)
         const data = await response.blob()

@@ -216,14 +216,6 @@ export default {
     const feedcode = this.$route.params.feedcode
     this.feedcode = feedcode
     this.$store.dispatch('FETCH_FEED_DETAIL', feedcode)
-    // this.$store.dispatch('IS_SCRAP', feedcode)
-    // this.$store.dispatch('IS_LIKE', feedcode)
-    // this.$store.dispatch('FETCH_LIKE_LIST', feedcode)
-    // for (const image of this.$store.getters.getFeedDetail.images) {
-    //   // this.imagesPath.push(`http://localhost:9990/feed/${image.newname}`)
-    //   this.imagesPath.push(`http://i5c102.p.ssafy.io/api/feed/${image.newname}`)
-    // }
-     
   },
   methods: {
     deleteFeed() {
@@ -267,8 +259,14 @@ export default {
       return this.$store.getters.getFeedDetail
     },
     isMyFeed() {
-      // return localStorage.getItem('email') === this.feed.feed.email ? true : false
-      return true
+      const feed = this.$store.getters.getFeedDetail
+      if (feed) {
+        const email = feed.feed.email
+          if (localStorage.getItem('email') === email) {
+            return true
+          }
+      }
+      return false
     },
     isScraped() {
       return this.$store.getters.getIsScrap

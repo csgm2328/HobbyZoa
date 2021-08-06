@@ -27,7 +27,6 @@ export default {
   },
   computed: {
     src() {
-      // return `http://localhost:9990/feed/${this.feed.images[0].newname}`
       return `http://i5c102.p.ssafy.io/api/feed/${this.feed.images[0].newname}`
     },
     feedpage() {
