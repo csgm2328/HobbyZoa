@@ -1,6 +1,9 @@
 # Hobby Zoa - Sub PJT 2
 
-[toc]
+[1. 프로젝트소개](#1.-프로젝트-소개)
+[2. 개발환경](#2.-개발환경)
+[3. 핵심라이브러리](#3.-핵심라이브러리)
+[4. 기획 및 설계](#4.-기획-및-설계)
 
 ## 1. 프로젝트 소개
 
@@ -73,6 +76,7 @@
 ![](./images/ERD.png)
 
 - 설계(API)
+
 [Swagger](http://i5c102.p.ssafy.io/api/swagger-ui.html#!/)
 
 ![](/images/swagger.png)
