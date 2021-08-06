@@ -58,13 +58,9 @@ public class EmailToken  {
     @Transactional
     public static EmailToken createEmailConfirmationToken(String userEmail){
         EmailToken confirmationToken = new EmailToken();
-//        confirmationToken.id = UUID.randomUUID().toString();
         confirmationToken.expirationDate = LocalDateTime.now().plusMinutes(EMAIL_TOKEN_EXPIRATION_TIME_VALUE); // 5분후 만료
-//        System.out.println(confirmationToken.expirationDate); 
         confirmationToken.userEmail = userEmail;
-//        System.out.println(confirmationToken.id);
         confirmationToken.expired = false;
-//        confirmationToken.lastModifiedDate = LocalDateTime.now();
         return confirmationToken;
     }
 

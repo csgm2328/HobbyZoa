@@ -13,7 +13,6 @@ public class EmailSenderServiceImpl implements EmailSenderService{
 	
 	@Async
 	public void sendEmail(SimpleMailMessage msg) {
-//		System.out.println("전송된 내용:\n"+email);
 		javaMailSender.send(msg);
 	}
 }

@@ -85,7 +85,7 @@ public class ProfileController {
 	public ResponseEntity<BasicResponse> SaveProfileImage(@PathVariable String email, @RequestBody MultipartFile file) {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
-		System.out.println(email);
+		System.out.println(email + "님 프로필 수정됨");
 
 		try {
 			result.object = profileService.saveImage(email, file);
@@ -144,7 +144,6 @@ public class ProfileController {
 	public ResponseEntity<BasicResponse> CheckFollow(
 			@RequestParam(required = true) @ApiParam(value = "email") final String from,
 			@RequestParam(required = true) @ApiParam(value = "email") final String to) {
-		System.out.println(from + to);
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
 

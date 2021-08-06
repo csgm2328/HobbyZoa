@@ -68,7 +68,6 @@ public class EmailTokenServiceImpl implements EmailTokenService{
 	// 유효한 토큰 가져오기
     public EmailToken findByIdAndExpirationDateAfterAndExpired(String confirmationTokenId){
         Optional<EmailToken> confirmationToken = emailTokenRepo.findByIdAndExpirationDateAfterAndExpired(confirmationTokenId, LocalDateTime.now(),false);
-        System.out.println(confirmationTokenId);
         return confirmationToken.orElseThrow(()-> new BadRequestException("TOKEN NOT FOUND"));
     }
 
