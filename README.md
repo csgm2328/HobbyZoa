@@ -63,7 +63,7 @@
 
 [Figma](https://www.figma.com/file/d3976n4YmnLMj4kvd7dgyv/SSAFY-PJT?node-id=222%3A1890)
 
-![](./images/와이어프레임.png)
+![](./images/와이어프레임.PNG)
 
 - 설계(ERD)
 
