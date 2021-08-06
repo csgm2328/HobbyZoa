@@ -1,5 +1,6 @@
 import axios from 'axios'
-const SERVER_URL = 'http://localhost:9990'
+// const SERVER_URL = 'http://localhost:9990'
+const SERVER_URL = 'http://i5c102.p.ssafy.io/api'
 
 const profileStore = {
   namespaced: true,
@@ -15,25 +16,24 @@ const profileStore = {
   },
   getters: {
     getEmail(state) {
-        return state.email
+      return state.email
     },
     getFeedNum(state) {
-        return state.feed
+      return state.feed
     },
     getFollowingNum(state) {
-        return state.following
+      return state.following
     },
     getFollowerNum(state) {
-        return state.follower
+      return state.follower
     },
     getImgpath(state) {
-        return state.imgpath
+      return state.imgpath
     },
     getComment(state) {
-        return state.comment
+      return state.comment
     },
     getUserFeed(state) {
-      console.log(state.feeds)
       return state.feeds
     },
     getUserSaved(state) {
@@ -57,35 +57,73 @@ const profileStore = {
     },
   },
   actions: {
-    fetchProfile({ commit }, username) {
-      axios.get(SERVER_URL + '/profile/' + username)
-        .then((res) => {
-          const info = res.data.object
-          commit('FETCH_PROFILE', info)
-        }) 
-        .catch(err => console.log(err))
-    },
-    fetchUserFeed({ commit }, username) {
-      const USER_FEED_USER = SERVER_URL + '/feed/mine'
-      axios.get(USER_FEED_USER, {
-        params: {
-          email: username,
-        }
+    // fetchProfile({ commit }, username) {
+    //   axios.get(SERVER_URL + '/profile/' + username)
+    //     .then((res) => {
+    //       const info = res.data.object
+    //       commit('FETCH_PROFILE', info)
+    //     }) 
+    //     .catch(err => console.log(err))
+    // },
+
+    async fetchProfile({ commit }, username) {
+      return new Promise((resolve, reject) => {
+        axios.get(SERVER_URL + '/profile/' + username)
+          .then((res) => {
+            const info = res.data.object
+            commit('FETCH_PROFILE', info)
+            resolve()
+          })
+          .catch((err) => {
+            console.log(err)
+            reject()
+          })
       })
-        .then((res) => {
-          const info = res.data
-          commit('FETCH_USER_FEED', info)
-        })
-        .catch(err => console.log(err))
     },
+
+    // fetchUserFeed({ commit }, username) {
+    //   const USER_FEED_USER = SERVER_URL + '/feed/mine'
+    //   axios.get(USER_FEED_USER, {
+    //     params: {
+    //       email: username,
+    //     }
+    //   })
+    //     .then((res) => {
+    //       const info = res.data
+    //       commit('FETCH_USER_FEED', info)
+    //     })
+    //     .catch(err => console.log(err))
+    // },
+
+    async fetchUserFeed({ commit }, username) {
+      return new Promise((resolve, reject) => {
+        axios.get(SERVER_URL + '/feed/mine', {
+          params: {
+            email: username,
+          }
+        })
+          .then((res) => {
+            const info = res.data
+            commit('FETCH_USER_FEED', info)
+            resolve()
+          })
+          .catch((err) => {
+            console.log(err)
+            reject()
+          })
+      })
+    },
+
     fetchUserSaved({ commit }, username) {
       const USER_SAVED_URL = SERVER_URL + '/scrap'
+      console.log(username)
       axios.get(USER_SAVED_URL, {
         params: {
           email: username
         }
       }) 
         .then((res) => {
+          console.log(res)
           commit('FETCH_USER_SAVED', res.data)
         }) 
         .catch(err => console.log(err))

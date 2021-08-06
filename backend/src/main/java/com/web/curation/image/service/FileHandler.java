@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.curation.feed.model.Feed;
 import com.web.curation.image.model.Image;
 
 import lombok.*;
@@ -22,12 +23,11 @@ import lombok.*;
 @Component
 public class FileHandler {
 	
-	public List<Image> parseFileInfo(Integer feedcode,List<MultipartFile> multipartFiles) throws Exception{
+	public List<Image> parseFileInfo(Feed feed,List<MultipartFile> multipartFiles) throws Exception{
 
         List<Image> fileList = new ArrayList<>(); //return할 리스트
 
         if(multipartFiles.isEmpty()){
-//        	System.out.println("파일 비었음");
             return fileList;
         }
         
@@ -35,7 +35,8 @@ public class FileHandler {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         String current_date = simpleDateFormat.format(new Date());
 
-        String absolutePath = "C:\\subpjt2Img\\";
+//        String absolutePath = new File("").getAbsolutePath() + "\\";
+        String absolutePath = new File("").getAbsolutePath() + "/"; //리눅스 버전
 
         String path = "images/feeds/" + current_date;
         File file = new File(absolutePath+path);
@@ -73,11 +74,11 @@ public class FileHandler {
                 String new_file_name = Long.toString(System.nanoTime()) + originalFileExtension;
                 // 생성 후 리스트에 추가
                 Image image = Image.builder()
-                		.feedcode(feedcode)
                         .orgname(multipartFile.getOriginalFilename())
                         .newname(new_file_name)
                         .imgpath(path + "/" + new_file_name)
                         .imgsize(multipartFile.getSize())
+                        .feed(feed)
                         .build();
                 fileList.add(image);
 

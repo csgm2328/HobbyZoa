@@ -1,4 +1,6 @@
 <template>
+<div>
+
   <v-sheet
     class="mx-auto overflow-hidden"
     height="10vh"
@@ -74,12 +76,14 @@
               </v-btn>
             </router-link>
           </div>
-            
+          
           <div v-else class="ms-2" :to="profile">
-            <v-btn text :to="profile">
+            <router-link
+              :to="{ name: 'Profile', params: { username: request_user }}"
+              >
               <v-icon>mdi-account-circle</v-icon>
               <span class="font-weight-black">{{ nickname }}</span> 님
-            </v-btn>
+            </router-link>
             
           </div>
           <v-divider class="my-3"></v-divider>
@@ -142,17 +146,20 @@
           v-model="search"
           placeholder="Search User"
           filled
-          dense
+          denses
           rounded
           pa-0
           class="mx-3"
-          @keyup.enter="searchUser"
+          type="text"
+          @input="autoSearch()"
+          @keyup.enter="searchUser(search)"
         ></v-text-field>
-        <button icon color="secondary" class="mt-2 mx-1" @click="searchUser">
+        <button icon color="secondary" class="mt-2 mx-1" @click="searchUser(search)">
           <v-icon>mdi-magnify</v-icon>
         </button>
       </div>
-        <v-list v-if="searchhistory.length != 0" rounded>
+
+        <v-list v-if="searchhistory.length != 0 && this.results.length == 0" rounded>
           <v-subheader>최근 검색어</v-subheader>
           <v-list-item-group
             color="primary"
@@ -164,7 +171,7 @@
                 class="d-flex justify-center"
               >
                 <v-list-item-title
-                  :to="'/user/' + history.email" @click="refreshAll"
+                  @click="searchUser(history.nickname)"
                   class="ma-0 d-inline"
                   v-text="history.nickname"
                 ></v-list-item-title>
@@ -174,8 +181,9 @@
           </v-list-item-group>
         </v-list>
         <!-- 검색 결과 -->
-        <v-list v-if="results.length != 0" rounded>
+        <v-list v-if="results.length !=  0" class="autocomplete disabled" rounded>
           <v-subheader>검색 결과는 다음과 같습니다</v-subheader>
+
           <v-list-item-group
             color="primary"
           >
@@ -184,15 +192,32 @@
             > 
             <!-- this.$router.push('/signup') -->
             
+
               <v-list-item-content
                 class="d-flex justify-center"
-              >
+              > 
                 <v-list-item-title
-                  :to="'/user/' + result.email" @click="refreshAll"
                   class="ma-0 d-inline"
-                  v-text="result.nickname"
-                ></v-list-item-title>
-                
+                >
+                  <!-- filter를 이용한 방법 -->
+                    <!-- {{ result.nickname | highlight(search) }} -->
+                    <!-- <div v-html="highlight(result.nickname, search)"></div> -->
+
+                  <!-- vue text highlight를 이용한 방법 -->
+                  <div>
+                    <text-highlight :queries="search">{{ result.nickname }}</text-highlight>
+                  </div>
+
+                </v-list-item-title>
+
+                <div>
+                  <router-link
+                    :to="{ name: 'Profile', params: { username: result.email }}"
+                    >
+                    <br>
+                    {{ result.email }}
+                  </router-link>
+                </div>
               </v-list-item-content>
             </v-list-item>
           </v-list-item-group>
@@ -201,11 +226,15 @@
         <v-subheader>검색 결과가 없습니다</v-subheader>
       </v-list>
     </v-navigation-drawer>
-
   </v-sheet>
+  <router-view :key="$route.fullPath"/>
+  </div>
 </template>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
+import TextHighlight from 'vue-text-highlight';
+// import Highlighter from 'vue-highlight-words'
 
 export default {
   data: () => ({
@@ -213,7 +242,15 @@ export default {
     group: null,
     searchbar: false,
     search: '',
+    request_user_email: "",
+    autocompleteresult: [],
   }),
+  components: {
+    TextHighlight,
+    // Highlighter
+  },
+  props: {
+  },
   created() {
     this.$store.dispatch('searchStore/findHistory', localStorage.getItem('email'))
   },
@@ -251,8 +288,11 @@ export default {
     profile() {
       return 'user/' + this.$store.getters.getEmail
     },
-    results() {
-      return this.$store.getters['searchStore/getSearchResult']
+    results: {
+      get() {
+        return this.$store.getters['searchStore/getSearchResult']
+      },
+      set() {}
     },
     searchhistory() {
       return this.$store.getters['searchStore/getSearchHistory']
@@ -266,19 +306,39 @@ export default {
       this.$store.commit('AUTH_LOGOUT')
       this.$router.push('/login')
     },
-    searchUser() {
-      const params = [this.search, this.request_user]
-      this.$store.dispatch('searchStore/findUser', params)
+    searchUser(tmp) {
+      console.log(tmp)
+      // 사실 여기에 대해 보호가 필요했다... vue는 제공을 안한다...
+      if (tmp.trim().length) {
+        const params = [tmp, this.request_user]
+        this.$store.dispatch('searchStore/findUser', params)
+      }
+      else {
+        this.$store.dispatch('searchStore/deleteSearch', this.search)
+      }
     },
-    refreshAll() {
-        // 새로고침
-      this.$router.go();
+    autoSearch() {
+      if (this.search.trim().length) {
+        this.$store.dispatch('searchStore/autoSearch', this.search)
+      }
+      else {
+        this.$store.dispatch('searchStore/deleteSearch', this.search)
+      }
     },
-  }
+    searchHistoryUser() {
+      this.$store.dispatch('searchStore/findHistory', this.request_user)
+    },
+    // highlight: function(words, search) {
+    //   const iQuery = new RegExp(search, "ig");
+    //   return words.toString().replace(iQuery, function(matchedTxt, a, b){
+    //     return ('<mark class="highlight">' + matchedTxt + '</mark>');
+    //   });
+    // }
+  },
 }
 </script>
 
-<style scoped>
+<style>
 .logo {
   position: absolute;
   top: 50%;

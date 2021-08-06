@@ -15,20 +15,13 @@
             indeterminate
           ></v-progress-linear>
         </template>
+        <!-- :src="'http://localhost:9990/feed/' + feed.images[0].newname" -->
         <v-img
-          :src="'http://localhost:9990/feed/' + feed.images[0].newname"
+          :src="'http://i5c102.p.ssafy.io/api/feed/' + feed.images[0].newname"
           height="250"
         ></v-img>
         <v-card-text>
-
-          <div class="my-2 text-subtitle-1">
-            좋아요 {{ feed.likes }}개
-          </div>
-
-          <div>{{ comment }}</div>
-          <div> 
-            {{ feed.replies }}
-          </div>
+          {{feed}}
         </v-card-text>
 
         <v-divider class="mx-4"></v-divider>
@@ -52,14 +45,7 @@ export default {
   name: "UserFeed",
   data () {
     return {
-      username: this.$route.params.username,
-      loading: false,
-      selection: 1,
-      // tmp data
-      likedCount: 12,
-      comment: "멋지군요!(코멘트 보여주기란)",
-      items: [{text: 'abc'}, {text: 'abc'},{text: 'abc'},{text: 'abc'},{text: 'xyz'},]
-    }
+      username: this.$route.params.username,}
   },
   created() {
     this.$store.dispatch('profileStore/fetchUserSaved', this.username)

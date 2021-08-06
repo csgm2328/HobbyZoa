@@ -1,6 +1,5 @@
 # Hobby Zoa - Sub PJT 2
 
-[toc]
 
 ## 1. 프로젝트 소개
 
@@ -64,15 +63,17 @@
 
 [Figma](https://www.figma.com/file/d3976n4YmnLMj4kvd7dgyv/SSAFY-PJT?node-id=222%3A1890)
 
-![](./images/와이어프레임.png)
+![](./images/와이어프레임.PNG)
 
 - 설계(ERD)
 
 [ERD Cloud에서 확인하기](https://www.erdcloud.com/d/Qfmif9Qqa6xj9jZXL)
 
-![](./images/ERD.PNG)
+![](./images/ERD.png)
 
 - 설계(API)
+
+[Swagger](http://i5c102.p.ssafy.io/api/swagger-ui.html#!/)
 
 ![](/images/swagger.png)
 

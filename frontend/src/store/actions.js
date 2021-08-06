@@ -70,10 +70,15 @@ export default {
     commit('FETCH_FEED_LIST', response.data)
   },
   // get feed detail
-  async FETCH_FEED_DETAIL({ commit }, feedcode) {
+  async FETCH_FEED_DETAIL({ commit, dispatch }, feedcode) {
     const FEED_DETAIL_URL = `/feed/search/${feedcode}`
     const response = await axios.get(FEED_DETAIL_URL)
     commit('FETCH_FEED_DETAIL', response.data)
+    if (response) {
+      dispatch('IS_SCRAP', feedcode)
+      dispatch('IS_LIKE', feedcode)
+      dispatch('FETCH_LIKE_LIST', feedcode)
+    }
   },
   // update feed
   async UPDATE_FEED({ commit }, form) {
@@ -92,6 +97,63 @@ export default {
     const FEED_DELETE_URL = `/feed/${feedcode}`
     const response = await axios.delete(FEED_DELETE_URL)
     console.log(response, commit)
+  },
+  // scrap 조회
+  async IS_SCRAP({ getters, commit }, feedcode) {
+    const email = getters.getEmail
+    if (email === null) {
+      commit('FETCH_IS_SCRAP', false)
+      return
+    }
+    var is_scrap = false
+    const SCRAP_FEED_URL = `/scrap`
+    const response = await axios.get(SCRAP_FEED_URL, {params: {email: email}})
+
+    for (const feed of response.data) {
+      if (feed.feedcode == feedcode) {
+        is_scrap = true
+        break
+      }
+    }
+    commit('FETCH_IS_SCRAP', is_scrap)
+  },
+  // scrap feed
+  async SCRAP_FEED({ commit }, data){
+    const FEED_SCRAP_URL = '/scrap'
+    const response = await axios.post(FEED_SCRAP_URL, data)
+    if (response.status == '204') {
+      commit('FETCH_IS_SCRAP', false)
+      this.SCRAP_DELETE_FEED(data)
+    } else {
+      commit('FETCH_IS_SCRAP', true)
+    }
+  },
+  // delete scrap
+  async SCRAP_DELETE_FEED({ commit }, data){
+    const FEED_SCRAP_URL = '/scrap'
+    const response = await axios.delete(FEED_SCRAP_URL, data)
+    console.log(response, commit)
+  },
+  // like 조회
+  async IS_LIKE({ getters, commit }, feedcode) {
+    const email = getters.getEmail
+    const IS_LIKE_URL = `/feed/checklike/${email}/${feedcode}`
+    const response = await axios.get(IS_LIKE_URL)
+    commit('FETCH_IS_LIKE', response.data.status)
+  },
+  // like
+  async LIKE_FEED({ commit }, data) {
+    const email = data.email
+    const feedcode = data.feedcode
+    const LIKE_FEED_URL = `/feed/like/${email}/${feedcode}`
+    await axios.get(LIKE_FEED_URL)
+    console.log(commit)
+  },
+  // like list
+  async FETCH_LIKE_LIST({ commit }, feedcode) {
+    const LIKE_LIST_URL = `/feed/likelist/${feedcode}`
+    const response = await axios.get(LIKE_LIST_URL)
+    commit('FETCH_LIKE_LIST', response.data.object)
   },
   // create reply
   async CREATE_REPLY({ commit }, reply) {
@@ -133,5 +195,5 @@ export default {
     const response = await axios.put(UPDATE_USER_URL, user)
     commit('FETCH_USER_SETTING', response.data.object)
     commit('FETCH_NICKNAME', response.data.object.nickname)
-  }
+  },
 }

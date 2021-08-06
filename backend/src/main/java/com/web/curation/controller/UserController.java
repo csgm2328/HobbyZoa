@@ -2,11 +2,10 @@ package com.web.curation.controller;
 
 import java.util.Optional;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import com.web.curation.user.service.UserService;
-import com.web.curation.email.service.EmailTokenServiceImpl;
+import com.web.curation.email.service.EmailTokenService;
 import com.web.curation.response.BasicResponse;
 import com.web.curation.user.model.SignupRequest;
 import com.web.curation.user.model.User;
@@ -42,7 +41,7 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	@Autowired
-	EmailTokenServiceImpl confirmationTokenService;
+	EmailTokenService emailTokenService;
 
 	@GetMapping("/login")
 	@ApiOperation(value = "로그인")
@@ -62,7 +61,6 @@ public class UserController {
 		} else {
 			response = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		}
-		System.out.println(response);
 		return response;
 	}
 
@@ -87,7 +85,7 @@ public class UserController {
 			// 회원가입 후 이메일 인증 하기:
 			// 토큰생성(token save) --> 토큰ID와 함께 이메일 인증 링크 전송 -->
 			// 만료전(5분) 링크 접속시 인증완료 --> 인증된 이메일로 처리
-			confirmationTokenService.createEmailConfirmationToken(request.getEmail(), request.getEmail());
+			emailTokenService.createEmailConfirmationToken(request.getEmail(), request.getEmail());
 		} else {
 			result.status = true;
 			result.data = "fail: 이미 존재하는 이메일입니다.";
@@ -102,12 +100,12 @@ public class UserController {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
 //		if (userService.confirmEmail(token)) {
-		if (confirmationTokenService.confirmEmail(token)) {
+		if (emailTokenService.confirmEmail(token)) {
 			result.status = true;
 			result.data = "success";
 			response = new ResponseEntity<>(result, HttpStatus.OK);
 		} else {
-			result.status = true;
+			result.status = false;
 			result.data = "fail: 이메일 인증 오류";
 			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
@@ -122,7 +120,7 @@ public class UserController {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
 		// 기존 토큰 삭제 후 재 생성
-		confirmationTokenService.reCreateToken(userEmail, recieverEmail);
+		emailTokenService.reCreateToken(userEmail, recieverEmail);
 		result.status = true;
 		result.data = "success";
 		response = new ResponseEntity<>(result, HttpStatus.OK);
@@ -152,7 +150,7 @@ public class UserController {
 		user.setNickname(UpdateInfo.getNickname());
 		// 비밀번호 변경시 안내 메일 전송
 		if(!user.getPassword().equals(UpdateInfo.getPassword()))
-			confirmationTokenService.NotifyEmailPasswordChange(email);
+			emailTokenService.NotifyEmailPasswordChange(email);
 		user.setPassword(UpdateInfo.getPassword());
 		user.setPhone(UpdateInfo.getPhone());
 		if (UpdateInfo.getComment() != null)

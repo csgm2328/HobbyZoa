@@ -1,5 +1,6 @@
 import axios from 'axios'
-const SERVER_URL = 'http://localhost:9990'
+// const SERVER_URL = 'http://localhost:9990'
+const SERVER_URL = 'http://i5c102.p.ssafy.io/api'
 
 const searchStore = {
   namespaced: true,
@@ -21,24 +22,45 @@ const searchStore = {
     }, 
     FIND_HISTORY(state, res) {
       state.search_history = res
+    },
+    DELETE_SEARCH(state) {
+      state.search_result = []
     }
   },
   actions: {
     findUser({ commit }, params) {
       const search = params[0]
       const request_user = params[1]
-      console.log(request_user, search)
-      const SEARCH_URL = SERVER_URL + '/find/' + search
-        axios.get(SEARCH_URL, {
-          params: {
-            email: request_user
-          }
-        })
+      
+      // const form = new FormData()
+      // form.append('email', request_user)
+      // form.append('email', search)
+      
+      // const data = {
+      //   email: request_user,
+      //   searchNickname: search
+      // }
+      const SAVE_SEARCH_URL = SERVER_URL + '/find/savehistory/' + request_user + "/" +  search
+      axios.get(SAVE_SEARCH_URL)
         .then((res) => {
+          console.log('save', res)
           commit('SEARCH_USER', res.data)
         })
         .catch(err => console.log(err))
     },
+
+    
+    autoSearch({ commit }, search) {
+      const SEARCH_URL = SERVER_URL + '/find/autocomplete/' + search
+        axios.get(SEARCH_URL)
+        .then((res) => {
+          console.log('notsave', res)
+          commit('SEARCH_USER', res.data)
+        })
+        .catch(err => console.log(err))
+    },
+
+
     findHistory({ commit }, user) {
       const FIND_HISTORY_URL = SERVER_URL + '/find/history/' + user
         axios.get(FIND_HISTORY_URL, {
@@ -46,10 +68,14 @@ const searchStore = {
           }
         })
         .then((res) => {
-          console.log(res.data)
-          commit('FIND_HISTORY', res.data)
+          const long = res.data.length
+          commit('FIND_HISTORY', res.data.slice(long-5, long))
         })
         .catch(err => console.log(err))
+    },
+
+    deleteSearch({ commit }) {
+      commit('DELETE_SEARCH')
     }
   }
 }

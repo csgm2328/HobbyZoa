@@ -76,8 +76,8 @@ public class LoginController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-	@ApiOperation(value = "회원 인증", notes = "회원 정보 반환")
 	@GetMapping("/loginInfo")
+	@ApiOperation(value = "회원 인증", notes = "회원 정보 반환")
 	public ResponseEntity<Map<String, Object>> getInfo(
 //			String token) {
 			HttpServletRequest request) {

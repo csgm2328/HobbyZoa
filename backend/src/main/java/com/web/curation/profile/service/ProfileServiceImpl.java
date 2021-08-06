@@ -36,7 +36,7 @@ public class ProfileServiceImpl implements ProfileService {
 	UserRepo userRepo;
 
 	@Autowired
-	ProfileHandler profileHandler;
+	ProfileImageHandler profileHandler;
 
 	@Override
 	// 프로필 이미지 얻기
@@ -46,12 +46,12 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Override
 	// 프로필 이미지 저장 or 수정
-	public ProfileImage save(String email, MultipartFile file) throws IllegalStateException, IOException {
+	public ProfileImage saveImage(String email, MultipartFile file) throws IllegalStateException, IOException {
 		return profileImageRepo.save(profileHandler.parseFileInfo(email, file));
 	}
 
 	@Override
-	//프로필 정보 얻기: 회원 가입시 자동 생성, 팔로워, 피드수를 계속 업데이트해야므로 save() 동작
+	//프로필 정보 얻기: 회원 가입시 자동 생성하고 보기 요청마다 팔로워, 피드수를 계속 업데이트해야므로 save() 동작
 	public Profile findProfileById(String email) {
 		Optional<ProfileImage> e =profileImageRepo.findById(email);
 		return profileRepo.save(Profile.builder()

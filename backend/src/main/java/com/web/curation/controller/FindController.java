@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,11 +14,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.find.model.History;
 import com.web.curation.find.service.FindService;
+import com.web.curation.login.model.LoginRequest;
 import com.web.curation.login.service.JwtService;
 import com.web.curation.response.BasicResponse;
 import com.web.curation.user.model.User;
@@ -33,13 +38,13 @@ public class FindController {
 	@Autowired
 	JwtService jwtService;
 
-	@GetMapping(value = "/{nickname}")
-	@ApiOperation(value = "닉네임 검색", notes = "해당 닉네임 포함하는 유저 모두 검색, 없는 이메일로 찾으면 안됨..")
-	public ResponseEntity<List<Map<String, Object>>> findNickname(@PathVariable("nickname") String searchWord,
-			String email, HttpServletResponse response) {
-		// 검색어(지금은 닉네임)포함하는 닉네임 모두 리스트에 가져오기
+	@GetMapping(value = "/autocomplete/{searchword}")
+	@ApiOperation(value = "자동완성", notes = "검색어(닉네임)포함하는 닉네임 다 가져오기")
+	public ResponseEntity<List<Map<String, Object>>> searchWord(@PathVariable("searchword") String searchWord,
+			HttpServletResponse response) {
 		List<User> list = findService.findSearchWord(searchWord);
 		List<Map<String, Object>> searchList = new ArrayList<>();
+		System.out.println("검색단어: " + searchWord);
 
 		if (!list.isEmpty()) {
 			for (int i = 0; i < list.size(); i++) {
@@ -52,18 +57,25 @@ public class FindController {
 			}
 
 		} else {
-			// nicknameList.
 			System.out.println("해당 닉네임 없음");
 		}
 
-		History saveduser = new History();
-		saveduser.setEmail(email);
-		saveduser.setSearchWord(searchWord);
-		// 검색어와 본인 이메일을 find_history에 넣자
-		findService.saveHistory(saveduser);
-		
-
 		return new ResponseEntity<List<Map<String, Object>>>(searchList, HttpStatus.OK);
+	}
+
+	
+	@GetMapping(value = "/savehistory/{email}/{searchword}")
+	@ApiOperation(value = "검색 내역 저장", notes = "검색 버튼 누르면 history에 저장")
+	public ResponseEntity<BasicResponse> searchNickname(@PathVariable("email") String email, @PathVariable("searchword") String searchword) {
+		ResponseEntity<BasicResponse> response = null;
+		List<Map<String, Object>> searchList = new ArrayList<>();
+		System.out.println("저장할 단어: " + searchword);
+		History history = new History();
+		history.setEmail(email);
+		history.setSearchWord(searchword);
+		findService.saveHistory(history);
+
+		return response;
 	}
 
 	@GetMapping(value = "/history/{email}")

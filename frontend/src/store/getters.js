@@ -26,6 +26,14 @@ export default {
   },
   getUser(state) {
     return state.user
+  },
+  getIsScrap(state) {
+    return state.isScrap
+  },
+  getIsLike(state) {
+    return state.isLike
+  },
+  getLikeList(state) {
+    return state.likeList
   }
-
 }

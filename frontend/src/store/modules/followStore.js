@@ -1,5 +1,6 @@
 import axios from 'axios'
-const SERVER_URL = 'http://localhost:9990'
+// const SERVER_URL = 'http://localhost:9990'
+const SERVER_URL = 'http://i5c102.p.ssafy.io/api'
 
 const followStore = {
   namespaced: true,
@@ -21,7 +22,6 @@ const followStore = {
       return state.feeds
     },
     getCheckFollow(state) {
-      console.log('js', state.checkfollow)
       return state.checkfollow
     },
   },
@@ -33,16 +33,21 @@ const followStore = {
       state.followinglist = info
     },
     FOLLOW(state) {
+      // 리스트 업데이트가 안됨...
       state.message = '요청이 성공적으로 처리되었습니다.'
     },
     CHECK_FOLLOW(state, res) {
-      console.log('change', state.checkfollow)
+      console.log(res, 'state')
       state.checkfollow = res
     },
   },
   actions: {
-    follow({ commit }, follow_info) {
+
+    
+    async follow({ dispatch, commit }, follow_info) {
+      return new Promise((resolve, reject) => {
       const FOLLOW_URL = SERVER_URL + '/profile/follow'
+      const username = follow_info[1]
       axios.get(FOLLOW_URL, {
         params: {
           from: follow_info[0],
@@ -51,8 +56,17 @@ const followStore = {
       })
         .then(() => {
           commit('FOLLOW')
+          // FETCH_PROFILE 호출하기
+          dispatch('followStore/checkFollow', follow_info, { root: true })
+          dispatch('profileStore/fetchProfile', username , { root: true })
+          dispatch('followStore/fetchFollower', username , { root: true })
+          resolve()
         }) 
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err)
+          reject()
+        })
+      })
     },
     fetchFollower({ commit }, username) {
       axios.get(SERVER_URL + '/profile/followerlist/' + username)

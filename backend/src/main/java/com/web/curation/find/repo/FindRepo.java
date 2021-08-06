@@ -12,6 +12,6 @@ import com.web.curation.user.model.User;
 @Repository
 public interface FindRepo extends JpaRepository<User, Integer> {
 
-	List<User> findBynicknameContaining(String nickname);
+	List<User> findByNicknameContaining(String searchWord);
 
 }

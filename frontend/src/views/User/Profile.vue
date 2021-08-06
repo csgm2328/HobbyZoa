@@ -1,6 +1,5 @@
 <template>
-  <div
-  >
+  <div>
     <Header/>
     <div>
       <!-- profile box -->
@@ -9,9 +8,10 @@
           <!-- profile img -->
           <v-col cols="4" offset-sm="0" sm="3" class="center d-flex justify-center align-center">
             <v-avatar color="indigo" height="77px" width="77px" id="profileImg">
+                <!-- :src="'http://localhost:9990/feed/' + imgpath" -->
               <img 
                 v-if="imgpath" 
-                :src="'http://localhost:9990/feed/' + imgpath"
+                :src="'http://i5c102.p.ssafy.io/api/feed/' + imgpath"
                 alt="profile img">
               <v-icon 
                 v-else
@@ -48,7 +48,7 @@
                   <FollowerModal
                     :visible="showFollowerModal" @close="showFollowerModal=false"
                   />
-                  <span><span style="color: black; font-weight: bold;">팔로워</span><br/>{{ this.follower }}</span>
+                  <span><span style="color: black; font-weight: bold;">팔로워</span><br/>{{ follower }}</span>
                 </v-btn>
               </v-col>
               <!-- follow Modal -->
@@ -156,6 +156,7 @@
     />
   </div>
 
+
 </template>
 
 <script>
@@ -183,27 +184,37 @@
         showFollowModal: false,
         showFollowerModal: false,
         requestuser_email: null,
-        isLiked: null,
+        // isLiked: null,
+        
       }
     },
     created() {
       this.requestuser_email = localStorage.email
       this.checkFollow()
       this.$store.dispatch('profileStore/fetchProfile', this.username)
+    
+    },
+    watch: {
+      $route(to, from) {
+        console.log(to.params.username, from)
+        // react to route changes...
+      }
     },
     computed: {
 
       email() {
         return this.$store.getters['profileStore/getEmail']
       },
-      feed() {
-        return this.$store.getters['profileStore/getFeedNum']
+      feed: {
+        get() {return this.$store.getters['profileStore/getFeedNum']
+        },
+        set( ) {}
       },
       follower() {
-        return this.$store.getters['profileStore/getFollowerNum']
+          return this.$store.getters['profileStore/getFollowerNum']
       },
       following() {
-        return this.$store.getters['profileStore/getFollowingNum']
+          return this.$store.getters['profileStore/getFollowingNum']
       },
       imgpath() {
         return this.$store.getters['profileStore/getImgpath']
@@ -211,17 +222,31 @@
       comment() {
         return this.$store.getters['profileStore/getComment']
       },
+      isLiked: {
+        get() {
+          return this.$store.getters['followStore/getCheckFollow']
+        },
+        set() {}
+      }
     },
     methods: {
       changeLike() {
-        if (this.isLiked) {
-          this.isLiked = false
-        }
-        else {
-          this.isLiked = true
-        }
+        // if (this.isLiked) {
+        //   this.isLiked = false
+        // }
+        // else {
+        //   this.isLiked = true
+        //   console.log(this.follower, typeof(this.follower+1))
+        // }
+        // $("profileBox").load(window.location.href + "profileBox");
         const params = [ this.requestuser_email, this.username ]
         this.$store.dispatch('followStore/follow', params)
+          .then(() => {
+            this.isLiked = this.$store.getters['followStore/getCheckFollow']
+          })
+          .catch((err) => {
+            console.log(err)
+          })
       },
       UserSelected(message) {
         this.selected = message
@@ -236,7 +261,7 @@
           .catch(() => {
 
           })
-      }
+      },
     }
   }
 </script>
