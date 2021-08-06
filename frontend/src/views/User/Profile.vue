@@ -184,7 +184,7 @@
         showFollowModal: false,
         showFollowerModal: false,
         requestuser_email: null,
-        isLiked: null,
+        // isLiked: null,
         
       }
     },
@@ -222,6 +222,12 @@
       comment() {
         return this.$store.getters['profileStore/getComment']
       },
+      isLiked: {
+        get() {
+          return this.$store.getters['followStore/getCheckFollow']
+        },
+        set() {}
+      }
     },
     methods: {
       changeLike() {
