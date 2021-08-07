@@ -114,7 +114,8 @@ const profileStore = {
       })
     },
 
-    fetchUserSaved({ commit }, username) {
+    async fetchUserSaved({ commit }, username) {
+      return new Promise((resolve, reject) => {
       const USER_SAVED_URL = SERVER_URL + '/scrap'
       console.log(username)
       axios.get(USER_SAVED_URL, {
@@ -125,8 +126,13 @@ const profileStore = {
         .then((res) => {
           console.log(res)
           commit('FETCH_USER_SAVED', res.data)
+          resolve()
         }) 
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err)
+          reject()
+        })
+      })
     },
   }
 }

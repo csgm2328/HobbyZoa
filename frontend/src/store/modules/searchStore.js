@@ -28,23 +28,14 @@ const searchStore = {
     }
   },
   actions: {
-    findUser({ commit }, params) {
+    findUser({ dispatch, commit }, params) {
       const search = params[0]
       const request_user = params[1]
-      
-      // const form = new FormData()
-      // form.append('email', request_user)
-      // form.append('email', search)
-      
-      // const data = {
-      //   email: request_user,
-      //   searchNickname: search
-      // }
       const SAVE_SEARCH_URL = SERVER_URL + '/find/savehistory/' + request_user + "/" +  search
       axios.get(SAVE_SEARCH_URL)
         .then((res) => {
-          console.log('save', res)
           commit('SEARCH_USER', res.data)
+          dispatch('searchStore/findHistory', request_user , { root: true })
         })
         .catch(err => console.log(err))
     },
@@ -54,7 +45,6 @@ const searchStore = {
       const SEARCH_URL = SERVER_URL + '/find/autocomplete/' + search
         axios.get(SEARCH_URL)
         .then((res) => {
-          console.log('notsave', res)
           commit('SEARCH_USER', res.data)
         })
         .catch(err => console.log(err))
