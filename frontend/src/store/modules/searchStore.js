@@ -19,7 +19,7 @@ const searchStore = {
   mutations: {
     SEARCH_USER(state, res) {
       state.search_result = res
-    }, 
+    },
     FIND_HISTORY(state, res) {
       state.search_history = res
     },
@@ -28,13 +28,13 @@ const searchStore = {
     }
   },
   actions: {
-    findUser({ dispatch, commit }, params) {
+    // 
+    findUser({ dispatch }, params) {
       const search = params[0]
       const request_user = params[1]
       const SAVE_SEARCH_URL = SERVER_URL + '/find/savehistory/' + request_user + "/" +  search
       axios.get(SAVE_SEARCH_URL)
-        .then((res) => {
-          commit('SEARCH_USER', res.data)
+        .then(() => {
           dispatch('searchStore/findHistory', request_user , { root: true })
         })
         .catch(err => console.log(err))
@@ -64,6 +64,19 @@ const searchStore = {
         .catch(err => console.log(err))
     },
 
+    searchHistoryUser({ dispatch }, params) {
+      const search = params[0]
+      const request_user = params[1]
+      const SAVE_SEARCH_URL = SERVER_URL + '/find/savehistory/' + request_user + "/" +  search
+      axios.get(SAVE_SEARCH_URL)
+        .then(() => {
+          dispatch('searchStore/autoSearch', search , { root: true })
+          dispatch('searchStore/findHistory', request_user , { root: true })
+        })
+        .catch(err => console.log(err))
+    },
+
+    // 공백 처리
     deleteSearch({ commit }) {
       commit('DELETE_SEARCH')
     }
