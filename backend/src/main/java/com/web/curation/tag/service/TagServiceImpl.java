@@ -21,7 +21,7 @@ public class TagServiceImpl implements TagService {
 
 	public Tag check(String tagname) {
 		// tagname있는지 검사
-		return tagRepo.findByTagname(tagname);
+		return tagRepo.findByTagnameContaining(tagname);
 	}
 
 	@Override
@@ -31,8 +31,8 @@ public class TagServiceImpl implements TagService {
 	}
 
 	@Override
-	public void updateTagCnt(Tag tag) {
-		tagRepo.updateTagCnt(tag.getTagname());
+	public void updateTagCnt(String tagname) {
+		tagRepo.updateTagCnt(tagname);
 		return;
 	}
 
