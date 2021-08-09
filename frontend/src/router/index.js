@@ -12,6 +12,7 @@ import FeedCreate from '@/views/Feed/CreateFeed.vue'
 import FeedUpdate from '@/views/Feed/FeedUpdate.vue'
 import FeedDetail from '@/views/Feed/FeedDetail.vue'
 import NotFoundPage from '@/views/NotFoundPage.vue'
+import ErrorPage from '@/views/ErrorPage.vue'
 
 Vue.use(VueRouter)
 
@@ -104,6 +105,11 @@ const routes = [
     path: '*',
     redirect: "/404"
   },
+  {
+    path: '/error',
+    name: "ErrorPage",
+    component: ErrorPage
+  },
 ]
 
 const router = new VueRouter({
@@ -111,6 +117,5 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-
 
 export default router

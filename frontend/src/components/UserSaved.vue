@@ -1,64 +1,64 @@
 <template>
-  <div
-    style="margin: 20px;"
-  >
-    <div v-for="feed in feeds" :key="feed.feedcode" class="mx-auto">
-
-      <v-card
-        class="mx-auto my-12"
-        max-width="374"
-      >
-        <template slot="progress">
-          <v-progress-linear
-            color="deep-purple"
-            height="unique_110"
-            indeterminate
-          ></v-progress-linear>
-        </template>
-        <!-- :src="'http://localhost:9990/feed/' + feed.images[0].newname" -->
-        <v-img
-          :src="'http://i5c102.p.ssafy.io/api/feed/' + feed.images[0].newname"
-          height="250"
-        ></v-img>
-        <v-card-text>
-          {{feed}}
-        </v-card-text>
-
-        <v-divider class="mx-4"></v-divider>
-
-        <v-card-actions>
-          <v-btn
-            color="blue lighten-2"
-            text
-            :to="`/feed/` + feed.feedcode"
-          >
-            더보기
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </div> 
+  <div>
+    <v-container>
+      <FeedListItem
+        v-for="feed in feeds"
+        :key="feed.feedcode"
+        :feed="feed"
+      />
+    </v-container>
+    <infinite-loading @infinite="infiniteHandler"></infinite-loading>
   </div>
 </template>
 
+<script src="https://unpkg.com/vue-infinite-loading@^2/dist/vue-infinite-loading.js"></script>
+
 <script>
+import FeedListItem from '@/components/FeedListItem'
+import InfiniteLoading from 'vue-infinite-loading'
+
 export default {
-  name: "UserFeed",
+  name: "UserSaved",
   data () {
     return {
-      username: this.$route.params.username,}
+      username: this.$route.params.username,
+      feeds: [],
+    }
+  },
+  components: {
+    InfiniteLoading,
+    FeedListItem,
   },
   created() {
     this.$store.dispatch('profileStore/fetchUserSaved', this.username)
   },
   computed: {
-    feeds() {
+    all_feeds() {
       return this.$store.getters['profileStore/getUserSaved']
-    }
+    },
   },
 
   methods: {
     reserve () {
       setTimeout(() => (this.loading = false), 2000)
+    },
+    infiniteHandler($state) {
+      this.$store.dispatch('profileStore/fetchUserSaved', this.username)
+        .then(() => {
+          if (this.feeds.length < this.all_feeds.length) {
+            setTimeout(() => {
+              const temp = [];
+            for (let i = this.feeds.length; i <= this.feeds.length + 3 && i < this.all_feeds.length; i++) {
+              temp.push(this.all_feeds[i].feed);
+            }
+            this.feeds = this.feeds.concat(temp);
+            $state.loaded();
+            }, 500);
+          }
+          else {
+           $state.complete() 
+          }
+        })
     },
   },
 }

@@ -192,6 +192,11 @@
       this.requestuser_email = localStorage.email
       this.checkFollow()
       this.$store.dispatch('profileStore/fetchProfile', this.username)
+        .then()
+        .catch((err) => {
+           console.log(err)
+           this.$router.push({ name: 'ErrorPage' })
+        })
     
     },
     watch: {
