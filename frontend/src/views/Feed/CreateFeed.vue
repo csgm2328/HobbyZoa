@@ -7,7 +7,7 @@
         justify="center"
         no-gutters
       >
-        <v-col cols="12" sm="8" class="mt-3">
+        <v-col cols="12" class="mt-3">
           <v-carousel
             :show-arrows="false"
             v-if="selected_picture"
@@ -40,18 +40,28 @@
           </div>
           <p v-if="pic_error" style="color: red; margin-top: 2vh; text-align: center;">사진을 입력해주세요</p>
         </v-col>
-        <v-col cols="12" sm="8"  class="my-3 px-1">
+        <v-col cols="12" class="my-3 px-1">
           <v-textarea
             @keyup="inputText"
             v-model="text"
             fluid
-            counter
+            no-resize
+            hide-details
+            rows="7"
             style="height: 30vh; border-radius: 15px;"
             outlined
             label="Text"
             placeholder="내용을 입력해주세요."
           ></v-textarea>
           <p v-if="text_error" style="color: red; text-align: center;">내용을 입력해주세요</p>
+        </v-col>
+        <v-col cols="12">
+          <v-text-field
+            v-model="tagtext"
+            filled
+            label="tags"
+            placeholder="태그를 입력해주세요."
+          ></v-text-field>
         </v-col>
         
       </v-row>
@@ -87,7 +97,8 @@
         url: [],
         selected_picture: false,
         pic_error: false,
-        text_error: false
+        text_error: false,
+        tagtext: '',
       }
     },
     methods: {
@@ -130,12 +141,18 @@
           form.append('nickname', localStorage.getItem('user'))
           form.append('comment', this.text)
           form.append('tags', [])
+          form.append('tags', this.tags)
           this.$store.dispatch('CREATE_FEED', form)
             .then(() => {
               this.$router.push('/main')
             })
 
         }
+      }
+    },
+    computed: {
+      tags() {
+        return this.tagtext.trim().split('#').filter((word) => word.length).map(word => word.trim())
       }
     }
   }
