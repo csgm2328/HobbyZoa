@@ -14,6 +14,7 @@ Vue.use(Vuex)
 // axios 설정
 axios.defaults.baseURL = 'http://i5c102.p.ssafy.io/api'
 
+// error code는 전역변수로 설정
 const state = {
   user: [],
   signupEmail: '',
@@ -27,6 +28,7 @@ const state = {
   isScrap: false,
   isLike: false,
   likeList: [],
+  error_code: null,
 }
 
 export default new Vuex.Store({

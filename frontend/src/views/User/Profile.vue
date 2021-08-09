@@ -195,9 +195,9 @@
         .then()
         .catch((err) => {
            console.log(err)
-           this.$router.push({ name: 'ErrorPage' })
+           if (this.$store.getters.getErrorCode == 500) {
+           this.$router.push({ name: 'ErrorPage' })}
         })
-    
     },
     watch: {
       $route(to, from) {
@@ -236,14 +236,6 @@
     },
     methods: {
       changeLike() {
-        // if (this.isLiked) {
-        //   this.isLiked = false
-        // }
-        // else {
-        //   this.isLiked = true
-        //   console.log(this.follower, typeof(this.follower+1))
-        // }
-        // $("profileBox").load(window.location.href + "profileBox");
         const params = [ this.requestuser_email, this.username ]
         this.$store.dispatch('followStore/follow', params)
           .then(() => {
@@ -257,7 +249,6 @@
         this.selected = message
       },
       checkFollow() {
-        
         const params = [ this.requestuser_email, this.username ]
         this.$store.dispatch('followStore/checkFollow', params)
           .then(() => {

@@ -196,4 +196,7 @@ export default {
     commit('FETCH_USER_SETTING', response.data.object)
     commit('FETCH_NICKNAME', response.data.object.nickname)
   },
+  DELETE_ERROR_CODE({ commit }) {
+    commit('DELETE_ERROR_CODE')
+  },
 }
