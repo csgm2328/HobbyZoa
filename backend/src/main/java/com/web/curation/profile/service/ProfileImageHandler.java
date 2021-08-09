@@ -56,7 +56,8 @@ public class ProfileImageHandler{
 			}
 		}
 		// 파일이름 : 유저이메일( PK ) : 날짜 .확장자
-		String new_file_name = email + "_" + current_date + originalFileExtension;
+		// String new_file_name = email + "_" + current_date + originalFileExtension; //파일이 계속 남음
+		String new_file_name = email + originalFileExtension; //덮어쓰도록
 		// 생성 후 리스트에 추가
 		System.out.printf("업로드한 파일 크기: %.2fKB", uploadFile.getSize() / Math.pow(2,10)); //KB
 		ProfileImage image = ProfileImage.builder()
