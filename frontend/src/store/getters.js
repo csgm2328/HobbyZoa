@@ -35,5 +35,8 @@ export default {
   },
   getLikeList(state) {
     return state.likeList
+  },
+  getErrorCode(state) {
+    return state.error_code
   }
 }

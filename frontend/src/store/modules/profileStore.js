@@ -39,6 +39,9 @@ const profileStore = {
     getUserSaved(state) {
       return state.saved
     },
+    getErrorCode(state) {
+      return state.error_code
+    }
   },
   mutations: {
     FETCH_PROFILE(state, info) {
@@ -76,7 +79,7 @@ const profileStore = {
           })
           .catch((err) => {
             console.log(err)
-            console.log(err.response.status)
+            commit('FETCH_ERROR', err.response.status , { root: true })
             reject()
           })
       })
@@ -110,7 +113,6 @@ const profileStore = {
           })
           .catch((err) => {
             console.log(err)
-            console.log('status', status)
             reject()
           })
       })

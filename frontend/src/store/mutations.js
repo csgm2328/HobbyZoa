@@ -40,5 +40,11 @@ export default {
   },
   FETCH_LIKE_LIST(state, likeList) {
     state.likeList = likeList
-  }
+  },
+  FETCH_ERROR(state, error) {
+    state.error_code = error
+  },
+  DELETE_ERROR_CODE(state) {
+    state.error_code = null
+  },
 }
