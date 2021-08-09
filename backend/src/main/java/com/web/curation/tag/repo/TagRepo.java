@@ -14,7 +14,7 @@ import com.web.curation.tag.service.TagService;
 @Repository
 public interface TagRepo extends JpaRepository<Tag, String> {
 
-	Tag findByTagname(String tagname);
+	Tag findByTagnameContaining(String tagname);
 
 	@Transactional
 	@Modifying

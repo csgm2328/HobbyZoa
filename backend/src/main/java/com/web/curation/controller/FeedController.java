@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,16 +74,21 @@ public class FeedController {
             @Valid @RequestPart("files") List<MultipartFile> files,
             @RequestParam(value="tags", required=false) List<String> tags
     ) throws Exception { 
-        
 		String tagnames = new String();
+            
+//            @Valid @RequestPart("files") MultipartFile file,
+//            @RequestParam(value="tags", required=false) List<String> tags
+//      ) throws Exception { 
+//		String tagnames = new String();       
+//		List<MultipartFile> files = new ArrayList<MultipartFile>();
+//        files.add(file);
 		
 		for (int i = 0; i < tags.size(); i++) {
 			String tagname = tags.get(i);
 			tagnames+=tagname;
 			Tag tagCheck = tagService.check(tagname);
-			
 			if (tagCheck != null) {
-				tagService.updateTagCnt(tagCheck);	
+				tagService.updateTagCnt(tagname);	
 			} else {
 				Tag tag = new Tag();
 				tag.setTagname(tagname);
