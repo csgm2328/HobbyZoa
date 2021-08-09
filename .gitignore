@@ -202,5 +202,7 @@ $RECYCLE.BIN/
 # Server
 Servers/
 backend/Servers/
+backend/nohup*
+backend/images/
 
 # End of https://www.toptal.com/developers/gitignore/api/vue,vuejs,eclipse,windows,macos,visualstudiocode,maven,java
