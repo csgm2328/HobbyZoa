@@ -76,6 +76,7 @@ const profileStore = {
           })
           .catch((err) => {
             console.log(err)
+            console.log(err.response.status)
             reject()
           })
       })
@@ -109,6 +110,7 @@ const profileStore = {
           })
           .catch((err) => {
             console.log(err)
+            console.log('status', status)
             reject()
           })
       })

@@ -7,6 +7,7 @@ import mutations from './mutations'
 import profileStore from '././modules/profileStore'
 import searchStore from '././modules/searchStore'
 import followStore from '././modules/followStore'
+import errorStore from '././modules/errorStore'
 
 Vue.use(Vuex)
 
@@ -36,6 +37,7 @@ export default new Vuex.Store({
   modules: {
     profileStore,
     searchStore,
-    followStore
+    followStore,
+    errorStore,
   }
 })

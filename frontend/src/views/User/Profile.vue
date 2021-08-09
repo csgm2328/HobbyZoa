@@ -194,7 +194,7 @@
       this.$store.dispatch('profileStore/fetchProfile', this.username)
         .then()
         .catch((err) => {
-           console.log('profile err', err)
+           console.log(err)
            this.$router.push({ name: 'ErrorPage' })
         })
     

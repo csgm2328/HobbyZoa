@@ -38,7 +38,6 @@ export default {
     infiniteHandler($state) {
       this.$store.dispatch('FETCH_ALL_FEED')
         .then(() => {
-          console.log(this.feedList, this.all_feedList, this.all_feedList[3])
           if (this.feedList.length < this.all_feedList.length) {
             setTimeout(() => {
               const temp = [];
