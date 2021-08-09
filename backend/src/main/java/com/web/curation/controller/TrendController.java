@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = { "*" })
 @RestController
-@RequestMapping(value = "/tag")
+@RequestMapping(value = "/orderby")
 public class TrendController {
 	
 	@Autowired
@@ -27,7 +27,7 @@ public class TrendController {
 	
 	@GetMapping(value = "/likes/{keyword}")
 	@ApiOperation(value="키워드 입력", notes="해당 키워드 포함 피드 좋아요순 정렬, 같으면 날짜순")
-	public ResponseEntity<List<Feed>> orderBylikes(@RequestParam("keyword") String keyword ){
+	public ResponseEntity<List<Feed>> orderByLikes(@RequestParam("keyword") String keyword ){
 		List<Feed> feeds = trendService.orderByLikes(keyword);
 		return new ResponseEntity<List<Feed>>(feeds, HttpStatus.OK);
 		
