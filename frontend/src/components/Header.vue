@@ -80,13 +80,18 @@
 
             <!-- menu bar list item(s) -->
             <v-list-item>
-              <v-list-item-title><h1>Feed</h1></v-list-item-title>
+              <v-list-item-title @click="followfeed()"><h1>Followings</h1></v-list-item-title>
             </v-list-item>
 
             <v-list-item>
-              <v-list-item-title><h1>Hobby</h1></v-list-item-title>
+              <v-list-item-title @click="likefeed()"><h1>Likes</h1></v-list-item-title>
             </v-list-item>
-            
+           
+            <v-list-item>
+              <v-list-item-title
+              @click="dialog=true"><h1>Search Tags</h1></v-list-item-title>
+            </v-list-item>
+
           </v-list-item-group>
         </v-list>
 
@@ -209,6 +214,11 @@
         </v-list>
       </v-navigation-drawer>
 
+      <SearchTagModal
+        v-if="dialog" 
+        @close="dialog=false"
+      />  
+
     </v-sheet>
   <router-view :key="$route.fullPath"/>
   </div>
@@ -217,6 +227,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
 import TextHighlight from 'vue-text-highlight';
+import SearchTagModal from '@/components/SearchTagModal'
 
 export default {
   data: () => ({
@@ -226,9 +237,11 @@ export default {
     search: '',
     request_user_email: "",
     autocompleteresult: [],
+    dialog: false,
   }),
   components: {
     TextHighlight,
+    SearchTagModal
   },
   props: {
   },
@@ -312,13 +325,13 @@ export default {
     deleteSearch() {
       this.search = ''
       this.$store.dispatch('searchStore/deleteSearch', this.search)
+    },
+    followfeed() {
+      this.$router.push({ name: 'FollowFeed' })
+    },
+    likefeed() {
+      this.$router.push({ name: 'LikeFeed' })
     }
-    // highlight: function(words, search) {
-    //   const iQuery = new RegExp(search, "ig");
-    //   return words.toString().replace(iQuery, function(matchedTxt, a, b){
-    //     return ('<mark class="highlight">' + matchedTxt + '</mark>');
-    //   });
-    // }
   },
 }
 </script>

@@ -11,6 +11,9 @@ import UserSetting from '@/views/User/UserSetting.vue'
 import FeedCreate from '@/views/Feed/CreateFeed.vue'
 import FeedUpdate from '@/views/Feed/FeedUpdate.vue'
 import FeedDetail from '@/views/Feed/FeedDetail.vue'
+import Tag from '@/views/Feed/Tag.vue'
+import FollowFeed from '@/views/Feed/FollowFeed.vue'
+import LikeFeed from '@/views/Feed/LikeFeed.vue'
 import NotFoundPage from '@/views/NotFoundPage.vue'
 import ErrorPage from '@/views/ErrorPage.vue'
 
@@ -94,6 +97,24 @@ const routes = [
     path: '/feed/:feedcode',
     name: 'FeedDetail',
     component: FeedDetail,
+    beforeEnter: requireAuth
+  },
+  {
+    path: '/followfeed',
+    name: 'FollowFeed',
+    component: FollowFeed,
+    beforeEnter: requireAuth
+  },
+  {
+    path: '/like',
+    name: 'LikeFeed',
+    component: LikeFeed,
+    beforeEnter: requireAuth
+  },
+  {
+    path: '/tag/:tagname',
+    name: 'Tag',
+    component: Tag,
     beforeEnter: requireAuth
   },
   {
