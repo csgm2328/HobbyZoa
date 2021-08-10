@@ -8,4 +8,5 @@ public interface HobbyService {
 	Hobby save(Hobby hobby);
 	List<Hobby> findAllByEmail(String email);
 	void deleteByHobbycode(Integer hobbycode);
+	Hobby findByHobbycode(Integer hobbycode);
 }

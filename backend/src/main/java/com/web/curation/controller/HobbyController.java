@@ -2,6 +2,7 @@ package com.web.curation.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.web.curation.attendance.model.Attendance;
+import com.web.curation.attendance.service.AttendanceService;
 import com.web.curation.badge.model.Badge;
 import com.web.curation.badge.service.BadgeService;
 import com.web.curation.hobby.model.Hobby;
@@ -34,6 +37,9 @@ public class HobbyController {
 	
 	@Autowired
 	BadgeService badgeService;
+	
+	@Autowired
+	AttendanceService attendanceService;
 	
 	@PostMapping
 	@ApiOperation(value="취미 생성", notes="email, name(취미이름)을 입력받아 uri를 반환")
@@ -71,4 +77,58 @@ public class HobbyController {
 		hobbyService.deleteByHobbycode(hobbycode);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
+	
+	@PostMapping(value="/check")
+	@ApiOperation(value="출석 생성", notes="email,hobbycode,시작시간,종료시간,comment를 입력받아 저장 후 uri반환")
+	public ResponseEntity<?> createAttendance(@RequestParam String email, @RequestParam int hobbycode, 
+			@RequestParam String start, @RequestParam String end, 
+			@RequestParam String comment) throws Exception{
+		//check저장할 때 배지 추가 여부 검사해주기
+
+		Hobby hobby = hobbyService.findByHobbycode(hobbycode);
+		Attendance attendance = attendanceService.save(Attendance.builder()
+				.email(email)
+				.hobby(hobby)
+				.start(Integer.parseInt(start))
+				.end(Integer.parseInt(end))
+				.comment(comment).build());
+		System.out.println(start);
+		URI uriLocation = new URI("hobby/check/" + attendance.getCheckcode());
+		return ResponseEntity.created(uriLocation).body("{}");
+	}
+	
+	@GetMapping(value="/check")
+	@ApiOperation(value="해당 취미의 출석 모두 보기", notes="hobbycode를 입력받아 출석 리스트를 반환")
+	public ResponseEntity<List<Attendance>> getAllAttendance(@RequestParam int hobbycode){
+		Hobby hobby = hobbyService.findByHobbycode(hobbycode);
+		List<Attendance> attendances = attendanceService.findAllByHobby(hobby);
+		return new ResponseEntity<List<Attendance>>(attendances, HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/check/{checkcode}")
+	@ApiOperation(value="출석 상세 보기", notes="checkcode를 입력받아 attendance를 반환")
+	public ResponseEntity<Attendance> getOneAttendance(@PathVariable int checkcode){
+		Attendance attendance = attendanceService.findByCheckcode(checkcode);
+		return new ResponseEntity<Attendance>(attendance, HttpStatus.OK);
+	}
+	
+	@PutMapping(value="/check/{checkcode}")
+	@ApiOperation(value="출석 수정 하기", notes="checkcode를 입력받아 attendance 수정")
+	public ResponseEntity<Attendance> updateAttendance(@PathVariable int checkcode, @RequestParam String start, 
+			@RequestParam String end, @RequestParam String comment){
+		Attendance attendance = attendanceService.findByCheckcode(checkcode);
+		attendance.setStart(Integer.parseInt(start));
+		attendance.setEnd(Integer.parseInt(end));
+		attendance.setComment(comment);
+		attendanceService.updateByCheckcode(checkcode, attendance);
+		return new ResponseEntity<Attendance>(attendance, HttpStatus.OK);
+	}
+	
+	@DeleteMapping(value="/check/{checkcode}")
+	@ApiOperation(value="출석 삭제", notes="checkcode를 입력받아 attendance 삭제")
+	public ResponseEntity<Void> deleteAttendance(@PathVariable int checkcode){
+		attendanceService.deleteByCheckcode(checkcode);
+		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+	
 }
