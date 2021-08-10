@@ -105,5 +105,10 @@ public class HobbyController {
 		return new ResponseEntity<List<Attendance>>(attendances, HttpStatus.OK);
 	}
 	
-	
+	@GetMapping(value="/check/{checkcode}")
+	@ApiOperation(value="출석 상세 보기", notes="checkcode를 입력받아 attendance를 반환")
+	public ResponseEntity<Attendance> getOneAttendance(@PathVariable int checkcode){
+		Attendance attendance = attendanceService.findByCheckcode(checkcode);
+		return new ResponseEntity<Attendance>(attendance, HttpStatus.OK);
+	}
 }
