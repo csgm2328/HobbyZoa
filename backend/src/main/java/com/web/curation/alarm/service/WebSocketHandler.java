@@ -1,4 +1,4 @@
-package com.web.curation.controller;
+package com.web.curation.alarm.service;
 
 import java.util.Date;
 import java.util.Map;

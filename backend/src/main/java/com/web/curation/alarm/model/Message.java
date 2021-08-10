@@ -1,4 +1,4 @@
-package com.web.curation.request.model;
+package com.web.curation.alarm.model;
 
 import javax.persistence.Entity;
 
@@ -17,5 +17,6 @@ public class Message {
 	private MessageType type;
 	private String content;
 	private String sender;
+	private String receiver;
 
 }

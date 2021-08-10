@@ -5,6 +5,8 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import com.web.curation.user.service.UserService;
+import com.web.curation.alarm.model.MessageType;
+import com.web.curation.alarm.service.AlarmService;
 import com.web.curation.email.service.EmailTokenService;
 import com.web.curation.response.BasicResponse;
 import com.web.curation.user.model.SignupRequest;
@@ -37,11 +39,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
-
+	
 	@Autowired
 	UserService userService;
 	@Autowired
 	EmailTokenService emailTokenService;
+	@Autowired
+	AlarmService alarmService;
 
 	@GetMapping("/login")
 	@ApiOperation(value = "로그인")
@@ -68,6 +72,7 @@ public class UserController {
 	@ApiOperation(value = "회원가입", notes = "비밀번호는 문자,숫자,특문포함해서  8자리 이상")
 	public ResponseEntity<BasicResponse> signUp(@Valid @RequestBody SignupRequest request) {
 		ResponseEntity<BasicResponse> response = null;
+		String welcomeMsg = "";
 		final BasicResponse result = new BasicResponse();
 		if (!userService.findById(request.getEmail()).isPresent()) { // 이메일 중복검사
 			User user = new User();
@@ -79,6 +84,7 @@ public class UserController {
 
 			result.object = userService.save(user);
 			System.out.println("[ " + user.getNickname() + " ] 님 등록 성공");
+			welcomeMsg = user.getNickname() + "님 Hobby Zoa와 함께하게 되신걸 환영합니다!\n이메일 인증을 하셨나요?";
 			result.status = true;
 			result.data = "success";
 			response = new ResponseEntity<>(result, HttpStatus.OK);
@@ -87,10 +93,11 @@ public class UserController {
 			// 만료전(5분) 링크 접속시 인증완료 --> 인증된 이메일로 처리
 			emailTokenService.createEmailConfirmationToken(request.getEmail(), request.getEmail());
 		} else {
-			result.status = true;
+			result.status = false;
 			result.data = "fail: 이미 존재하는 이메일입니다.";
 			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
+		alarmService.sendAlarm(MessageType.JOIN, request.getEmail(), request.getEmail(), welcomeMsg);
 		return response;
 	}
 

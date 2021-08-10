@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.curation.alarm.model.Message;
+import com.web.curation.alarm.model.MessageType;
+import com.web.curation.alarm.service.AlarmService;
 import com.web.curation.follow.service.FollowService;
 import com.web.curation.profile.service.ProfileService;
-import com.web.curation.request.model.Message;
-import com.web.curation.request.model.MessageType;
 import com.web.curation.response.BasicResponse;
 import com.web.curation.user.service.UserService;
 
@@ -42,7 +43,9 @@ public class ProfileController {
 	@Autowired
 	UserService userService;
 	@Autowired
-	NotifyController notifyController;
+	AlarmController alarmController;
+	@Autowired
+	AlarmService alarmService;
 
 	@GetMapping("{email}")
 	@ApiOperation(value = "프로필 보기", notes = "요청시 게시물 수, 팔로워, 팔로잉 수 업데이트, 코멘트는 계정설정에서 가져옴")
@@ -122,20 +125,18 @@ public class ProfileController {
 
 		result.object = followService.Follow(from, to);
 		result.status = true;
-		if (result.object != null)
+		MessageType alarmType;
+		if (result.object != null) {
 			result.data = "success:" + "[" + from + "] 가 [" + to + "]를 팔로우 했습니다.";
-		else
+			alarmType = MessageType.FOLLOW;
+		}
+		else {
 			result.data = "success:" + "[" + from + "] 가 [" + to + "]를 더이상 팔로우하지 않습니다.";
+			alarmType = MessageType.UNFOLLOW;
+		}
 		response = new ResponseEntity<>(result, HttpStatus.OK);
-		
 		// follow 알림 보내기
-		Message FollowMessage = new Message();
-		FollowMessage.setContent(result.data);
-		FollowMessage.setSender(from);
-		FollowMessage.setType(MessageType.FOLLOW);
-				
-		Message x =notifyController.Follow(FollowMessage, to);
-		System.out.println(x.getContent());
+		alarmService.sendAlarm(alarmType, from, to, result.data);
 		return response;
 	}
 
