@@ -139,10 +139,14 @@ const profileStore = {
         })
       })
     },
-    async createHobby({ commit }, data) {
+    async createHobby({ dispatch }, info) {
+      const data = info[0]
+      const username = info[1]
+      console.log(data)
+      console.log(username)
       const CREATE_HOBBY_URL = '/hobby'
-      const response = await axios.post(CREATE_HOBBY_URL, data)
-      console.log(commit, response)
+      await axios.post(CREATE_HOBBY_URL, data)
+      dispatch('profileStore/fetchHobby',username, { root: true })
     },
     async deleteHobby({ commit, dispatch }, info) {
       const hobbycode = info[0]
