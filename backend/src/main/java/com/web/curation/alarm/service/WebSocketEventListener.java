@@ -1,4 +1,4 @@
-package com.web.curation.controller;
+package com.web.curation.alarm.service;
 
 
 import org.slf4j.Logger;
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import com.web.curation.request.model.Message;
-import com.web.curation.request.model.MessageType;
+import com.web.curation.alarm.model.Message;
+import com.web.curation.alarm.model.MessageType;
 
 @Component
 public class WebSocketEventListener {
