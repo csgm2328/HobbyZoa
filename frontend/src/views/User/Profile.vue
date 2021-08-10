@@ -144,16 +144,19 @@
           <span style="margin-left: 10px;">Level</span>
         </v-btn>
       </v-row>
+      <div style="max-width: 1000px; margin:auto;">
+        <UserFeed
+          v-if="selected=='posts'"
+        />
+        <UserSaved
+          v-else-if="selected=='saved'"
+        />
+
+        <UserLevel
+          v-else-if="selected=='level'"
+        />
+      </div>
     </div>
-    <UserFeed
-      v-if="selected=='posts'"
-    />
-    <UserSaved
-      v-else-if="selected=='saved'"
-    />
-    <UserLevel
-      v-else-if="selected=='level'"
-    />
   </div>
 
 

@@ -86,11 +86,16 @@ export default {
   },
   methods: {
     addHobby() {
-      alert(`${this.hobby}가 추가되었습니다`)
       const form = new FormData()
       form.append('email', this.request_user)
-      form.append('name', this.hobby)
-      this.$store.dispatch('profileStore/createHobby', form)
+      form.append('name', this.hobbyinput)
+      this.$store.dispatch('profileStore/createHobby', [form, this.request_user])
+        .then(() => {
+          alert(`${this.hobbyinput}가 추가되었습니다`)
+        })
+        .catch(() => {
+          alert(`이미 ${this.hobbyinput}이란 이름의 취미가 존재합니다.`)
+        })
     },
     deleteHobby() {
       this.hobby = ''
