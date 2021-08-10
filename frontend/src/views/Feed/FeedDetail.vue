@@ -2,7 +2,6 @@
   <div>
     <Header/>
     <v-container>
-
       <v-layout column justify-center>
         <div 
           v-if="isMyFeed"
@@ -50,6 +49,11 @@
           ></v-carousel-item>
         </v-carousel>
         <h2 class="ms-1">{{ feed.feed.nickname }}</h2>
+        <div>
+          <v-chip>
+            {{ feed.feed.tag }}
+          </v-chip>
+        </div>
         <h4 class="ms-1">{{ feed.feed.comment }}</h4>
         <div class="d-flex justify-end">
           
@@ -207,7 +211,6 @@ export default {
   data() {
     return {
       feedcode: '',
-      // imagesPath: [],
       snackbar: false,
       message: '',
     }
