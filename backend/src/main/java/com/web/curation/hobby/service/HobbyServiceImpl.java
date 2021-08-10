@@ -1,6 +1,7 @@
 package com.web.curation.hobby.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,13 @@ public class HobbyServiceImpl implements HobbyService {
 	@Override
 	public void deleteByHobbycode(Integer hobbycode) {
 		hobbyRepo.deleteById(hobbycode);
+	}
+
+	@Override
+	public Hobby findByHobbycode(Integer hobbycode) {
+		Optional<Hobby> optHobby = hobbyRepo.findById(hobbycode);
+		Hobby hobby = optHobby.get();
+		return hobby;
 	}
 
 }

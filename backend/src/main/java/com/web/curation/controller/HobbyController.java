@@ -2,6 +2,7 @@ package com.web.curation.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.web.curation.attendance.model.Attendance;
+import com.web.curation.attendance.service.AttendanceService;
 import com.web.curation.badge.model.Badge;
 import com.web.curation.badge.service.BadgeService;
 import com.web.curation.hobby.model.Hobby;
@@ -34,6 +37,9 @@ public class HobbyController {
 	
 	@Autowired
 	BadgeService badgeService;
+	
+	@Autowired
+	AttendanceService attendanceService;
 	
 	@PostMapping
 	@ApiOperation(value="취미 생성", notes="email, name(취미이름)을 입력받아 uri를 반환")
@@ -71,4 +77,24 @@ public class HobbyController {
 		hobbyService.deleteByHobbycode(hobbycode);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
+	
+	@PostMapping(value="/check")
+	public ResponseEntity<?> createCheck(@RequestParam String email, @RequestParam int hobbycode, 
+			@RequestParam String start, @RequestParam String end, 
+			@RequestParam String comment) throws Exception{
+		//check저장할 때 배지 추가 여부 검사해주기
+
+		Hobby hobby = hobbyService.findByHobbycode(hobbycode);
+		Attendance attendance = attendanceService.save(Attendance.builder()
+				.email(email)
+				.hobby(hobby)
+				.start(Integer.parseInt(start))
+				.end(Integer.parseInt(end))
+				.comment(comment).build());
+		System.out.println(start);
+		URI uriLocation = new URI("/check/" + attendance.getCheckcode());
+		return ResponseEntity.created(uriLocation).body("{}");
+	}
+	
+	
 }
