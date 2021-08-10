@@ -84,25 +84,6 @@ const followStore = {
         }) 
         .catch(err => console.log(err))
     },
-    // checkFollow({ commit }, follow_info) {
-    //   const CHECK_FOLLOW_URL = SERVER_URL + '/profile/checkfollow'
-    //   console.log(follow_info[0], follow_info[1])
-    //   axios.get(CHECK_FOLLOW_URL, {
-    //     params: {
-    //       from: follow_info[0],
-    //       to: follow_info[1],
-    //     }
-    //   })
-    //     .then((res) => {
-    //       console.log('res', res)
-    //       commit('CHECK_FOLLOW', res.data.status)
-    //     }) 
-    //     .catch((err) => {
-    //       console.log(err)
-    //       commit('CHECK_FOLLOW', false)})
-    // },
-
-
     async checkFollow({ commit }, follow_info) {
       return new Promise((resolve, reject) => {
         const CHECK_FOLLOW_URL = SERVER_URL + '/profile/checkfollow'

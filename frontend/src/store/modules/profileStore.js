@@ -13,6 +13,7 @@ const profileStore = {
     comment: null,
     feeds: [],
     saved: [],
+    badge: [],
   },
   getters: {
     getEmail(state) {
@@ -41,6 +42,9 @@ const profileStore = {
     },
     getErrorCode(state) {
       return state.error_code
+    },
+    getHobby(state) {
+      return state.badge
     }
   },
   mutations: {
@@ -58,17 +62,11 @@ const profileStore = {
     FETCH_USER_SAVED(state, res) {
       state.saved = res
     },
+    FETCH_HOBBY(state, res) {
+      state.badge = res
+    }
   },
   actions: {
-    // fetchProfile({ commit }, username) {
-    //   axios.get(SERVER_URL + '/profile/' + username)
-    //     .then((res) => {
-    //       const info = res.data.object
-    //       commit('FETCH_PROFILE', info)
-    //     }) 
-    //     .catch(err => console.log(err))
-    // },
-
     async fetchProfile({ commit }, username) {
       return new Promise((resolve, reject) => {
         axios.get(SERVER_URL + '/profile/' + username)
@@ -84,21 +82,6 @@ const profileStore = {
           })
       })
     },
-
-    // fetchUserFeed({ commit }, username) {
-    //   const USER_FEED_USER = SERVER_URL + '/feed/mine'
-    //   axios.get(USER_FEED_USER, {
-    //     params: {
-    //       email: username,
-    //     }
-    //   })
-    //     .then((res) => {
-    //       const info = res.data
-    //       commit('FETCH_USER_FEED', info)
-    //     })
-    //     .catch(err => console.log(err))
-    // },
-
     async fetchUserFeed({ commit }, username) {
       return new Promise((resolve, reject) => {
         axios.get(SERVER_URL + '/feed/mine', {
@@ -117,7 +100,6 @@ const profileStore = {
           })
       })
     },
-
     async fetchUserSaved({ commit }, username) {
       return new Promise((resolve, reject) => {
       const USER_SAVED_URL = SERVER_URL + '/scrap'
@@ -137,6 +119,38 @@ const profileStore = {
           reject()
         })
       })
+    },
+    async fetchHobby({ commit }, username) {
+      return new Promise((resolve, reject) => {
+      const USER_SAVED_URL = SERVER_URL + '/hobby/badge'
+      axios.get(USER_SAVED_URL, {
+        params: {
+          email: username
+        }
+      }) 
+        .then((res) => {
+          console.log(res)
+          commit('FETCH_HOBBY', res.data)
+          resolve()
+        }) 
+        .catch(err => {
+          console.log(err)
+          reject()
+        })
+      })
+    },
+    async createHobby({ commit }, data) {
+      const CREATE_HOBBY_URL = '/hobby'
+      const response = await axios.post(CREATE_HOBBY_URL, data)
+      console.log(commit, response)
+    },
+    async deleteHobby({ commit, dispatch }, info) {
+      const hobbycode = info[0]
+      const username = info[1]
+      const DELETE_HOBBY_URL = '/hobby/' + hobbycode
+      const response = await axios.delete(DELETE_HOBBY_URL)
+      console.log(commit, response)
+      dispatch('profileStore/fetchHobby', username , { root: true })
     },
   }
 }
