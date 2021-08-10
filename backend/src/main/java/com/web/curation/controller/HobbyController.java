@@ -123,4 +123,12 @@ public class HobbyController {
 		attendanceService.updateByCheckcode(checkcode, attendance);
 		return new ResponseEntity<Attendance>(attendance, HttpStatus.OK);
 	}
+	
+	@DeleteMapping(value="/check/{checkcode}")
+	@ApiOperation(value="출석 삭제", notes="checkcode를 입력받아 attendance 삭제")
+	public ResponseEntity<Void> deleteAttendance(@PathVariable int checkcode){
+		attendanceService.deleteByCheckcode(checkcode);
+		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+	
 }
