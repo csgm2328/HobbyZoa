@@ -111,4 +111,16 @@ public class HobbyController {
 		Attendance attendance = attendanceService.findByCheckcode(checkcode);
 		return new ResponseEntity<Attendance>(attendance, HttpStatus.OK);
 	}
+	
+	@PutMapping(value="/check/{checkcode}")
+	@ApiOperation(value="출석 수정 하기", notes="checkcode를 입력받아 attendance 수정")
+	public ResponseEntity<Attendance> updateAttendance(@PathVariable int checkcode, @RequestParam String start, 
+			@RequestParam String end, @RequestParam String comment){
+		Attendance attendance = attendanceService.findByCheckcode(checkcode);
+		attendance.setStart(Integer.parseInt(start));
+		attendance.setEnd(Integer.parseInt(end));
+		attendance.setComment(comment);
+		attendanceService.updateByCheckcode(checkcode, attendance);
+		return new ResponseEntity<Attendance>(attendance, HttpStatus.OK);
+	}
 }
