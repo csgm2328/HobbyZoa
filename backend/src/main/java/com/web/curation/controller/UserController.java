@@ -84,7 +84,7 @@ public class UserController {
 
 			result.object = userService.save(user);
 			System.out.println("[ " + user.getNickname() + " ] 님 등록 성공");
-			welcomeMsg = user.getNickname() + "님 Hobby Zoa와 함께하게 되신걸 환영합니다!\n이메일 인증을 하셨나요?";
+			welcomeMsg = user.getNickname() + "님 Hobby Zoa와 함께하게 되신걸 환영합니다!";
 			result.status = true;
 			result.data = "success";
 			response = new ResponseEntity<>(result, HttpStatus.OK);

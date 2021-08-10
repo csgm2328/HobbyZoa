@@ -1,6 +1,7 @@
 package com.web.curation.controller;
 
 import java.net.URI;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -18,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.web.curation.alarm.model.MessageType;
+import com.web.curation.alarm.service.AlarmService;
+import com.web.curation.feed.model.Feed;
+import com.web.curation.feed.service.FeedService;
 import com.web.curation.reply.model.Reply;
 import com.web.curation.reply.service.ReplyService;
 import com.web.curation.response.BasicResponse;
@@ -41,7 +46,10 @@ public class ReplyController {
 
 	@Autowired
 	ReplyService replyService;
-	
+	@Autowired
+	AlarmService alarmService;
+	@Autowired
+	FeedService feedService;
 	//댓글 생성(피드코드를 넘겨받아야,,)
 	@PostMapping
 	@ApiOperation(value="댓글 생성", notes="댓글(reply)를 입력받아 uri를 반환")
@@ -55,8 +63,11 @@ public class ReplyController {
 				.hide(hide)
 				.feedcode(feedcode)
 				.build());
-		
 		URI uriLocation = new URI("/reply/" + reply.getReplycode()); //replycode or feedcode
+		//알림을 위한 feed 소유자 찾기
+		Feed feed = feedService.findByFeedcode(feedcode);
+		String alarmMsg = "[" + nickname + "]님이 회원님의 "+ feedcode + "번 피드에 댓글을 달았습니다.";
+		alarmService.sendAlarm(MessageType.REPLY, nickname, feed.getEmail(), alarmMsg);
         return ResponseEntity.created(uriLocation).body("{}");
 	}
 	
