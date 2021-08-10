@@ -1,14 +1,20 @@
 package com.web.curation.alarm.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
+import com.web.curation.alarm.model.Alarm;
 import com.web.curation.alarm.model.Message;
 import com.web.curation.alarm.model.MessageType;
+import com.web.curation.alarm.repo.AlarmRepo;
 
 @Service
 public class AlarmServiceImpl implements AlarmService{
+	@Autowired
+	private AlarmRepo alarmRepo;
 	@Autowired
 	private SimpMessageSendingOperations messagingTemplate;
 	
@@ -20,6 +26,15 @@ public class AlarmServiceImpl implements AlarmService{
 		msg.setSender(from);
 		msg.setReceiver(to);
 		msg.setContent(content);
+		Alarm alarm = Alarm.builder()
+				.type(alarmType.toString())
+				.fromemail(from)
+				.toemail(to)
+				.content("csgm2328")
+//				.check(false)
+//				.createDate(LocalDateTime.now())
+				.build();
+		alarmRepo.save(alarm);
 		messagingTemplate.convertAndSend("/queue/" + to, msg);
 	}
 
