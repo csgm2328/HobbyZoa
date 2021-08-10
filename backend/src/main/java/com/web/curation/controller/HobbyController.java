@@ -79,7 +79,8 @@ public class HobbyController {
 	}
 	
 	@PostMapping(value="/check")
-	public ResponseEntity<?> createCheck(@RequestParam String email, @RequestParam int hobbycode, 
+	@ApiOperation(value="출석 생성", notes="email,hobbycode,시작시간,종료시간,comment를 입력받아 저장 후 uri반환")
+	public ResponseEntity<?> createAttendance(@RequestParam String email, @RequestParam int hobbycode, 
 			@RequestParam String start, @RequestParam String end, 
 			@RequestParam String comment) throws Exception{
 		//check저장할 때 배지 추가 여부 검사해주기
@@ -92,8 +93,16 @@ public class HobbyController {
 				.end(Integer.parseInt(end))
 				.comment(comment).build());
 		System.out.println(start);
-		URI uriLocation = new URI("/check/" + attendance.getCheckcode());
+		URI uriLocation = new URI("hobby/check/" + attendance.getCheckcode());
 		return ResponseEntity.created(uriLocation).body("{}");
+	}
+	
+	@GetMapping(value="/check")
+	@ApiOperation(value="해당 취미의 출석 모두 보기", notes="hobbycode를 입력받아 출석 리스트를 반환")
+	public ResponseEntity<List<Attendance>> getAllAttendance(@RequestParam int hobbycode){
+		Hobby hobby = hobbyService.findByHobbycode(hobbycode);
+		List<Attendance> attendances = attendanceService.findAllByHobby(hobby);
+		return new ResponseEntity<List<Attendance>>(attendances, HttpStatus.OK);
 	}
 	
 	
