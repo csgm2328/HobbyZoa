@@ -14,11 +14,20 @@ export default {
     state.nickname = nickname
     localStorage.setItem('user', nickname)
   },
+  FETCH_EMAIL(state, email) {
+    state.email = email
+    localStorage.setItem('email', email)
+  },
+  FETCH_EMAILVERIFIED(state, emailVerified) {
+    state.emailVerified = emailVerified
+    localStorage.setItem('emailVerified', emailVerified)
+  },
   AUTH_LOGOUT(state) {
     state.token = ''
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     localStorage.removeItem('email')
+    localStorage.removeItem('emailVerified')
   },
   LOGIN_ERROR(state, loginError) {
     state.loginError = loginError

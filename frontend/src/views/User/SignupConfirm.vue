@@ -4,6 +4,7 @@
     <v-container fluid fill-height>
       <v-layout column align-center justify-center>
         <h1 class="ma-5">메일 인증 완료</h1>
+        <MailReconfirm/>
       </v-layout>
     </v-container>
   </div>
@@ -11,11 +12,13 @@
 
 <script>
 import Header from '@/components/Header'
+import MailReconfirm from '@/components/MailReconfirm'
 
 export default {
   name: 'SignupConfirm',
   components: {
-    Header
+    Header,
+    MailReconfirm
   },
   data() {
     return {

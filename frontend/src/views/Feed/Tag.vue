@@ -1,12 +1,31 @@
 <template>
     <div>
-        tag 페이지 입니다
+        <Header/>
+        Feed
+        <FeedList/>
     </div>
 </template>
 
 <script>
-export default {
+import Header from '@/components/Header'
+import FeedList from '@/components/FeedList'
 
+export default {
+    name: 'Tag',
+    components: {
+        Header,
+        FeedList
+    },
+    data() {
+        return {
+            tagname: '',
+        }
+    },
+    created() {
+        const tagname = this.$route.params.tagname
+        this.tagname = tagname
+        this.$store.dispatch('FETCH_KEYWORD_FEED', tagname)
+    },
 }
 </script>
 

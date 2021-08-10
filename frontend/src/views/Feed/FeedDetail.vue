@@ -219,6 +219,12 @@ export default {
     const feedcode = this.$route.params.feedcode
     this.feedcode = feedcode
     this.$store.dispatch('FETCH_FEED_DETAIL', feedcode)
+      .then()
+      .catch(() => {
+        if (this.$store.getters.getErrorCode) {
+          this.$router.push({ name: 'ErrorPage' })
+        }
+      })
   },
   methods: {
     deleteFeed() {
