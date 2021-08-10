@@ -18,6 +18,9 @@ export default {
   getEmail(state) {
     return state.email
   },
+  getEmailVerified(state) {
+    return state.emailVerified
+  },
   getFeedList(state) {
     return state.feedList
   },

@@ -16,12 +16,17 @@ import FollowFeed from '@/views/Feed/FollowFeed.vue'
 import LikeFeed from '@/views/Feed/LikeFeed.vue'
 import NotFoundPage from '@/views/NotFoundPage.vue'
 import ErrorPage from '@/views/ErrorPage.vue'
+import UserMailConfirm from '@/views/User/UserMailConfirm.vue'
 
 Vue.use(VueRouter)
 
 const requireAuth = function(to, from, next) {
   if (localStorage.getItem('token')) {
-    next()
+    if (localStorage.getItem('emailVerified') == 'true') {
+      next()
+    } else {
+      next('/reconfirm')
+    }
   } else {
     next('/login')
   }
@@ -68,6 +73,11 @@ const routes = [
     name: 'Login',
     component: Login,
     beforeEnter: requiredAuth
+  },
+  {
+    path: '/reconfirm',
+    name: 'UserMailConfirm',
+    component: UserMailConfirm,
   },
   {
     path: '/setting',

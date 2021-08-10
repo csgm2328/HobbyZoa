@@ -23,6 +23,7 @@ const state = {
   token: localStorage.getItem('token'),
   nickname: localStorage.getItem('user'),
   email: localStorage.getItem('email'),
+  emailVerified: localStorage.getItem('emailVerified'),
   feedList: [],
   feedDetail: null,
   isScrap: false,

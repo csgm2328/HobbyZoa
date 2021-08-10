@@ -23,6 +23,11 @@ export default {
     const response = await axios.get(SIGNUP_CONFRIM_URL, { params: {token: signup_token}})
     console.log(commit, response)
   },
+  async SIGNUP_RE_CONFIRM({ commit }, signup_mail) {
+    const SIGNUP_RECONFRIM_URL = '/user/reconfirm_email'
+    const response = await axios.get(SIGNUP_RECONFRIM_URL, { params: {'가입한 이메일': signup_mail, '인증메일 받을 이메일': signup_mail}})
+    console.log(commit, response)
+  },
   // login action
   async AUTH_USER({ commit }, userinfo) {
     return new Promise((resolve, reject) => {
@@ -38,16 +43,15 @@ export default {
 
           axios.get('/auth/loginInfo')
             .then((res) => {
-              localStorage.setItem('user', res.data.userInfo.nickname)
-              localStorage.setItem('email', res.data.userInfo.email)
               commit('FETCH_NICKNAME', res.data.userInfo.nickname)
+              commit('FETCH_EMAIL', res.data.userInfo.email)
+              commit('FETCH_EMAILVERIFIED', res.data.userInfo.emailVerified)
               resolve()
             })
             .catch((err) => {
-              console.log(err)
               const loginError = 'Login'
               commit('LOGIN_ERROR', loginError)
-              reject()
+              reject(err)
             })
         })
     })
@@ -71,14 +75,21 @@ export default {
   },
   // get feed detail
   async FETCH_FEED_DETAIL({ commit, dispatch }, feedcode) {
-    const FEED_DETAIL_URL = `/feed/search/${feedcode}`
-    const response = await axios.get(FEED_DETAIL_URL)
-    commit('FETCH_FEED_DETAIL', response.data)
-    if (response) {
-      dispatch('IS_SCRAP', feedcode)
-      dispatch('IS_LIKE', feedcode)
-      dispatch('FETCH_LIKE_LIST', feedcode)
-    }
+    return new Promise((resolve, reject) => {
+      const FEED_DETAIL_URL = `/feed/search/${feedcode}`
+      axios.get(FEED_DETAIL_URL)
+        .then((response) => {
+          commit('FETCH_FEED_DETAIL', response.data)
+          dispatch('IS_SCRAP', feedcode)
+          dispatch('IS_LIKE', feedcode)
+          dispatch('FETCH_LIKE_LIST', feedcode)
+          resolve()
+        })
+        .catch((err) => {
+          commit('FETCH_ERROR', err.response.status , { root: true })
+          reject()
+        })
+    })
   },
   // update feed
   async UPDATE_FEED({ commit }, form) {
@@ -202,6 +213,7 @@ export default {
   async FETCH_KEYWORD_FEED({ commit }, keyword) {
     const KEYWORD_FEED_URL = `/orderby/date/${keyword}`
     const response = await axios.get(KEYWORD_FEED_URL)
+    console.log(response.data)
     commit('FETCH_FEED_LIST', response.data)
   },
   async FETCH_KEYWORD_LIKE_FEED({ commit }, keyword) {

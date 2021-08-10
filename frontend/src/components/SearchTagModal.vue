@@ -11,8 +11,8 @@
         </v-card-title>
         <v-card-text>
           <v-text-field
-            label="Outlined"
-            placeholder="Placeholder"
+            label="tag"
+            placeholder="ex) 운동"
             outlined
             v-model="search"
           ></v-text-field>

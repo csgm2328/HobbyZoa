@@ -139,12 +139,12 @@
         return this.$store.getters.getFeedDetail.feed
       },
     },
-    async created() {
+    created() {
       this.text = this.$store.getters.getFeedDetail.feed.comment
       for (const image of this.$store.getters.getFeedDetail.images) {
         var imgurl = `http://i5c102.p.ssafy.io/api/feed/${image.newname}`
-        const response = await fetch(imgurl)
-        const data = await response.blob()
+        const response = fetch(imgurl)
+        const data = response.blob()
         const ext = image.newname.split(".").pop()
         const filename = image.orgname
         const metadata = { type: `image/${ext}`}
