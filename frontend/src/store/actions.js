@@ -19,7 +19,7 @@ export default {
   },
   // signup action
   async SIGNUP_CONFIRM({ commit }, signup_token) {
-    const SIGNUP_CONFRIM_URL = 'http://localhost:9990/user/confirm-email'
+    const SIGNUP_CONFRIM_URL = '/user/confirm-email'
     const response = await axios.get(SIGNUP_CONFRIM_URL, { params: {token: signup_token}})
     console.log(commit, response)
   },
@@ -199,4 +199,14 @@ export default {
   DELETE_ERROR_CODE({ commit }) {
     commit('DELETE_ERROR_CODE')
   },
+  async FETCH_KEYWORD_FEED({ commit }, keyword) {
+    const KEYWORD_FEED_URL = `/orderby/date/${keyword}`
+    const response = await axios.get(KEYWORD_FEED_URL)
+    commit('FETCH_FEED_LIST', response.data)
+  },
+  async FETCH_KEYWORD_LIKE_FEED({ commit }, keyword) {
+    const KEYWORD_LIKE_FEED_URL = `/orderby/likes/${keyword}`
+    const response = await axios.get(KEYWORD_LIKE_FEED_URL)
+    commit('FETCH_FEED_LIST', response.data)
+  }
 }
