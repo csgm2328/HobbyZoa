@@ -46,10 +46,10 @@ public class Alarm {
 //	@JsonBackReference
 //	private String to;
 	
-	@Column
-	private String from;
-	@Column
-	private String to;
+	@Column(name = "from_email")
+	private String fromemail;
+	@Column(name = "to_email")
+	private String toemail;
 	@Column
 	private String content;
 	

@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.curation.alarm.model.MessageType;
+import com.web.curation.alarm.service.AlarmService;
 import com.web.curation.feed.model.Feed;
 import com.web.curation.feed.service.FeedService;
 import com.web.curation.image.model.Image;
@@ -57,13 +59,12 @@ public class FeedController {
 
 	@Autowired
 	FeedService feedService;
-	
 	@Autowired
 	ReplyService replyService;
-	
 	@Autowired
 	TagService tagService;
-	
+	@Autowired
+	AlarmService alarmService;
 	// 피드 생성
 	@PostMapping
 	@ApiOperation(value="피드 생성", notes="email, nickname, comment와 file리스트를 입력받아 uri를 반환")
@@ -177,6 +178,9 @@ public class FeedController {
 	public ResponseEntity<String> LikeFeed(@PathVariable("email") String email, @PathVariable("feedcode") Integer feedcode) {
 		String result = email + "님이 피드번호: " +  feedcode + "을 "
 				+ feedService.LikeFeed(email, feedcode);
+		Feed feed = feedService.findByFeedcode(feedcode);
+		String alarmMsg = "[" + email + "]님이 회원님의 "+ feedcode + "번 피드를 좋아합니다.";
+		alarmService.sendAlarm(MessageType.LIKE, email, feed.getEmail(), alarmMsg);
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
 	// 좋아요 여부 체크

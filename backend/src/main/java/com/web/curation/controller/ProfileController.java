@@ -126,17 +126,20 @@ public class ProfileController {
 		result.object = followService.Follow(from, to);
 		result.status = true;
 		MessageType alarmType;
+		String alarmMsg= "";
 		if (result.object != null) {
 			result.data = "success:" + "[" + from + "] 가 [" + to + "]를 팔로우 했습니다.";
+			alarmMsg = "" + from + "님이 회원님을 팔로우하기 시작했습니다.";
 			alarmType = MessageType.FOLLOW;
 		}
 		else {
 			result.data = "success:" + "[" + from + "] 가 [" + to + "]를 더이상 팔로우하지 않습니다.";
+			alarmMsg = "" + from + "님이 회원님을 더이상 팔로우하지 않습니다.";
 			alarmType = MessageType.UNFOLLOW;
 		}
 		response = new ResponseEntity<>(result, HttpStatus.OK);
 		// follow 알림 보내기
-		alarmService.sendAlarm(alarmType, from, to, result.data);
+		alarmService.sendAlarm(alarmType, from, to, alarmMsg);
 		return response;
 	}
 
