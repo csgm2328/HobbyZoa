@@ -1,5 +1,7 @@
 package com.web.curation.attendance.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,14 +31,45 @@ public class AttendanceaccServiceImpl implements AttendanceaccService {
 	}
 
 	@Override
-	public Attendanceacc updateAttendanceacc(Attendanceacc attendanceacc) {
-		return null;
+	public void updateAttendanceacc(Hobby hobby, int orgtime, int newtime) {
+		Attendanceacc attendanceacc = attendanceaccRepo.findByHobby(hobby);
+		int time = attendanceacc.getTimetot() - orgtime + newtime;
+		attendanceacc.setTimetot(time);
+		attendanceaccRepo.save(attendanceacc);
 	}
 
 	@Override
 	public void deleteAttendanceacc(Integer id) {
 		attendanceaccRepo.deleteById(id);
 
+	}
+
+	@Override
+	public String checkDaytot(Hobby hobby, Attendanceacc attendanceacc) {
+		if(attendanceacc.getDaytot() == 3) {
+			return "3days";
+		}else if(attendanceacc.getDaytot() == 7) {
+			return "7days";
+		}else if(attendanceacc.getDaytot() == 21) {
+			return "21days";
+		}else if(attendanceacc.getDaytot() == 30) {
+			return "30days";
+		}else if(attendanceacc.getDaytot() == 100) {
+			return "100days";
+		}else if(attendanceacc.getDaytot() == 365) {
+			return "365days";
+		}
+		return null;
+	}
+
+	@Override
+	public String checkTimetot(Hobby hobby, Attendanceacc attendanceacc) {
+		if(attendanceacc.getTimetot() == 24) {
+			return "24hours";
+		}else if(attendanceacc.getTimetot() == 10000) {
+			return "10000hours";
+		}
+		return null;
 	}
 
 }

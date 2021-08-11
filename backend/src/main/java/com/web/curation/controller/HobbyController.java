@@ -101,14 +101,30 @@ public class HobbyController {
 			attendanceacc = attendanceaccService.findByHobby(hobby);
 			attendanceacc.setDaytot(attendanceacc.getDaytot()+1);
 			attendanceacc.setTimetot(attendanceacc.getTimetot()+time);
-//			attendanceaccService.updateAttendanceacc(attendanceacc);
 			attendanceaccService.save(attendanceacc);
+			
+			String daysbadge = attendanceaccService.checkDaytot(hobby, attendanceacc);
+			String timesbadge = attendanceaccService.checkTimetot(hobby, attendanceacc);
+			
+			if(daysbadge != null) {
+				badgeService.save(Badge.builder()
+						.name(daysbadge)
+						.hobby(hobby)
+						.build());
+			}
+			if(timesbadge != null) {
+				badgeService.save(Badge.builder()
+						.name(timesbadge)
+						.hobby(hobby)
+						.build());
+			}
 		}else {
 			attendanceacc = attendanceaccService.save(Attendanceacc.builder()
 					.hobby(hobby)
 					.daytot(1)
 					.timetot(time).build());
 		}
+		
 		URI uriLocation = new URI("hobby/check/" + attendance.getCheckcode());
 		return ResponseEntity.created(uriLocation).body("{}");
 	}
@@ -133,10 +149,13 @@ public class HobbyController {
 	public ResponseEntity<Attendance> updateAttendance(@PathVariable int checkcode, @RequestParam String start, 
 			@RequestParam String end, @RequestParam String comment){
 		Attendance attendance = attendanceService.findByCheckcode(checkcode);
+		int orgtime = attendance.getEnd() - attendance.getStart();
 		attendance.setStart(Integer.parseInt(start));
 		attendance.setEnd(Integer.parseInt(end));
 		attendance.setComment(comment);
 		attendanceService.updateByCheckcode(checkcode, attendance);
+		int newtime = Integer.parseInt(end)-Integer.parseInt(start);
+		attendanceaccService.updateAttendanceacc(attendance.getHobby(), orgtime, newtime);
 		return new ResponseEntity<Attendance>(attendance, HttpStatus.OK);
 	}
 	
