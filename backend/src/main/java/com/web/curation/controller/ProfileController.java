@@ -43,7 +43,7 @@ public class ProfileController {
 	@Autowired
 	UserService userService;
 	@Autowired
-	AlarmController alarmController;
+	WSController alarmController;
 	@Autowired
 	AlarmService alarmService;
 

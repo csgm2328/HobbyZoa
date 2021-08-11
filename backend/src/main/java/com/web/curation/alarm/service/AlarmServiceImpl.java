@@ -1,6 +1,6 @@
 package com.web.curation.alarm.service;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -34,6 +34,29 @@ public class AlarmServiceImpl implements AlarmService{
 				.build();
 		alarmRepo.save(alarm);
 		messagingTemplate.convertAndSend("/queue/" + to, msg);
+	}
+
+	//한달 내 생성된 알람 리스트 반환
+	//읽은거는 읽은 날짜 순으로 order by check_date desc
+	//안읽은거는 생성순으로 order by create_date desc
+	//안읽은거부터 합쳐서 리스트반환
+	@Override
+	public List<Alarm> findAll(String email) {
+		List<Alarm> total = alarmRepo.findByToemail(email);
+		List<Alarm> alreadyCheckedList = alarmRepo.findAllByToemailAndAlarmCheckOrderByCheckDateDesc(email, true);
+		List<Alarm> unCheckedList = alarmRepo.findAllByToemailAndAlarmCheckOrderByCreateDateDesc(email, false);
+		for(Alarm x: unCheckedList) // 확인안한 알림이 위로 오게
+			total.add(x);
+		for(Alarm x: alreadyCheckedList)
+			total.add(x);
+		return total;
+	}
+	//읽은 알림처리
+	@Override
+	public Alarm CheckAlarm(int code) {
+		Alarm alarm = alarmRepo.findByAlarmcode(code);
+		alarm.setAlarmCheck(true);
+		return alarmRepo.findByAlarmcode(code);
 	}
 
 }

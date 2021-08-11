@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -52,9 +53,15 @@ public class Alarm {
 	private String toemail;
 	@Column
 	private String content;
-	
-    @Column(insertable = false, updatable = false)
-    private LocalDateTime createDate;
 	@Column
 	private boolean alarmCheck;
+	
+    @CreatedDate
+	private LocalDateTime createDate; //알림 생성 날짜
+    @LastModifiedDate
+    private LocalDateTime checkDate; //알림 확인 날짜
+	public boolean getAlarmCheck() {
+		// TODO Auto-generated method stub
+		return alarmCheck;
+	}
 }

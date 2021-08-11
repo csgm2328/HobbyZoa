@@ -1,72 +1,70 @@
 package com.web.curation.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.web.curation.alarm.model.Message;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.web.curation.alarm.model.Alarm;
+import com.web.curation.alarm.service.AlarmService;
 import com.web.curation.response.BasicResponse;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.stereotype.Controller;
-
 @ApiResponses(value = { @ApiResponse(code = 400, message = "Bad Request", response = BasicResponse.class) })
 
-@Controller
-//@RequestMapping(value = "app")
+@RestController
+@RequestMapping(value = "alarm")
 @CrossOrigin(origins = { "*" })
 public class AlarmController {
-
-//	@Autowired
-//	WebSocketHandler webSocketHandler;
-//	@Autowired
-//	WebSocketEventListener webSocketEventListener;
 	@Autowired
-	private SimpMessageSendingOperations messagingTemplate;
+	AlarmService alarmService;
+	
+	@GetMapping("{email}")
+	@ApiOperation(value = "한달 내 생성된 알림 보기", notes = "회원가입, 팔로우, 언팔로우, 좋아요, 스크랩, 댓글, 이메일 인증")
+	public ResponseEntity<BasicResponse> ShowAlarmList(@PathVariable String email) {
+		
+		List<Alarm> list = alarmService.findAll(email);
+		ResponseEntity<BasicResponse> response = null;
 
-	@MessageMapping("/alarm/{email}")
-//	@SendTo("topic/{email}")
-	public void alarmMessage(@DestinationVariable("email") String email, @Payload Message alarmMessage) {
-		System.out.println("알람타겟: " + email);
-		messagingTemplate.convertAndSend("/topic/" + email, alarmMessage);
-//		messagingTemplate.convertAndSendToUser(email, "topic/", alarmMessage);
-//		return alarmMessage;
+		if (!list.isEmpty()) {
+			System.out.println("[ " + email + " ] 님의 알림 목록 요청");
+			final BasicResponse result = new BasicResponse();
+			result.status = true;
+			result.data = "success";
+			result.object = list;
+			response = new ResponseEntity<>(result, HttpStatus.OK);
+		} else {
+			response = new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+		}
+		return response;
+		
 	}
+	@GetMapping("{email}/{code}")
+	@ApiOperation(value = "알림 확인 처리", notes = "")
+	public ResponseEntity<BasicResponse> checkAlarm(@PathVariable String email,@PathVariable int code) {
+		//code로 찾아서 check = true
+		
+		ResponseEntity<BasicResponse> response = null;
 
-	@MessageMapping("/chat.sendMessage")
-	@SendTo("/topic/public")
-	@ApiOperation(value = "메시지 보내기")
-	public Message sendMessage(@Payload Message chatMessage) throws JsonMappingException, JsonProcessingException {
-//		for(Message x: chatMessage)
-//			System.out.println(x);
-//		ObjectMapper objectMapper = new ObjectMapper();
-//		byte[] result = objectMapper.readValue(chatMessage.toString(), byte[].class);
-//		System.out.println(result);
-		return chatMessage;
-	}
-
-	@MessageMapping("/chat.addUser")
-	@SendTo("/topic/public")
-	public Message addUser(@Payload Message chatMessage, SimpMessageHeaderAccessor headerAccessor) {
-		headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-		return chatMessage;
-	}
-
-	@MessageMapping("/follow")
-//    @SendToUser("queue/follow")
-	public void Follow(@Payload Message FollowMessage) {
-		System.out.println("팔로우 타겟:" + FollowMessage.getReceiver());
-		messagingTemplate.convertAndSend("/queue/" + FollowMessage.getReceiver(), FollowMessage);
-//    	return FollowMessage;
+		if (alarmService.CheckAlarm(code) != null) {
+			System.out.println("[ " + code + " ]번 알림 읽음");
+			final BasicResponse result = new BasicResponse();
+			result.status = true;
+			result.data = "success";
+			result.object = null;
+			response = new ResponseEntity<>(result, HttpStatus.OK);
+		} else {
+			response = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		}
+		return response;
 	}
 }
