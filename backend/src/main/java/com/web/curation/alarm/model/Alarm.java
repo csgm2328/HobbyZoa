@@ -56,9 +56,9 @@ public class Alarm {
 	@Column
 	private boolean alarmCheck;
 	
-    @CreatedDate
+    @Column(insertable=false, updatable=false)
 	private LocalDateTime createDate; //알림 생성 날짜
-    @LastModifiedDate
+    @Column
     private LocalDateTime checkDate; //알림 확인 날짜
 	public boolean getAlarmCheck() {
 		// TODO Auto-generated method stub

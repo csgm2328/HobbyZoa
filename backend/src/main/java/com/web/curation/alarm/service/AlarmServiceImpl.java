@@ -2,6 +2,8 @@ package com.web.curation.alarm.service;
 
 import java.util.List;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
@@ -55,8 +57,10 @@ public class AlarmServiceImpl implements AlarmService{
 	@Override
 	public Alarm CheckAlarm(int code) {
 		Alarm alarm = alarmRepo.findByAlarmcode(code);
+		System.out.println("상태:" + alarm.getAlarmCheck());
 		alarm.setAlarmCheck(true);
-		return alarmRepo.findByAlarmcode(code);
+		alarm.setCheckDate(LocalDateTime.now());
+		return alarmRepo.save(alarm);
 	}
 
 }
