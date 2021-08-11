@@ -12,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.web.curation.attendance.model.Attendance;
+import com.web.curation.attendance.model.Attendanceacc;
 import com.web.curation.attendance.service.AttendanceService;
+import com.web.curation.attendance.service.AttendanceaccService;
 import com.web.curation.badge.model.Badge;
 import com.web.curation.badge.service.BadgeService;
 import com.web.curation.hobby.model.Hobby;
@@ -40,6 +42,9 @@ public class HobbyController {
 	
 	@Autowired
 	AttendanceService attendanceService;
+	
+	@Autowired
+	AttendanceaccService attendanceaccService;
 	
 	@PostMapping
 	@ApiOperation(value="취미 생성", notes="email, name(취미이름)을 입력받아 uri를 반환")
@@ -83,8 +88,6 @@ public class HobbyController {
 	public ResponseEntity<?> createAttendance(@RequestParam String email, @RequestParam int hobbycode, 
 			@RequestParam String start, @RequestParam String end, 
 			@RequestParam String comment) throws Exception{
-		//check저장할 때 배지 추가 여부 검사해주기
-
 		Hobby hobby = hobbyService.findByHobbycode(hobbycode);
 		Attendance attendance = attendanceService.save(Attendance.builder()
 				.email(email)
@@ -92,7 +95,20 @@ public class HobbyController {
 				.start(Integer.parseInt(start))
 				.end(Integer.parseInt(end))
 				.comment(comment).build());
-		System.out.println(start);
+		Attendanceacc attendanceacc;
+		int time = Integer.parseInt(end) - Integer.parseInt(start);
+		if(attendanceaccService.existsByHobby(hobby)) {
+			attendanceacc = attendanceaccService.findByHobby(hobby);
+			attendanceacc.setDaytot(attendanceacc.getDaytot()+1);
+			attendanceacc.setTimetot(attendanceacc.getTimetot()+time);
+//			attendanceaccService.updateAttendanceacc(attendanceacc);
+			attendanceaccService.save(attendanceacc);
+		}else {
+			attendanceacc = attendanceaccService.save(Attendanceacc.builder()
+					.hobby(hobby)
+					.daytot(1)
+					.timetot(time).build());
+		}
 		URI uriLocation = new URI("hobby/check/" + attendance.getCheckcode());
 		return ResponseEntity.created(uriLocation).body("{}");
 	}
