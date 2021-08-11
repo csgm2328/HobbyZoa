@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -66,7 +68,7 @@ public class AlarmServiceImpl implements AlarmService{
 		Alarm alarm = alarmRepo.findByAlarmcode(code);
 		System.out.println("[ " + code + " ]번 알림 읽음");
 		alarm.setAlarmCheck(true);
-		alarm.setCheckDate(LocalDateTime.now()); //읽은시간 생성
+		alarm.setCheckDate(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime()); //읽은시간 생성
 		return alarmRepo.save(alarm);
 	}
 
