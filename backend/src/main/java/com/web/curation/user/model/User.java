@@ -2,29 +2,33 @@
 
 package com.web.curation.user.model;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
 
-@Entity
+
 @Data
-@NoArgsConstructor
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Getter
+@Setter
+@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL) //null아닌것만 responseBody에 포함
 public class User {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String email;
     @Column
     private String nickname;
@@ -33,69 +37,9 @@ public class User {
     @Column
     private String phone;
     @Column
-    private boolean emailVerified;
-    @Column
     private String comment;
-
+    @Column
+    private boolean emailVerified;
     @Column(insertable = false, updatable = false)
     private LocalDateTime regdate;
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getNickname() {
-		return nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public LocalDateTime getRegdate() {
-		return regdate;
-	}
-
-	public void setRegdate(LocalDateTime regdate) {
-		this.regdate = regdate;
-	}
-
-	public void emailVerifiedSuccess() {
-		this.emailVerified = true;
-	}
-	public boolean isEmailVerified() {
-		return emailVerified;
-	}
-
-	public void setEmailVerified(boolean emailVerified) {
-		this.emailVerified = emailVerified;
-	}
 }

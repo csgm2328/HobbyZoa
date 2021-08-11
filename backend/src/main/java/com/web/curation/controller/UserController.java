@@ -30,10 +30,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@ApiResponses(value = { @ApiResponse(code = 400, message = "Bad Request", response = BasicResponse.class),
-		@ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
-		@ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
-		@ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
+@ApiResponses(value = { @ApiResponse(code = 500, message = "Bad Request", response = BasicResponse.class) })
 
 @CrossOrigin(origins = { "*" })
 @RestController
@@ -70,34 +67,28 @@ public class UserController {
 
 	@PostMapping("/signup")
 	@ApiOperation(value = "회원가입", notes = "비밀번호는 문자,숫자,특문포함해서  8자리 이상")
-	public ResponseEntity<BasicResponse> signUp(@Valid @RequestBody SignupRequest request) {
+	public ResponseEntity<BasicResponse> signUp(@Valid @RequestBody SignupRequest userInfo) {
 		ResponseEntity<BasicResponse> response = null;
-		String welcomeMsg = "";
 		final BasicResponse result = new BasicResponse();
-		if (!userService.findById(request.getEmail()).isPresent()) { // 이메일 중복검사
-			User user = new User();
-			user.setNickname(request.getNickname());
-			user.setEmail(request.getEmail());
-			user.setPassword(request.getPassword());
-			user.setPhone(request.getPhone());
-			user.setComment(request.getComment());
-
-			result.object = userService.save(user);
-			System.out.println("[ " + user.getNickname() + " ] 님 등록 성공");
-			welcomeMsg = user.getNickname() + "님 Hobby Zoa와 함께하게 되신걸 환영합니다!";
+		if (!userService.findById(userInfo.getEmail()).isPresent()) { // 이메일 중복검사
+			result.object = userService.save(userInfo);
+			System.out.println("[ " + userInfo.getNickname() + " ] 님 등록 성공");
+			
 			result.status = true;
 			result.data = "success";
 			response = new ResponseEntity<>(result, HttpStatus.OK);
 			// 회원가입 후 이메일 인증 하기:
 			// 토큰생성(token save) --> 토큰ID와 함께 이메일 인증 링크 전송 -->
 			// 만료전(5분) 링크 접속시 인증완료 --> 인증된 이메일로 처리
-			emailTokenService.createEmailConfirmationToken(request.getEmail(), request.getEmail());
+			emailTokenService.createEmailConfirmationToken(userInfo.getEmail(), userInfo.getEmail());
+			String welcomeMsg = userInfo.getNickname() + "님 Hobby Zoa와 오신걸 환영합니다!";
+			alarmService.sendAlarm(MessageType.JOIN, "admin@hobbyzoa.com", userInfo.getEmail(), welcomeMsg); //관리자가 보내주는 웰컴메시지
 		} else {
 			result.status = false;
 			result.data = "fail: 이미 존재하는 이메일입니다.";
 			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
-		alarmService.sendAlarm(MessageType.JOIN, request.getEmail(), request.getEmail(), welcomeMsg);
+		
 		return response;
 	}
 
@@ -106,7 +97,7 @@ public class UserController {
 	public ResponseEntity<BasicResponse> confirmUserEmail(@Valid @RequestParam String token) {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
-//		if (userService.confirmEmail(token)) {
+		
 		if (emailTokenService.confirmEmail(token)) {
 			result.status = true;
 			result.data = "success";
@@ -151,19 +142,7 @@ public class UserController {
 	public ResponseEntity<BasicResponse> UpdateUser(@PathVariable String email, @Valid @RequestBody SignupRequest UpdateInfo) {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
-
-		User user = userService.findById(email).get();
-		// PK인 email 빼고 전부다 변경가능
-		user.setNickname(UpdateInfo.getNickname());
-		// 비밀번호 변경시 안내 메일 전송
-		if(!user.getPassword().equals(UpdateInfo.getPassword()))
-			emailTokenService.NotifyEmailPasswordChange(email);
-		user.setPassword(UpdateInfo.getPassword());
-		user.setPhone(UpdateInfo.getPhone());
-		if (UpdateInfo.getComment() != null)
-			user.setComment(UpdateInfo.getComment());
-		//jpa hibernate sync 기능으로 이미 존재하는 컬럼 변경이후 find시 컬럼 수정
-		result.object = userService.findById(email).get();
+		result.object = userService.UpdateUser(UpdateInfo);
 
 		if (result.object != null) {
 			result.status = true;

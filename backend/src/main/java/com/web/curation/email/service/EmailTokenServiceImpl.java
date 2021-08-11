@@ -79,11 +79,11 @@ public class EmailTokenServiceImpl implements EmailTokenService{
 	//링크누르면  해당 이메일 인증 상태로 처리
 	public boolean confirmEmail(String token) {
 		EmailToken findConfirmationToken = findByIdAndExpirationDateAfterAndExpired(token);
-		Optional<User> user = userRepo.findById(findConfirmationToken.getUserEmail());
-		if (!user.isPresent())
+		Optional<User> e = userRepo.findById(findConfirmationToken.getUserEmail());
+		if (!e.isPresent())
 			return false;
 		findConfirmationToken.useToken(); // 사용한 토큰은 만료 처리
-		user.get().emailVerifiedSuccess(); // 인증된 이메일 처리
+		e.get().setEmailVerified(true); // 인증된 이메일 처리
 		userRepo.findAll(); // select하려고 하기전에 hibernate가 자동 sync를 통해 update
 		emailTokenRepo.findAll();
 		return true;

@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.web.curation.alarm.model.Message;
-import com.web.curation.alarm.model.MessageType;
-import com.web.curation.alarm.service.AlarmService;
 import com.web.curation.follow.service.FollowService;
 import com.web.curation.profile.service.ProfileService;
 import com.web.curation.response.BasicResponse;
@@ -29,7 +25,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@ApiResponses(value = { @ApiResponse(code = 400, message = "Bad Request", response = BasicResponse.class) })
+@ApiResponses(value = { @ApiResponse(code = 500, message = "Bad Request", response = BasicResponse.class) })
 
 @RestController
 @RequestMapping(value = "profile")
@@ -44,8 +40,6 @@ public class ProfileController {
 	UserService userService;
 	@Autowired
 	WSController alarmController;
-	@Autowired
-	AlarmService alarmService;
 
 	@GetMapping("{email}")
 	@ApiOperation(value = "프로필 보기", notes = "요청시 게시물 수, 팔로워, 팔로잉 수 업데이트, 코멘트는 계정설정에서 가져옴")
@@ -115,31 +109,20 @@ public class ProfileController {
 			@RequestParam(required = true) @ApiParam(value = "email") final String to) {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
-		// from, to 이메일 검증
-		if (!userService.findById(from).isPresent() || !userService.findById(to).isPresent()) {
+		// from, to 이메일 검증 & from != to 체크
+		if (!userService.findById(from).isPresent() || !userService.findById(to).isPresent() || from.equals(to)) {
 			result.status = false;
-			result.data = "fail: 등록된 유저만 팔로우를 할 수 있습니다.";
+			result.data = "fail: 등록된 유저만 팔로우를 할 수 있습니다. 혹은 올바르지 않은 팔로우 요청입니다";
 			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 			return response;
 		}
-
 		result.object = followService.Follow(from, to);
 		result.status = true;
-		MessageType alarmType;
-		String alarmMsg= "";
-		if (result.object != null) {
+		if (result.object != null)
 			result.data = "success:" + "[" + from + "] 가 [" + to + "]를 팔로우 했습니다.";
-			alarmMsg = "" + from + "님이 회원님을 팔로우하기 시작했습니다.";
-			alarmType = MessageType.FOLLOW;
-		}
-		else {
+		else 
 			result.data = "success:" + "[" + from + "] 가 [" + to + "]를 더이상 팔로우하지 않습니다.";
-			alarmMsg = "" + from + "님이 회원님을 더이상 팔로우하지 않습니다.";
-			alarmType = MessageType.UNFOLLOW;
-		}
 		response = new ResponseEntity<>(result, HttpStatus.OK);
-		// follow 알림 보내기
-		alarmService.sendAlarm(alarmType, from, to, alarmMsg);
 		return response;
 	}
 

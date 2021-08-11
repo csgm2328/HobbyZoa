@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@ApiResponses(value = { @ApiResponse(code = 400, message = "Bad Request", response = BasicResponse.class) })
+@ApiResponses(value = { @ApiResponse(code = 500, message = "Bad Request", response = BasicResponse.class) })
 
 @RestController
 @RequestMapping(value = "alarm")
@@ -52,12 +52,9 @@ public class AlarmController {
 	@PutMapping("/{code}")
 	@ApiOperation(value = "알림 확인 처리", notes = "")
 	public ResponseEntity<BasicResponse> checkAlarm(@PathVariable int code) {
-		//code로 찾아서 check = true
-		
 		ResponseEntity<BasicResponse> response = null;
 		Alarm alarm = alarmService.CheckAlarm(code);
 		if (alarm != null) {
-			System.out.println(alarm.getAlarmCheck() + "[ " + code + " ]번 알림 읽음");
 			final BasicResponse result = new BasicResponse();
 			result.status = true;
 			result.data = "success";

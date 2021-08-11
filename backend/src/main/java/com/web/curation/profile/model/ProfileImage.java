@@ -3,7 +3,6 @@ package com.web.curation.profile.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 
 import lombok.AccessLevel;
 import lombok.Builder;

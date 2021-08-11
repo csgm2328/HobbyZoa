@@ -11,6 +11,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.curation.alarm.model.MessageType;
+import com.web.curation.alarm.service.AlarmService;
 import com.web.curation.feed.model.Feed;
 import com.web.curation.feed.repo.FeedRepo;
 import com.web.curation.image.model.Image;
@@ -25,15 +27,14 @@ public class FeedServiceImpl implements FeedService{
 
 	@Autowired
 	private FeedRepo feedRepo;
-	
 	@Autowired
 	private ImageRepo imageRepo;
-	
 	@Autowired
 	LikeRepo likeRepo;
-	
 	@Autowired
 	FileHandler fileHandler;
+	@Autowired
+	AlarmService alarmService;
 	
 	@Override
 	public List<Feed> findAllFeeds() { //전체 레코드 불러오기 findAll()
@@ -144,6 +145,9 @@ public class FeedServiceImpl implements FeedService{
 				return "좋아요 취소";
 		likeRepo.save(
 				FeedLike.builder().email(email).feedcode(feedcode).build());
+		Feed feed = feedRepo.findByFeedcode(feedcode); //피드 소유자 찾기
+		String alarmMsg = "[" + email + "]님이 회원님의 "+ feedcode + "번 피드를 좋아합니다.";
+		alarmService.sendAlarm(MessageType.LIKE, email, feed.getEmail(), alarmMsg);
 		return "좋아요";
 	}
 
