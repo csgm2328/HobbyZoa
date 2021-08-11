@@ -27,12 +27,10 @@ public class AlarmServiceImpl implements AlarmService{
 		msg.setReceiver(to);
 		msg.setContent(content);
 		Alarm alarm = Alarm.builder()
-				.type(alarmType.toString())
+				.alarmType(alarmType.toString())
 				.fromemail(from)
 				.toemail(to)
-				.content("csgm2328")
-//				.check(false)
-//				.createDate(LocalDateTime.now())
+				.content(content)
 				.build();
 		alarmRepo.save(alarm);
 		messagingTemplate.convertAndSend("/queue/" + to, msg);
