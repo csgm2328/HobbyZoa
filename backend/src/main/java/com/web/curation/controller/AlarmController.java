@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +29,7 @@ public class AlarmController {
 	@Autowired
 	AlarmService alarmService;
 	
-	@GetMapping("{email}")
+	@GetMapping("/{email}")
 	@ApiOperation(value = "한달 내 생성된 알림 보기", notes = "회원가입, 팔로우, 언팔로우, 좋아요, 스크랩, 댓글, 이메일 인증")
 	public ResponseEntity<BasicResponse> ShowAlarmList(@PathVariable String email) {
 		
@@ -48,15 +49,15 @@ public class AlarmController {
 		return response;
 		
 	}
-	@GetMapping("{email}/{code}")
+	@PutMapping("/{code}")
 	@ApiOperation(value = "알림 확인 처리", notes = "")
-	public ResponseEntity<BasicResponse> checkAlarm(@PathVariable String email,@PathVariable int code) {
+	public ResponseEntity<BasicResponse> checkAlarm(@PathVariable int code) {
 		//code로 찾아서 check = true
 		
 		ResponseEntity<BasicResponse> response = null;
-
-		if (alarmService.CheckAlarm(code) != null) {
-			System.out.println("[ " + code + " ]번 알림 읽음");
+		Alarm alarm = alarmService.CheckAlarm(code);
+		if (alarm != null) {
+			System.out.println(alarm.getAlarmCheck() + "[ " + code + " ]번 알림 읽음");
 			final BasicResponse result = new BasicResponse();
 			result.status = true;
 			result.data = "success";
