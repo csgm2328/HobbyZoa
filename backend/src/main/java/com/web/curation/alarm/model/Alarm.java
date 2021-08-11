@@ -34,7 +34,7 @@ public class Alarm {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int alarmcode;
 	@Column
-	private String type;
+	private String alarmType;
 	
 //	@ManyToOne
 //	@JoinColumn(name = "email")
@@ -53,9 +53,8 @@ public class Alarm {
 	@Column
 	private String content;
 	
-	@CreatedDate
-    @Column(updatable = false)
+    @Column(insertable = false, updatable = false)
     private LocalDateTime createDate;
 	@Column
-	private boolean check;
+	private boolean alarmCheck;
 }
