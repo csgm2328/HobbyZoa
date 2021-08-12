@@ -43,8 +43,8 @@ public class AlarmServiceImpl implements AlarmService{
 				.toemail(to)
 				.content(content)
 				.build();
-		alarmRepo.save(alarm); //DB에 성공적으로 저장되면 알림 개수 변동을 알림
-		messagingTemplate.convertAndSend("/queue/" + to, alarmRepo.countByToemail(to));
+		alarmRepo.save(alarm); //DB에 성공적으로 저장되면 안읽은 알림 개수 변동을 알림
+		messagingTemplate.convertAndSend("/queue/" + to, alarmRepo.countByToemailAndAlarmCheck(to, false));
 //		messagingTemplate.convertAndSend("/queue/" + to, msg);
 	}
 
@@ -74,12 +74,8 @@ public class AlarmServiceImpl implements AlarmService{
 		System.out.println("[ " + code + " ]번 알림 읽음");
 		alarm.setAlarmCheck(true);
 		alarm.setCheckDate(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime()); //읽은시간 생성
+		//읽은 후에 다시 소켓에 안읽은 알림 수 리턴
+		messagingTemplate.convertAndSend("/queue/" + alarm.getToemail(), alarmRepo.countByToemailAndAlarmCheck(alarm.getToemail(), false));
 		return alarmRepo.save(alarm);
 	}
-
-	@Override
-	public void countAlarm(String email) {
-		messagingTemplate.convertAndSend("/queue/" + email, alarmRepo.countByToemail(email));
-	}
-
 }

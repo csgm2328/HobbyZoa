@@ -20,4 +20,6 @@ public interface AlarmRepo extends JpaRepository<Alarm, String>{
 
 	int countByToemail(String email);
 
+	Object countByToemailAndAlarmCheck(String to, boolean alarm_check);
+
 }

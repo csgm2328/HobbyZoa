@@ -12,6 +12,4 @@ public interface AlarmService {
 	List<Alarm> findAll(String email);
 
 	Alarm CheckAlarm(int code);
-
-	void countAlarm(String to);
 }
