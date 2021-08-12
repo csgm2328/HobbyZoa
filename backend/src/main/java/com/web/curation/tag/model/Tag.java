@@ -1,19 +1,22 @@
 package com.web.curation.tag.model;
 
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.transaction.TransactionScoped;
-import javax.transaction.Transactional;
-
+import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
-import lombok.Data;
-
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Entity(name = "tags")
+@Entity(name = "tag")
 public class Tag {
 
 	@Id
@@ -26,6 +29,10 @@ public class Tag {
 
 	@Column(name = "cnt")
 	private Integer cnt;
+	
+	@OneToMany(mappedBy = "tag")
+	@JsonManagedReference
+	private List<Feedtags> feedtags;
 
 	public Integer getTagcode() {
 		return tagcode;

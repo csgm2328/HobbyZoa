@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +13,6 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,6 +35,7 @@ import com.web.curation.image.model.Image;
 import com.web.curation.reply.model.Reply;
 import com.web.curation.reply.service.ReplyService;
 import com.web.curation.response.BasicResponse;
+import com.web.curation.tag.model.Feedtags;
 import com.web.curation.tag.model.Tag;
 import com.web.curation.tag.service.TagService;
 
@@ -52,73 +52,68 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping(value = "/feed")
 public class FeedController {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
 	@Autowired
 	FeedService feedService;
-	
+
 	@Autowired
 	ReplyService replyService;
-	
+
 	@Autowired
 	TagService tagService;
-	
+
 	// 피드 생성
 	@PostMapping
-	@ApiOperation(value="피드 생성", notes="email, nickname, comment와 file리스트를 입력받아 uri를 반환")
-	public ResponseEntity<?> createFeed(
-            @Valid @RequestParam("email") String email,
-            @Valid @RequestParam("nickname") String nickname,
-            @RequestParam("comment") String comment,
-            @Valid @RequestPart("files") List<MultipartFile> files,
-            @RequestParam(value="tags", required=false) List<String> tags
-    ) throws Exception { 
-        
-		String tagnames = new String();
-		
+	@ApiOperation(value = "피드 생성", notes = "email, nickname, comment와 file리스트를 입력받아 uri를 반환")
+	public ResponseEntity<?> createFeed(@Valid @RequestParam("email") String email,
+			@Valid @RequestParam("nickname") String nickname, @RequestParam("comment") String comment,
+//          @Valid @RequestPart("files") List<MultipartFile> files,
+//          @RequestParam(value="tags", required=false) List<String> tags
+//  ) throws Exception {        
+			@Valid @RequestPart("files") MultipartFile file,
+			@RequestParam(value = "tags", required = false) List<String> tags) throws Exception {
+		List<MultipartFile> files = new ArrayList<MultipartFile>();
+		files.add(file);
+
+		Feed feed = feedService.save(Feed.builder().email(email).nickname(nickname).comment(comment).build(), files);
+
+		Tag tag = new Tag();
 		for (int i = 0; i < tags.size(); i++) {
 			String tagname = tags.get(i);
-			tagnames+=tagname;
-			Tag tagCheck = tagService.check(tagname);
-			
+			Tag tagCheck = tagService.findByTagname(tagname);
 			if (tagCheck != null) {
-				tagService.updateTagCnt(tagCheck);	
+				//원래 있는 운동태그이면 cnt늘리기
+				tagService.updateTagCnt(tagCheck);
 			} else {
-				Tag tag = new Tag();
+				//새로운 운동태그이면 save하기
 				tag.setTagname(tagname);
 				tag.setCnt(1);
 				tagService.saveTag(tag);
-			}				
+			}
+			//운동태그의 tagcode가져오기 
+			tag.setTagcode(tagService.findByTagname(tagname).getTagcode());
+			tagService.saveFeedtags(Feedtags.builder().feed(feed).tag(tag).build());
 		}
 
-		Feed feed = feedService.save(Feed.builder()
-                .email(email)
-                .nickname(nickname)
-                .comment(comment)
-                .tag(tagnames)
-                .build(), files);
-        		
+		URI uriLocation = new URI("/feed/" + feed.getFeedcode());
+		return ResponseEntity.created(uriLocation).body("{}");
 
-        URI uriLocation = new URI("/feed/" + feed.getFeedcode());
-        return ResponseEntity.created(uriLocation).body("{}");
-    }
-		
+	}
 
 	// 모든 피드 조회 (이미지 엮어서 보내주기)
-	@GetMapping(value="/all") 
-	@ApiOperation(value="모든 피드 조회", notes="모든 피드 반환")
-	public ResponseEntity<List<Feed>> getAllFeeds() { 
+	@GetMapping(value = "/all")
+	@ApiOperation(value = "모든 피드 조회", notes = "모든 피드 반환")
+	public ResponseEntity<List<Feed>> getAllFeeds() {
 		List<Feed> feeds = feedService.findAllFeeds();
-		return new ResponseEntity<List<Feed>>(feeds, HttpStatus.OK); 
+		return new ResponseEntity<List<Feed>>(feeds, HttpStatus.OK);
 	}
-	
-	// 해당 계정 피드 조회 
-	@GetMapping(value="/mine") 
-	@ApiOperation(value="해당 계정의 모든 피드 조회", notes="계정 이메일 받아서 해당 계정의 피드와 이미지 엮어서 반환")
-	public ResponseEntity<List<Feed>> getFeedsByEmail(@RequestParam("email") String email) { 
-		//email에 해당하는 모든 피드 list
+
+	// 해당 계정 피드 조회
+	@GetMapping(value = "/mine")
+	@ApiOperation(value = "해당 계정의 모든 피드 조회", notes = "계정 이메일 받아서 해당 계정의 피드와 이미지 엮어서 반환")
+	public ResponseEntity<List<Feed>> getFeedsByEmail(@RequestParam("email") String email) {
+		// email에 해당하는 모든 피드 list
 		List<Feed> list = feedService.findByEmail(email);
-		return new ResponseEntity<List<Feed>>(list, HttpStatus.OK); 
+		return new ResponseEntity<List<Feed>>(list, HttpStatus.OK);
 	}
 
 	// 해당 feedcode 피드 상세보기
@@ -129,10 +124,16 @@ public class FeedController {
 		Feed feed = feedService.findByFeedcode(feedcode);
 		List<Image> images = feedService.findAllByfeedcode(feedcode);
 		List<Reply> replies = replyService.findAllByFeedcode(feedcode);
+		List<Tag> tags = tagService.findAllByFeedcode(feed);
+		List<String> taginfo = new ArrayList<String>();
+		for (int i = 0; i < tags.size(); i++) {
+			taginfo.add(tags.get(i).getTagname());
+		}
 		map.put("feed", feed);
 		map.put("images", images);
 		map.put("replies", replies);
-		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK); 
+		map.put("tags", taginfo);
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 
 	// 피드번호로 피드 삭제
@@ -144,39 +145,42 @@ public class FeedController {
 	}
 
 	// 피드 번호로 피드수정
-	@PutMapping(value = "/{feedcode}") 
-	@ApiOperation(value="피드 수정", notes="feedcode로 수정 후 수정 피드 반환")
-	public ResponseEntity<Feed> updateFeed(@PathVariable("feedcode") Integer feedcode, 
-			@RequestParam("comment") String comment, @RequestPart("files") List<MultipartFile> files) throws Exception { 
+	@PutMapping(value = "/{feedcode}")
+	@ApiOperation(value = "피드 수정", notes = "feedcode로 수정 후 수정 피드 반환")
+	public ResponseEntity<Feed> updateFeed(@PathVariable("feedcode") Integer feedcode,
+			@RequestParam("comment") String comment, @RequestPart("files") List<MultipartFile> files) throws Exception {
 		Feed feed = feedService.findByFeedcode(feedcode);
 		feed.setComment(comment);
-		feedService.updateByFeedcode(feedcode, feed, files); 		
-		return new ResponseEntity<Feed>(feed, HttpStatus.OK); 
+		feedService.updateByFeedcode(feedcode, feed, files);
+		return new ResponseEntity<Feed>(feed, HttpStatus.OK);
 	}
-	
-	//이미지 리턴
-	@GetMapping(value="{newname}", produces = MediaType.IMAGE_JPEG_VALUE)
-	public ResponseEntity<byte[]> imageSearch(@PathVariable("newname") String newname)throws IOException {
+
+	// 이미지 리턴
+	@GetMapping(value = "{newname}", produces = MediaType.IMAGE_JPEG_VALUE)
+	public ResponseEntity<byte[]> imageSearch(@PathVariable("newname") String newname) throws IOException {
 		Image image = feedService.findByNewname(newname);
 //		String absolutePath = new File("").getAbsolutePath() + "\\";
-		String absolutePath = new File("").getAbsolutePath() + "/"; //리눅스 버전
-		InputStream imageStream = new FileInputStream(absolutePath+image.getImgpath());
+		String absolutePath = new File("").getAbsolutePath() + "/"; // 리눅스 버전
+		InputStream imageStream = new FileInputStream(absolutePath + image.getImgpath());
 		byte[] imageByteArray = IOUtils.toByteArray(imageStream);
 		imageStream.close();
 		return new ResponseEntity<byte[]>(imageByteArray, HttpStatus.OK);
 	}
+
 	// 좋아요 & 좋아요 취소
 	@GetMapping("/like/{email}/{feedcode}")
 	@ApiOperation(value = "좋아요 기능", notes = "이미 좋아요 했다면 취소됨")
-	public ResponseEntity<String> LikeFeed(@PathVariable("email") String email, @PathVariable("feedcode") Integer feedcode) {
-		String result = email + "님이 피드번호: " +  feedcode + "을 "
-				+ feedService.LikeFeed(email, feedcode);
+	public ResponseEntity<String> LikeFeed(@PathVariable("email") String email,
+			@PathVariable("feedcode") Integer feedcode) {
+		String result = email + "님이 피드번호: " + feedcode + "을 " + feedService.LikeFeed(email, feedcode);
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
+
 	// 좋아요 여부 체크
 	@GetMapping("checklike/{email}/{feedcode}")
 	@ApiOperation(value = "좋아요 여부 체크", notes = "")
-	public ResponseEntity<BasicResponse> checkLike(@PathVariable("email") String email, @PathVariable("feedcode") Integer feedcode) {
+	public ResponseEntity<BasicResponse> checkLike(@PathVariable("email") String email,
+			@PathVariable("feedcode") Integer feedcode) {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
 
@@ -190,6 +194,7 @@ public class FeedController {
 		response = new ResponseEntity<>(result, HttpStatus.OK);
 		return response;
 	}
+
 	// 해당 피드를 좋아요 누른 유저목록 반환
 	@GetMapping("/likelist/{feedcode}")
 	@ApiOperation(value = "좋아요 누른 유저들 보기", notes = "입력한 email 유저를 팔로우하는 from_email 리스트")

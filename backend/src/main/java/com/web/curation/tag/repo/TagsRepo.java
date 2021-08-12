@@ -1,4 +1,4 @@
-package com.web.curation.trend.repo;
+package com.web.curation.tag.repo;
 
 import java.util.List;
 
@@ -10,12 +10,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.web.curation.feed.model.Feed;
 import com.web.curation.tag.model.Tag;
 import com.web.curation.tag.service.TagService;
 
 @Repository
-public interface TrendRepo extends JpaRepository<Feed, Integer> {
-	List<Feed> findByTagContainingOrderByLikesDesc(String tagname);
-	List<Feed> findByTagContaining(String tagname);
+public interface TagsRepo extends JpaRepository<Tag, String> {
+
+	Tag findByTagname(String tagname);
+	Tag findByTagnameContaining(String tagname);	
+	@Transactional
+	@Modifying
+	@Query(value = "update tag t set t.cnt=t.cnt+1 where t.tagname = :tagname")
+	void updateTagCnt(@Param("tagname") String tagname);
+
+
 }
