@@ -60,7 +60,7 @@ public class ScrapController {
 			URI uriLocation = new URI("/scrap/"+scrap.getScrapcode());
 			Feed feed = feedService.findByFeedcode(feedcode);
 			String alarmMsg = "[" + email + "]님이 회원님의 "+ feedcode + "번 피드를 스크랩했습니다.";
-			alarmService.sendAlarm(MessageType.SCRAP, email, feed.getEmail(), alarmMsg);
+			alarmService.createAlarm(MessageType.SCRAP, email, feed.getEmail(), alarmMsg);
 			return ResponseEntity.created(uriLocation).body("{}");
 		}
 		else { //이미 있으면 스크랩 해제

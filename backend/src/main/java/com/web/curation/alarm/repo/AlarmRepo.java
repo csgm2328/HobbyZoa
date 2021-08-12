@@ -18,4 +18,6 @@ public interface AlarmRepo extends JpaRepository<Alarm, String>{
 
 	Alarm findByAlarmcode(int code);
 
+	int countByToemail(String email);
+
 }

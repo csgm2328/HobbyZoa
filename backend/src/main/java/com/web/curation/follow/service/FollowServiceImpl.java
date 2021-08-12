@@ -48,7 +48,7 @@ public class FollowServiceImpl implements FollowService {
 					.toemail(to).build();
 			Follow result = followRepo.save(followInfo);
 			String alarmMsg = "" + from + "님이 회원님을 팔로우하기 시작했습니다.";
-			alarmService.sendAlarm(MessageType.FOLLOW, from, to, alarmMsg); //팔로우 알림전송
+			alarmService.createAlarm(MessageType.FOLLOW, from, to, alarmMsg); //팔로우 알림전송
 			return result;
 		}
 				
