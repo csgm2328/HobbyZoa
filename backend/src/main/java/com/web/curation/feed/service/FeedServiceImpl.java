@@ -50,7 +50,6 @@ public class FeedServiceImpl implements FeedService{
 		return feeds;
 	}
 
-
 	@Override
 	public List<Feed> findByEmail(String email) { //해당 계정 피드 모아보기
 		List<Feed> feeds = feedRepo.findByEmail(email);
@@ -151,18 +150,21 @@ public class FeedServiceImpl implements FeedService{
 		return "좋아요";
 	}
 
-
 	@Override
 	public boolean CheckLike(String email, Integer feedcode) {
 		return likeRepo.findByEmailAndFeedcode(email, feedcode).isPresent();
 	}
-
 
 	@Override
 	public List<String> ShowLikeList(Integer feedcode) {
 		List<String> likes = new ArrayList<String>();
 		likeRepo.findAllByFeedcode(feedcode).forEach(e -> likes.add(e.getEmail()));
 		return likes;
+	}
+
+	@Override
+	public List<Feed> findByEmailInOrderByRegtimeDesc(List<String> list) {
+		return feedRepo.findByEmailInOrderByRegtimeDesc(list);
 	}
 
 }
