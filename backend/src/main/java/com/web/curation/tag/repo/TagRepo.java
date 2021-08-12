@@ -9,12 +9,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import com.web.curation.tag.model.Tag;
-import com.web.curation.tag.service.TagService;
 
 @Repository
-public interface TagsRepo extends JpaRepository<Tag, String> {
+public interface TagRepo extends JpaRepository<Tag, String> {
 
 	Tag findByTagname(String tagname);
 	Tag findByTagnameContaining(String tagname);	
@@ -22,6 +20,7 @@ public interface TagsRepo extends JpaRepository<Tag, String> {
 	@Modifying
 	@Query(value = "update tag t set t.cnt=t.cnt+1 where t.tagname = :tagname")
 	void updateTagCnt(@Param("tagname") String tagname);
+	List<Tag> findTop10ByOrderByCntDesc();
 
 
 }
