@@ -8,4 +8,5 @@ import com.web.curation.hobby.model.Hobby;
 public interface BadgeService {
 	Badge save(Badge badge);
 	List<Badge> findAllByHobby(Hobby hobby);
+	void deleteByHobbyAndName(Hobby hobby, String name);
 }

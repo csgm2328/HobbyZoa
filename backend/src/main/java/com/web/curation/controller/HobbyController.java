@@ -12,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.web.curation.attendance.model.Attendance;
+import com.web.curation.attendance.model.Attendanceacc;
 import com.web.curation.attendance.service.AttendanceService;
+import com.web.curation.attendance.service.AttendanceaccService;
 import com.web.curation.badge.model.Badge;
 import com.web.curation.badge.service.BadgeService;
 import com.web.curation.hobby.model.Hobby;
@@ -40,6 +42,9 @@ public class HobbyController {
 	
 	@Autowired
 	AttendanceService attendanceService;
+	
+	@Autowired
+	AttendanceaccService attendanceaccService;
 	
 	@PostMapping
 	@ApiOperation(value="취미 생성", notes="email, name(취미이름)을 입력받아 uri를 반환")
@@ -83,8 +88,6 @@ public class HobbyController {
 	public ResponseEntity<?> createAttendance(@RequestParam String email, @RequestParam int hobbycode, 
 			@RequestParam String start, @RequestParam String end, 
 			@RequestParam String comment) throws Exception{
-		//check저장할 때 배지 추가 여부 검사해주기
-
 		Hobby hobby = hobbyService.findByHobbycode(hobbycode);
 		Attendance attendance = attendanceService.save(Attendance.builder()
 				.email(email)
@@ -92,7 +95,36 @@ public class HobbyController {
 				.start(Integer.parseInt(start))
 				.end(Integer.parseInt(end))
 				.comment(comment).build());
-		System.out.println(start);
+		Attendanceacc attendanceacc;
+		int time = Integer.parseInt(end) - Integer.parseInt(start);
+		if(attendanceaccService.existsByHobby(hobby)) {
+			attendanceacc = attendanceaccService.findByHobby(hobby);
+			String orgTimesbadge = attendanceaccService.checkTimetot(attendanceacc);
+			attendanceacc.setDaytot(attendanceacc.getDaytot()+1);
+			attendanceacc.setTimetot(attendanceacc.getTimetot()+time);
+			attendanceaccService.save(attendanceacc);
+			
+			String daysbadge = attendanceaccService.checkDaytot(attendanceacc);
+			if(daysbadge != "no") {
+				badgeService.save(Badge.builder()
+						.name(daysbadge)
+						.hobby(hobby)
+						.build());
+			}
+			String timesbadge = attendanceaccService.checkTimetot(attendanceacc);
+			if(orgTimesbadge != timesbadge && timesbadge != "no") {
+				badgeService.save(Badge.builder()
+						.name(timesbadge)
+						.hobby(hobby)
+						.build());
+			}
+		}else {
+			attendanceacc = attendanceaccService.save(Attendanceacc.builder()
+					.hobby(hobby)
+					.daytot(1)
+					.timetot(time).build());
+		}
+		
 		URI uriLocation = new URI("hobby/check/" + attendance.getCheckcode());
 		return ResponseEntity.created(uriLocation).body("{}");
 	}
@@ -117,17 +149,54 @@ public class HobbyController {
 	public ResponseEntity<Attendance> updateAttendance(@PathVariable int checkcode, @RequestParam String start, 
 			@RequestParam String end, @RequestParam String comment){
 		Attendance attendance = attendanceService.findByCheckcode(checkcode);
+		
+		String orgTimesbadge = attendanceaccService.checkTimetot(attendanceaccService.findByHobby(attendance.getHobby()));
+		int orgtime = attendance.getEnd() - attendance.getStart();
+		int newtime = Integer.parseInt(end)-Integer.parseInt(start);
+		
 		attendance.setStart(Integer.parseInt(start));
 		attendance.setEnd(Integer.parseInt(end));
 		attendance.setComment(comment);
-		attendanceService.updateByCheckcode(checkcode, attendance);
+		attendanceService.updateByCheckcode(checkcode, attendance);		
+		attendanceaccService.updateAttendanceacc(attendance.getHobby(), orgtime, newtime);
+		
+		String newTimesbadge = attendanceaccService.checkTimetot(attendanceaccService.findByHobby(attendance.getHobby()));
+		if(!orgTimesbadge.equals(newTimesbadge)) {
+			if(!(orgTimesbadge=="24hours" && newTimesbadge=="10000hours"))
+				badgeService.deleteByHobbyAndName(attendance.getHobby(), orgTimesbadge);
+			if(newTimesbadge!="no")
+				badgeService.save(Badge.builder()
+						.name(newTimesbadge)
+						.hobby(attendance.getHobby()).build());
+		}
+		
 		return new ResponseEntity<Attendance>(attendance, HttpStatus.OK);
 	}
 	
 	@DeleteMapping(value="/check/{checkcode}")
 	@ApiOperation(value="출석 삭제", notes="checkcode를 입력받아 attendance 삭제")
 	public ResponseEntity<Void> deleteAttendance(@PathVariable int checkcode){
-		attendanceService.deleteByCheckcode(checkcode);
+		Attendance attendance = attendanceService.findByCheckcode(checkcode);
+		Hobby hobby = attendance.getHobby();
+		int time = attendance.getEnd() - attendance.getStart();
+		
+		attendanceService.deleteByCheckcode(checkcode);		
+		Attendanceacc attendanceacc = attendanceaccService.findByHobby(hobby);
+		String orgTimesbadge = attendanceaccService.checkTimetot(attendanceacc);
+		String orgDaysbadge = attendanceaccService.checkDaytot(attendanceacc);
+		
+		attendanceacc.setDaytot(attendanceacc.getDaytot()-1);
+		attendanceacc.setTimetot(attendanceacc.getTimetot()-time);
+		attendanceaccService.save(attendanceacc);
+		
+		String newTimesbadge = attendanceaccService.checkTimetot(attendanceacc);
+		if(!orgTimesbadge.equals(newTimesbadge)) {
+			badgeService.deleteByHobbyAndName(attendance.getHobby(), orgTimesbadge);
+		}
+		String newDaysbadge = attendanceaccService.checkDaytot(attendanceacc);
+		if(!orgDaysbadge.equals(newDaysbadge)) {
+			badgeService.deleteByHobbyAndName(attendance.getHobby(), orgDaysbadge);
+		}
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 	
