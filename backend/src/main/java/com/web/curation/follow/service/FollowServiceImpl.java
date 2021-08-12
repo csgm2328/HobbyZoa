@@ -14,6 +14,7 @@ import com.web.curation.alarm.service.AlarmService;
 import com.web.curation.exception.BadRequestException;
 import com.web.curation.follow.model.Follow;
 import com.web.curation.follow.repo.FollowRepo;
+import com.web.curation.user.model.User;
 import com.web.curation.user.repo.UserRepo;
 
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,8 @@ public class FollowServiceImpl implements FollowService {
 					.fromemail(from)
 					.toemail(to).build();
 			Follow result = followRepo.save(followInfo);
-			String alarmMsg = "" + from + "님이 회원님을 팔로우하기 시작했습니다.";
+			Optional<User> u = userRepo.findById(from);
+			String alarmMsg = "" + u.get().getNickname() + "님이 회원님을 팔로우하기 시작했습니다.";
 			alarmService.createAlarm(MessageType.FOLLOW, from, to, alarmMsg); //팔로우 알림전송
 			return result;
 		}

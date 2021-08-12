@@ -146,7 +146,7 @@ public class FeedServiceImpl implements FeedService{
 		likeRepo.save(
 				FeedLike.builder().email(email).feedcode(feedcode).build());
 		Feed feed = feedRepo.findByFeedcode(feedcode); //피드 소유자 찾기
-		String alarmMsg = "[" + email + "]님이 회원님의 "+ feedcode + "번 피드를 좋아합니다.";
+		String alarmMsg = feed.getNickname() + "님이 회원님의 "+ feedcode + "번 피드를 좋아합니다.";
 		alarmService.createAlarm(MessageType.LIKE, email, feed.getEmail(), alarmMsg);
 		return "좋아요";
 	}

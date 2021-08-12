@@ -66,7 +66,7 @@ public class ReplyController {
 		URI uriLocation = new URI("/reply/" + reply.getReplycode()); //replycode or feedcode
 		//알림을 위한 feed 소유자 찾기
 		Feed feed = feedService.findByFeedcode(feedcode);
-		String alarmMsg = "[" + nickname + "]님이 회원님의 "+ feedcode + "번 피드에 댓글을 달았습니다.";
+		String alarmMsg = nickname + "님이 회원님의 "+ feedcode + "번 피드에 댓글을 달았습니다.";
 		alarmService.createAlarm(MessageType.REPLY, email, feed.getEmail(), alarmMsg);
         return ResponseEntity.created(uriLocation).body("{}");
 	}
