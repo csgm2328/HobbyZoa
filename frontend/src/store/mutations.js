@@ -56,4 +56,7 @@ export default {
   DELETE_ERROR_CODE(state) {
     state.error_code = null
   },
+  FETCH_ALARM_LIST(state, alarmList) {
+    state.alarmList = alarmList
+  }
 }

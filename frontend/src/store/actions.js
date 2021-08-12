@@ -220,5 +220,15 @@ export default {
     const KEYWORD_LIKE_FEED_URL = `/orderby/likes/${keyword}`
     const response = await axios.get(KEYWORD_LIKE_FEED_URL)
     commit('FETCH_FEED_LIST', response.data)
+  },
+  async FETCH_ALARM_LIST({ commit }, email) {
+    const ALARM_LIST_URL = `alarm/${email}`
+    const response = await axios.get(ALARM_LIST_URL)
+    commit('FETCH_ALARM_LIST', response.data.object)
+  },
+  async CHECK_ALARM({ commit }, alarmcode) {
+    const AlARM_CHECK_URL = `alarm/${alarmcode}`
+    await axios.put(AlARM_CHECK_URL)
+    commit('DELETE_ERROR_CODE')
   }
 }

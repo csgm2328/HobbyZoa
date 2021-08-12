@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card
-      class="mx-auto my-12 mx-auto px-auto"
+      class="mx-auto mb-12 mx-auto px-auto"
       max-width="374"
       hover
       :to="{ name: 'FeedDetail', params: { feedcode: feed.feedcode }}"

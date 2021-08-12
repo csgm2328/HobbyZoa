@@ -80,6 +80,7 @@
 
 <script>
 import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 export default {
@@ -98,7 +99,8 @@ export default {
     }
   },
   created() {
-    dayjs.extend(relativeTime);
+    dayjs.extend(relativeTime)
+    dayjs.locale('ko')
   },
   methods: {
     remove() {
