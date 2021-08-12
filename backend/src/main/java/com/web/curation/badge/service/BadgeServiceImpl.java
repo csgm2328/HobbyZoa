@@ -25,4 +25,9 @@ public class BadgeServiceImpl implements BadgeService {
 		return badgeRepo.findAllByHobby(hobby);
 	}
 
+	@Override
+	public void deleteByHobbyAndName(Hobby hobby, String name) {
+		badgeRepo.deleteByHobbyAndName(hobby, name);
+	}
+
 }

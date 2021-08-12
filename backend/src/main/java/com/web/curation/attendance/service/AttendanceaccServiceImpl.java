@@ -1,7 +1,5 @@
 package com.web.curation.attendance.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +43,7 @@ public class AttendanceaccServiceImpl implements AttendanceaccService {
 	}
 
 	@Override
-	public String checkDaytot(Hobby hobby, Attendanceacc attendanceacc) {
+	public String checkDaytot(Attendanceacc attendanceacc) {
 		if(attendanceacc.getDaytot() == 3) {
 			return "3days";
 		}else if(attendanceacc.getDaytot() == 7) {
@@ -63,13 +61,13 @@ public class AttendanceaccServiceImpl implements AttendanceaccService {
 	}
 
 	@Override
-	public String checkTimetot(Hobby hobby, Attendanceacc attendanceacc) {
-		if(attendanceacc.getTimetot() == 24) {
+	public String checkTimetot(Attendanceacc attendanceacc) {
+		if(attendanceacc.getTimetot() >= 24 && attendanceacc.getTimetot() < 10000) {
 			return "24hours";
-		}else if(attendanceacc.getTimetot() == 10000) {
+		}else if(attendanceacc.getTimetot() >= 10000) {
 			return "10000hours";
 		}
-		return null;
+		return "no";
 	}
 
 }

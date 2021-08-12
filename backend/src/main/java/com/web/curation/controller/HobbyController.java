@@ -99,20 +99,20 @@ public class HobbyController {
 		int time = Integer.parseInt(end) - Integer.parseInt(start);
 		if(attendanceaccService.existsByHobby(hobby)) {
 			attendanceacc = attendanceaccService.findByHobby(hobby);
+			String orgTimesbadge = attendanceaccService.checkTimetot(attendanceacc);
 			attendanceacc.setDaytot(attendanceacc.getDaytot()+1);
 			attendanceacc.setTimetot(attendanceacc.getTimetot()+time);
 			attendanceaccService.save(attendanceacc);
 			
-			String daysbadge = attendanceaccService.checkDaytot(hobby, attendanceacc);
-			String timesbadge = attendanceaccService.checkTimetot(hobby, attendanceacc);
-			
+			String daysbadge = attendanceaccService.checkDaytot(attendanceacc);
 			if(daysbadge != null) {
 				badgeService.save(Badge.builder()
 						.name(daysbadge)
 						.hobby(hobby)
 						.build());
 			}
-			if(timesbadge != null) {
+			String timesbadge = attendanceaccService.checkTimetot(attendanceacc);
+			if(orgTimesbadge != timesbadge && timesbadge != "no") {
 				badgeService.save(Badge.builder()
 						.name(timesbadge)
 						.hobby(hobby)
@@ -149,13 +149,27 @@ public class HobbyController {
 	public ResponseEntity<Attendance> updateAttendance(@PathVariable int checkcode, @RequestParam String start, 
 			@RequestParam String end, @RequestParam String comment){
 		Attendance attendance = attendanceService.findByCheckcode(checkcode);
+		
+		String orgTimesbadge = attendanceaccService.checkTimetot(attendanceaccService.findByHobby(attendance.getHobby()));
 		int orgtime = attendance.getEnd() - attendance.getStart();
+		int newtime = Integer.parseInt(end)-Integer.parseInt(start);
+		
 		attendance.setStart(Integer.parseInt(start));
 		attendance.setEnd(Integer.parseInt(end));
 		attendance.setComment(comment);
-		attendanceService.updateByCheckcode(checkcode, attendance);
-		int newtime = Integer.parseInt(end)-Integer.parseInt(start);
+		attendanceService.updateByCheckcode(checkcode, attendance);		
 		attendanceaccService.updateAttendanceacc(attendance.getHobby(), orgtime, newtime);
+		
+		String newTimesbadge = attendanceaccService.checkTimetot(attendanceaccService.findByHobby(attendance.getHobby()));
+		if(!orgTimesbadge.equals(newTimesbadge)) {
+			if(!(orgTimesbadge=="24hours" && newTimesbadge=="10000hours"))
+				badgeService.deleteByHobbyAndName(attendance.getHobby(), orgTimesbadge);
+			if(newTimesbadge!="no")
+				badgeService.save(Badge.builder()
+						.name(newTimesbadge)
+						.hobby(attendance.getHobby()).build());
+		}
+		
 		return new ResponseEntity<Attendance>(attendance, HttpStatus.OK);
 	}
 	

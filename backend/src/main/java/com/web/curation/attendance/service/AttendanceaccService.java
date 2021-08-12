@@ -10,6 +10,6 @@ public interface AttendanceaccService {
 	Attendanceacc findByHobby(Hobby hobby);
 	void updateAttendanceacc(Hobby hobby, int orgtime, int newtime);
 	void deleteAttendanceacc(Integer id);
-	String checkDaytot(Hobby hobby, Attendanceacc attendanceacc);
-	String checkTimetot(Hobby hobby, Attendanceacc attendanceacc);
+	String checkDaytot(Attendanceacc attendanceacc);
+	String checkTimetot(Attendanceacc attendanceacc);
 }
