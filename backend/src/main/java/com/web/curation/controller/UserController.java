@@ -81,8 +81,6 @@ public class UserController {
 			// 토큰생성(token save) --> 토큰ID와 함께 이메일 인증 링크 전송 -->
 			// 만료전(5분) 링크 접속시 인증완료 --> 인증된 이메일로 처리
 			emailTokenService.createEmailConfirmationToken(userInfo.getEmail(), userInfo.getEmail());
-			String welcomeMsg = userInfo.getNickname() + "님 Hobby Zoa와 오신걸 환영합니다!";
-			alarmService.sendAlarm(MessageType.JOIN, "admin@hobbyzoa.com", userInfo.getEmail(), welcomeMsg); //관리자가 보내주는 웰컴메시지
 		} else {
 			result.status = false;
 			result.data = "fail: 이미 존재하는 이메일입니다.";

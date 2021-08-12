@@ -8,6 +8,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.web.curation.alarm.model.MessageType;
+import com.web.curation.alarm.service.AlarmService;
 import com.web.curation.email.service.EmailTokenService;
 import com.web.curation.profile.service.ProfileService;
 import com.web.curation.user.model.SignupRequest;
@@ -27,6 +29,8 @@ public class UserServiceImpl implements UserService {
 	ProfileService profileService;
 	@Autowired
 	EmailTokenService emailTokenService;
+	@Autowired
+	AlarmService alarmService;
 
 	@Override
 	public Optional<User> findById(String email) {
@@ -34,16 +38,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User save(@Valid SignupRequest updateInfo) {
+	public User save(@Valid SignupRequest userInfo) {
 		//회원가입시 프로필 자동 생성
 		User result = userRepo.save(User.builder()
-				.email(updateInfo.getEmail())
-				.nickname(updateInfo.getNickname())
-				.password(updateInfo.getPassword())
-				.comment(updateInfo.getComment())
-				.phone(updateInfo.getPhone())
+				.email(userInfo.getEmail())
+				.nickname(userInfo.getNickname())
+				.password(userInfo.getPassword())
+				.comment(userInfo.getComment())
+				.phone(userInfo.getPhone())
 				.build());
-		profileService.findProfileById(updateInfo.getEmail());
+		profileService.findProfileById(userInfo.getEmail());
+		String welcomeMsg = userInfo.getNickname() + "님 Hobby Zoa에 오신걸 환영합니다!";
+		alarmService.createAlarm(MessageType.JOIN, "admin@hobbyzoa.com", userInfo.getEmail(), welcomeMsg); //관리자가 보내주는 웰컴메시지
 		return result;
 	}
 

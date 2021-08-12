@@ -25,7 +25,11 @@ public class AlarmServiceImpl implements AlarmService{
 	
 	@Override
 	// webSocket: 서비스 알람의 종류에 따라 타겟 유저에 알람보내기
-	public void sendAlarm(MessageType alarmType, String from, String to, String content) {
+	// 실은 이렇게 알림을 보내면 알림창을 즉시 띄어주는 거랑 마찬가지다
+	// 하지만 사용자는 알림벨 아이콘을 눌러서 알림을 확인하므로 상호작용이 있다.
+	// 웹소켓으로 쏴줘야하는거는 아이콘에 표시할 알림의 개수다
+	// 이 알림의 개수는 구독하고 있는 연결을 통해 알림이 필요한 서비스후 DB에 자신의 알림 개수의 변화가 있으면 알려준다.
+	public void createAlarm(MessageType alarmType, String from, String to, String content) {
 		if(from.equals(to)) //자신의 피드에 좋아요, 스크랩시 알림 전송 X
 			return;
 		Message msg = new Message();
@@ -39,8 +43,9 @@ public class AlarmServiceImpl implements AlarmService{
 				.toemail(to)
 				.content(content)
 				.build();
-		alarmRepo.save(alarm);
-		messagingTemplate.convertAndSend("/queue/" + to, msg);
+		alarmRepo.save(alarm); //DB에 성공적으로 저장되면 알림 개수 변동을 알림
+		messagingTemplate.convertAndSend("/queue/" + to, alarmRepo.countByToemail(to));
+//		messagingTemplate.convertAndSend("/queue/" + to, msg);
 	}
 
 	//한달 내 생성된 알람 리스트 반환
@@ -70,6 +75,11 @@ public class AlarmServiceImpl implements AlarmService{
 		alarm.setAlarmCheck(true);
 		alarm.setCheckDate(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime()); //읽은시간 생성
 		return alarmRepo.save(alarm);
+	}
+
+	@Override
+	public void countAlarm(String email) {
+		messagingTemplate.convertAndSend("/queue/" + email, alarmRepo.countByToemail(email));
 	}
 
 }
