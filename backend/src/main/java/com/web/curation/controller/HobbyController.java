@@ -105,7 +105,7 @@ public class HobbyController {
 			attendanceaccService.save(attendanceacc);
 			
 			String daysbadge = attendanceaccService.checkDaytot(attendanceacc);
-			if(daysbadge != null) {
+			if(daysbadge != "no") {
 				badgeService.save(Badge.builder()
 						.name(daysbadge)
 						.hobby(hobby)
@@ -176,7 +176,27 @@ public class HobbyController {
 	@DeleteMapping(value="/check/{checkcode}")
 	@ApiOperation(value="출석 삭제", notes="checkcode를 입력받아 attendance 삭제")
 	public ResponseEntity<Void> deleteAttendance(@PathVariable int checkcode){
-		attendanceService.deleteByCheckcode(checkcode);
+		Attendance attendance = attendanceService.findByCheckcode(checkcode);
+		Hobby hobby = attendance.getHobby();
+		int time = attendance.getEnd() - attendance.getStart();
+		
+		attendanceService.deleteByCheckcode(checkcode);		
+		Attendanceacc attendanceacc = attendanceaccService.findByHobby(hobby);
+		String orgTimesbadge = attendanceaccService.checkTimetot(attendanceacc);
+		String orgDaysbadge = attendanceaccService.checkDaytot(attendanceacc);
+		
+		attendanceacc.setDaytot(attendanceacc.getDaytot()-1);
+		attendanceacc.setTimetot(attendanceacc.getTimetot()-time);
+		attendanceaccService.save(attendanceacc);
+		
+		String newTimesbadge = attendanceaccService.checkTimetot(attendanceacc);
+		if(!orgTimesbadge.equals(newTimesbadge)) {
+			badgeService.deleteByHobbyAndName(attendance.getHobby(), orgTimesbadge);
+		}
+		String newDaysbadge = attendanceaccService.checkDaytot(attendanceacc);
+		if(!orgDaysbadge.equals(newDaysbadge)) {
+			badgeService.deleteByHobbyAndName(attendance.getHobby(), orgDaysbadge);
+		}
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 	

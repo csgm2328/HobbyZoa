@@ -57,7 +57,7 @@ public class AttendanceaccServiceImpl implements AttendanceaccService {
 		}else if(attendanceacc.getDaytot() == 365) {
 			return "365days";
 		}
-		return null;
+		return "no";
 	}
 
 	@Override
