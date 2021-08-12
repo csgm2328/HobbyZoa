@@ -7,6 +7,8 @@
     >
       <!-- nav bar(upper) -->
       <v-app-bar
+        class="pa-1"
+        height="70"
         color="white accent-4"
         dark
       >
@@ -23,10 +25,7 @@
 
         <v-spacer></v-spacer>
 
-        <!-- alram icon -->
-        <v-btn icon color="secondary">
-          <v-icon>mdi-bell-outline</v-icon>
-        </v-btn>
+        <Alarm/>
         
         <!-- serch icon -->
         <v-btn icon color="secondary" @click.stop="searchbar = !searchbar">
@@ -228,8 +227,8 @@
 <script>
 import TextHighlight from 'vue-text-highlight';
 import SearchTagModal from '@/components/SearchTagModal'
-import Stomp from "webstomp-client";
-import SockJS from "sockjs-client";
+import Alarm from '@/components/Alarm'
+
 
 export default {
   data: () => ({
@@ -243,13 +242,13 @@ export default {
   }),
   components: {
     TextHighlight,
-    SearchTagModal
+    SearchTagModal,
+    Alarm
   },
   props: {
   },
   created() {
     this.$store.dispatch('searchStore/findHistory', localStorage.getItem('email'))
-    this.wsConnect();
   },
   watch: {
     group () {
@@ -335,41 +334,7 @@ export default {
     likefeed() {
       this.$router.push({ name: 'LikeFeed' })
     },
-    wsConnect() {
-      // if(this.stompClient && this.stompClient.connected)
-        // console.log(this.stompClient +  " " + this.stompClient.connected)
-      const serverURL = "http://i5c102.p.ssafy.io/api/ws";
-      let socket = new SockJS(serverURL);
-      this.stompClient = Stomp.over(socket);
-      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
-
-      this.stompClient.connect({}, this.onConnectecd, this.onError);
-    },
-    onConnectecd(payload) {
-      // 소켓 연결 성공
-      this.connected = true;
-      console.log("소켓 연결 성공", payload);
-      //subscribe to 서버의 엔드포인트
-      this.stompClient.subscribe("/queue/" + this.$store.getters.getEmail, this.onMessageReceived);
-
-      //서버에 JOIN한 유저 알리기
-      this.stompClient.send(
-        "app/chat.addUser",
-        {},
-        JSON.stringify({ sender: this.sender, type: "JOIN" })
-      );
-    },
-    onError(payload) {
-      console.log("소켓 연결 실패", payload);
-      this.connected = false;
-    },
-    onMessageReceived(payload) {
-      // console.log(payload);
-      var message = JSON.parse(payload.body);
-      // console.log("[구독으로 받은 메세지]: " + payload);
-      // this.recvList.push(message);
-      console.log(message);
-    },
+    
   },
 }
 </script>

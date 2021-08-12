@@ -30,6 +30,7 @@ const state = {
   isLike: false,
   likeList: [],
   error_code: null,
+  alarmList: []
 }
 
 export default new Vuex.Store({

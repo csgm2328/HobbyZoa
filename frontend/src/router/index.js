@@ -22,11 +22,12 @@ Vue.use(VueRouter)
 
 const requireAuth = function(to, from, next) {
   if (localStorage.getItem('token')) {
-    if (localStorage.getItem('emailVerified') == 'true') {
-      next()
-    } else {
-      next('/reconfirm')
-    }
+    // if (localStorage.getItem('emailVerified') == 'true') {
+    //   next()
+    // } else {
+    //   next('/reconfirm')
+    // }
+    next()
   } else {
     next('/login')
   }

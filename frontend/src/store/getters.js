@@ -41,5 +41,8 @@ export default {
   },
   getErrorCode(state) {
     return state.error_code
+  },
+  getAlarmList(state) {
+    return state.alarmList
   }
 }
