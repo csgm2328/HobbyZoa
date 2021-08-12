@@ -1,45 +1,107 @@
 package com.web.curation.tag.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.web.curation.feed.model.Feed;
+import com.web.curation.reply.model.Reply;
+import com.web.curation.tag.model.Feedtags;
 import com.web.curation.tag.model.Tag;
-import com.web.curation.tag.repo.TagRepo;
-import com.web.curation.tag.repo.TagSearchRepo;
+import com.web.curation.tag.repo.TagsRepo;
+import com.web.curation.tag.repo.FeedtagsRepo;
+import com.web.curation.tag.repo.OrderByFeedRepo;
 
 @Service
 public class TagServiceImpl implements TagService {
 
 	@Autowired
-	private TagRepo tagRepo;
+	private TagsRepo tagsRepo;
 	
 	@Autowired
-	private TagSearchRepo tagSearchRepo;
+	private FeedtagsRepo feedtagsRepo;
+	
+	@Autowired
+	private OrderByFeedRepo orderByFeedRepo;
 
-	public Tag check(String tagname) {
+
+	public Tag findByTagname(String tagname) {
 		// tagname있는지 검사
-		return tagRepo.findByTagnameContaining(tagname);
+		return tagsRepo.findByTagname(tagname);
 	}
+	
 
 	@Override
-	public void saveTag(Tag tag) {
-		tagRepo.save(tag);
+	public List<Tag> findAllByFeedcode(Feed feed) {
+		List<Feedtags> feedtags =  feedtagsRepo.findByFeed(feed);
+		List<Tag> tags = new ArrayList<Tag>();
+	
+		for (int i = 0; i < feedtags.size(); i++) {
+			tags.add(feedtags.get(i).getTag());
+		}
+		return tags;
+	}
+	
+
+	@Override
+	public void saveTag(Tag tags) {
+		tagsRepo.save(tags);
+		return;
+	}
+	
+	@Override
+	public void saveFeedtags(Feedtags feedtags) {
+		feedtagsRepo.save(feedtags);
 		return;
 	}
 
 	@Override
-	public void updateTagCnt(String tagname) {
-		tagRepo.updateTagCnt(tagname);
-		return;
+	public void updateTagCnt(Tag tag) {
+		tagsRepo.updateTagCnt(tag.getTagname());
 	}
+	
 
-	@Override
-	public List<Feed> searchTag(String tagname) {
-		return tagSearchRepo.findByTagContaining(tagname);
+//	좋아요 순으로 내림차순 정렬
+	public List<Feed> orderByLikes(String tagname) {
+		//tag테이블에서 tagname찾고 tag 가져옴
+		Tag tag = tagsRepo.findByTagnameContaining(tagname);
+		List<Feed> feeds = new ArrayList<Feed>();
+		//feedtags테이블에서 tag객체로 tagcode를 찾음
+		List<Feedtags> feedtags = feedtagsRepo.findByTag(tag);
+		List<Integer> feedcodes = new ArrayList<Integer>();
+
+		for (int i = 0; i < feedtags.size(); i++) {
+			int feedcode = feedtags.get(i).getFeed().getFeedcode();
+			feedcodes.add(feedcode);
+		}
+		feeds = orderByFeedRepo.findByFeedcodeInOrderByLikesDesc(feedcodes);
+		
+		return feeds;
 	}
+	
+//	 날짜 순으로 내림차순 정렬
+	public List<Feed> orderByRegtime(String tagname) {
+		Tag tag = tagsRepo.findByTagnameContaining(tagname);
+		List<Feed> feeds = new ArrayList<Feed>();
+		List<Feedtags> feedtags = feedtagsRepo.findByTag(tag);
+		for (int i = 0; i < feedtags.size(); i++) {
+			feeds.add(feedtags.get(i).getFeed());
+		}
+		return feeds;
+	}
+	
+	
+//	@Override
+//	public List<Tags> orderByTagCnt() {
+//		return null;
+////		return tagRepo.findAllByTagnameOrderByCnt();
+//	}
 
+//	@Override
+//	public List<Feed> searchTag(String tagname) {
+//		return orderByRepo.findByTagnameContaining(tagname);
+//	}
 
 }

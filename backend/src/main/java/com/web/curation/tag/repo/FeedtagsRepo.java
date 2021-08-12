@@ -6,10 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.web.curation.feed.model.Feed;
+import com.web.curation.tag.model.Feedtags;
 import com.web.curation.tag.model.Tag;
 
 @Repository
-public interface TagSearchRepo extends JpaRepository<Feed, Integer>{
+public interface FeedtagsRepo extends JpaRepository<Feedtags, Integer>{
 
-	List<Feed> findByTagContaining(String tagname);
+	List<Feedtags> findByTag(Tag tag);
+	List<Feedtags> findByFeed(Feed feed);
 }

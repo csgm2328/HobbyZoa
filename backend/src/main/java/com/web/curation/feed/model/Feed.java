@@ -3,15 +3,12 @@ package com.web.curation.feed.model;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.*;
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.web.curation.image.model.Image;
 import com.web.curation.reply.model.Reply;
+import com.web.curation.tag.model.Feedtags;
 
 @Data
 @Builder
@@ -37,7 +34,6 @@ public class Feed {
 	private String comment; //한줄설명
 	private Integer likes; //좋아요 수
 	private Integer scrap; //스크랩 수
-	private String tag; //태그
 	
 	
 	@OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -48,10 +44,13 @@ public class Feed {
 	@JsonManagedReference
 	private List<Reply> replies;
 	
+	@OneToMany(mappedBy = "feed", orphanRemoval = true)
+	@JsonManagedReference
+	private List<Feedtags> feedtags;	
+	
 	//default 0이거나 원래 값 넣어주기
 	@PrePersist
     public void prePersist() {
-		this.tag = this.tag == null? null: this.tag;
         this.likes = this.likes == null ? 0 : this.likes;
         this.scrap = this.scrap == null ? 0 : this.scrap;
     }
