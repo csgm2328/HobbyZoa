@@ -75,7 +75,8 @@ public class AlarmServiceImpl implements AlarmService{
 		alarm.setAlarmCheck(true);
 		alarm.setCheckDate(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime()); //읽은시간 생성
 		//읽은 후에 다시 소켓에 안읽은 알림 수 리턴
+		alarm = alarmRepo.save(alarm);
 		messagingTemplate.convertAndSend("/queue/" + alarm.getToemail(), alarmRepo.countByToemailAndAlarmCheck(alarm.getToemail(), false));
-		return alarmRepo.save(alarm);
+		return alarm;
 	}
 }
