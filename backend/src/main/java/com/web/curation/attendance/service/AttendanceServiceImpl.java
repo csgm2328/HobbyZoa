@@ -1,5 +1,6 @@
 package com.web.curation.attendance.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +53,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public void deleteByCheckcode(Integer checkcode) {
 		attendanceRepo.deleteById(checkcode);
 		
+	}
+
+	@Override
+	public Boolean existsByHobbyAndRegtimeBetween(Hobby hobby, LocalDateTime start, LocalDateTime end) {
+		return attendanceRepo.existsByHobbyAndRegtimeBetween(hobby, start, end);
 	}
 
 }
