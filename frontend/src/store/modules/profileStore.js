@@ -163,26 +163,27 @@ const profileStore = {
       console.log(commit, response)
       dispatch('profileStore/fetchHobby', username , { root: true })
     },
-    async createCheck({ commit }, form) {
+    async createCheck({ dispatch }, info) {
+      const form = info[0]
+      const hobbycode = info[1]
       const CREATE_CHECK_URL = `/hobby/check`
-      const response = await axios.post(CREATE_CHECK_URL, form)
-      console.log(commit, response)
+      await axios.post(CREATE_CHECK_URL, form)
+      dispatch('profileStore/fetchHobbyEvent', hobbycode , { root: true })
     },
     fetchHobbyEvent({ commit }, hobbycode) {
-      console.log('여기여기')
       const FETCH_CHECK_URL = '/hobby/check'
       axios.get(FETCH_CHECK_URL, { 
         params: {
           hobbycode: hobbycode
         }
       })
-        .then((res) => 
-        commit('FETCH_HOBBY_CALENDER', res.data)
-        )
+        .then((res) => {
+          commit('FETCH_HOBBY_CALENDER', res.data)
+          
+        })
         .catch((err) => 
           console.log(err)
         )
-      console.log(commit)
     }
   }
 }

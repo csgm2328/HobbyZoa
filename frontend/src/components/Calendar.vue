@@ -43,12 +43,14 @@
           color="primary"
           :events="events"
           @change="getEvents"
-          @click:date="openhobby"
+          @click:date="openhobby(focus, event.name)"
         ></v-calendar>
       </v-sheet>
       <v-btn
         @click="open"
       >출석 체크</v-btn>
+      <div>
+      </div>
     </v-col>
   </v-row>
   <CalendarModal
@@ -60,7 +62,7 @@
   <CheckDetailModal
     v-if="hobbycheck" 
     @close="hobbycheck=false"
-    :date="picker"
+    :date="date"
     :hobbycode="hobbycode"
   />  
   </div>
@@ -78,6 +80,7 @@ import CheckDetailModal from '@/components/CheckDetailModal'
       picker: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       events: [],
       value: '',
+      event: null,
     }),
     components: {
       CalendarModal,
@@ -89,17 +92,20 @@ import CheckDetailModal from '@/components/CheckDetailModal'
       },
     },
     created() {
-        this.$store.dispatch('profileStore/fetchHobbyEvent', this.hobbycode)
+      this.$store.dispatch('profileStore/fetchHobbyEvent', this.hobbycode)
+    
     },
     computed: {
       hobbyevents() {
         return this.$store.getters['profileStore/getHobbyEvent']
-      }
+      },
     },
+
     mounted () {
       this.$refs.calendar.checkChange()
     },
     methods: {
+
       getEventColor (event) {
         return event.color
       },
@@ -115,21 +121,31 @@ import CheckDetailModal from '@/components/CheckDetailModal'
       open() {
         this.dialog = true
       },
-      openhobby() {
+      openhobby(date, event) {
+        console.log(date)
+        console.log(event)
+        this.date = date
         this.hobbycheck = true
       },
       getEvents () {
         const events = []
         for (let i=0; i < this.hobbyevents.length; i ++) {
-          let min = new Date(`${this.hobbyevents[i].regtime.substr(0,10)}T${this.hobbyevents[i].start}:00:00`)
-          let max = new Date(`${this.hobbyevents[i].regtime.substr(0,10)}T${this.hobbyevents[i].end}:00:00`)
+          let start = String(this.hobbyevents[i].start)
+          let end = String(this.hobbyevents[i].end)
+          if (start.length == 1) {
+            start = '0' + start
+          }
+          if (end.length == 1) {
+            end = '0' + end
+          }
+          let min = new Date(`${this.hobbyevents[i].regtime.substr(0,10)}T${start}:00:00`)
+          let max = new Date(`${this.hobbyevents[i].regtime.substr(0,10)}T${end}:59:00`)
           let firstTimestamp = this.rnd(min.getTime(), max.getTime()) 
           let first = new Date(firstTimestamp - (firstTimestamp % 900000))
           events.push({
-            name: 'a',
+            name: this.hobbyevents[i].hobbycode,
             start: first,
             end:first,
-            color: 'None',
           })
         }
         this.events = events
@@ -141,13 +157,27 @@ import CheckDetailModal from '@/components/CheckDetailModal'
   }
 </script>
 
+<style scoped>
+</style>
+
 <style>
 div.pl-1 {
-  color: red;
-  width:30px;
-  height:50px;
+  color: transparent;
   background-image: url('../assets/images/check.png') !important;
-  cursor:auto;
-  margin: auto;
+  background-size: 6vh;
+  background-position: center center;
+  width: 100%;
+  height: 10vh;
+  margin-right: 0px !important;
+}
+div.v-event {
+  height: 80px !important;
+  width: 80px !important;
+  margin: 0px !important;
+}
+.v-event-more {
+  background-color: transparent !important;
+  height: 10vh !important;
+  content: none !important;
 }
 </style>
