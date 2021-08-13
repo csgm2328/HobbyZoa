@@ -66,14 +66,8 @@ public class FeedController {
 	@ApiOperation(value = "피드 생성", notes = "email, nickname, comment와 file리스트를 입력받아 uri를 반환")
 	public ResponseEntity<?> createFeed(@Valid @RequestParam("email") String email,
 			@Valid @RequestParam("nickname") String nickname, @RequestParam("comment") String comment,
-//          @Valid @RequestPart("files") List<MultipartFile> files,
-//          @RequestParam(value="tags", required=false) List<String> tags
-//  ) throws Exception {        
-			@Valid @RequestPart("files") MultipartFile file,
-			@RequestParam(value = "tags", required = false) List<String> tags) throws Exception {
-		List<MultipartFile> files = new ArrayList<MultipartFile>();
-		files.add(file);
-
+          @Valid @RequestPart("files") List<MultipartFile> files,
+          @RequestParam(value="tags", required=false) List<String> tags) throws Exception {        
 		Feed feed = feedService.save(Feed.builder().email(email).nickname(nickname).comment(comment).build(), files);
 
 		Tag tag = new Tag();
