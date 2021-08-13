@@ -6,6 +6,7 @@ import com.web.curation.tag.model.Feedtags;
 import com.web.curation.tag.model.Tag;
 
 public interface TagService {
+	boolean existsByTagname(String tagname);
 	Tag findByTagname(String tagname);
 	void saveTag(Tag tag);
 	void saveFeedtags(Feedtags feedtags);
