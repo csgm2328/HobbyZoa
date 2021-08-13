@@ -52,7 +52,7 @@ public class FeedServiceImpl implements FeedService{
 
 	@Override
 	public List<Feed> findByEmail(String email) { //해당 계정 피드 모아보기
-		List<Feed> feeds = feedRepo.findByEmail(email);
+		List<Feed> feeds = feedRepo.findByEmailOrderByRegtimeDesc(email);
 		for (int i = 0; i < feeds.size(); i++) {
 			List<Image> images = new ArrayList<Image>();
 			imageRepo.findAllByFeed(feeds.get(i)).forEach(e -> images.add(e));
