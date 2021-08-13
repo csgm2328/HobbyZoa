@@ -2,7 +2,7 @@ package com.web.curation.alarm.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Optional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -32,6 +32,11 @@ public class AlarmServiceImpl implements AlarmService{
 	public void createAlarm(MessageType alarmType, String from, String to, String content) {
 		if(from.equals(to)) //자신의 피드에 좋아요, 스크랩시 알림 전송 X
 			return;
+		Optional<Alarm> e = alarmRepo.findByAlarmTypeAndFromemailAndToemail(alarmType.toString(), from, to); 
+		if(e.isPresent()) {//이미 같은 type, from, to 가같은 알림이 존재한다면 또만들지 않음
+			System.out.println(e.get().getAlarmcode()+ "로 생성된 적 있는 알림");
+			return;
+		}
 		Message msg = new Message();
 		msg.setType(alarmType);
 		msg.setSender(from);
@@ -61,7 +66,6 @@ public class AlarmServiceImpl implements AlarmService{
 			total.add(x);
 		for(Alarm x: alreadyCheckedList) {
 			LocalDateTime monthago = LocalDateTime.now().minusMonths(1); //확인 한거는 한달 내 생성된거만 보여주기
-			System.out.println(monthago);
 			if(x.getCreateDate().isAfter(monthago))
 				total.add(x);
 		}

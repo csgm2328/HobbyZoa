@@ -1,10 +1,12 @@
 package com.web.curation.alarm.repo;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.web.curation.alarm.model.Alarm;
+import com.web.curation.alarm.model.MessageType;
 
 public interface AlarmRepo extends JpaRepository<Alarm, String>{
 
@@ -21,5 +23,7 @@ public interface AlarmRepo extends JpaRepository<Alarm, String>{
 	int countByToemail(String email);
 
 	Object countByToemailAndAlarmCheck(String to, boolean alarm_check);
+
+	Optional<Alarm> findByAlarmTypeAndFromemailAndToemail(String alarmType, String from, String to);
 
 }

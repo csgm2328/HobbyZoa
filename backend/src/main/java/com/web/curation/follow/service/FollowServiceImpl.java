@@ -66,7 +66,8 @@ public class FollowServiceImpl implements FollowService {
 	//팔로워 목록 보기
 	public List<String> ShowFollowerList(String email) {
 		List<String> followers = new ArrayList<String>();
-		followRepo.findAllByToemail(email).forEach(e -> followers.add(e.getFromemail()));
+		followRepo.findAllByToemail(email).forEach(e -> followers.add(
+				userRepo.findById(e.getFromemail()).get().getNickname()));
 		return followers;
 	}
 
@@ -74,7 +75,8 @@ public class FollowServiceImpl implements FollowService {
 	//팔로잉 목록 보기
 	public List<String> ShowFollowingList(String email) {
 		List<String> followings = new ArrayList<String>();
-		followRepo.findAllByFromemail(email).forEach(e -> followings.add(e.getToemail()));
+		followRepo.findAllByFromemail(email).forEach(e -> followings.add(
+				userRepo.findById(e.getToemail()).get().getNickname()));
 		return followings;
 	}
 
