@@ -1,5 +1,6 @@
 package com.web.curation.attendance.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.web.curation.attendance.model.Attendance;
@@ -12,4 +13,5 @@ public interface AttendanceService {
 	Attendance findByCheckcode(Integer checkcode);
 	void updateByCheckcode(Integer checkcode, Attendance attendance);
 	void deleteByCheckcode(Integer checkcode);
+	Boolean existsByHobbyAndRegtimeBetween(Hobby hobby, LocalDateTime start, LocalDateTime end);
 }

@@ -2,7 +2,7 @@ package com.web.curation.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -200,4 +200,14 @@ public class HobbyController {
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 	
+	@GetMapping(value="/check/checkattendance")
+	@ApiOperation(value="출석 여부 확인", notes="hobbycode를 받아 출석 여부 반환")
+	public ResponseEntity<Boolean> checkAttendance(@RequestParam int hobbycode){
+		Hobby hobby = hobbyService.findByHobbycode(hobbycode);
+		LocalDateTime start = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.of(0,0,0));
+		LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
+		Boolean isattended = attendanceService.existsByHobbyAndRegtimeBetween(hobby,start, end);
+		
+		return new ResponseEntity<Boolean>(isattended, HttpStatus.OK);
+	}
 }
