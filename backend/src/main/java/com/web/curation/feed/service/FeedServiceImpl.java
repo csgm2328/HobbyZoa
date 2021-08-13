@@ -167,4 +167,11 @@ public class FeedServiceImpl implements FeedService{
 		return feedRepo.findByEmailInOrderByRegtimeDesc(list);
 	}
 
+	@Override
+	public List<Feed> getLikeFeedByEmail(String email) {
+		List<Integer> list = new ArrayList<Integer>();
+		likeRepo.findAllByEmail(email).forEach(e -> list.add(e.getFeedcode()));
+		List<Feed> feeds = feedRepo.findByFeedcodeInOrderByRegtimeDesc(list);
+		return feeds;
+	}
 }
