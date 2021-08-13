@@ -25,8 +25,6 @@ export default {
       type: Array
     }
   },
-  computed: {
-  }
 }
 </script>
 

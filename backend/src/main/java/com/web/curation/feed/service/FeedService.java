@@ -21,4 +21,6 @@ public interface FeedService {
 	String LikeFeed(String email ,Integer feedcode);
 	boolean CheckLike(String email, Integer feedcode);
 	List<String> ShowLikeList(Integer feedcode);
+	List<Feed> findByEmailInOrderByRegtimeDesc(List<String> list);
+	List<Feed> getLikeFeedByEmail(String email);
 }

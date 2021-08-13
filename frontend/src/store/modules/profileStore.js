@@ -14,6 +14,7 @@ const profileStore = {
     feeds: [],
     saved: [],
     badge: [],
+    hobbyevents: []
   },
   getters: {
     getEmail(state) {
@@ -45,6 +46,9 @@ const profileStore = {
     },
     getHobby(state) {
       return state.badge
+    },
+    getHobbyEvent(state) {
+      return state.hobbyevents
     }
   },
   mutations: {
@@ -64,6 +68,9 @@ const profileStore = {
     },
     FETCH_HOBBY(state, res) {
       state.badge = res
+    },
+    FETCH_HOBBY_CALENDER(state, res) {
+      state.hobbyevents = res
     }
   },
   actions: {
@@ -156,6 +163,27 @@ const profileStore = {
       console.log(commit, response)
       dispatch('profileStore/fetchHobby', username , { root: true })
     },
+    async createCheck({ commit }, form) {
+      const CREATE_CHECK_URL = `/hobby/check`
+      const response = await axios.post(CREATE_CHECK_URL, form)
+      console.log(commit, response)
+    },
+    fetchHobbyEvent({ commit }, hobbycode) {
+      console.log('여기여기')
+      const FETCH_CHECK_URL = '/hobby/check'
+      axios.get(FETCH_CHECK_URL, { 
+        params: {
+          hobbycode: hobbycode
+        }
+      })
+        .then((res) => 
+        commit('FETCH_HOBBY_CALENDER', res.data)
+        )
+        .catch((err) => 
+          console.log(err)
+        )
+      console.log(commit)
+    }
   }
 }
 
