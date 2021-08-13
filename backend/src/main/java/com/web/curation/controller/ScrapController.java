@@ -1,6 +1,7 @@
 package com.web.curation.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,20 +75,19 @@ public class ScrapController {
 	@ApiOperation(value="스크랩목록", notes="email을 입력 받아 스크랩한 목록을 반환")
 	public ResponseEntity<List<Scrap>> findByEmail(@RequestParam("email") String email){
 		List<Scrap> scraps = scrapService.findByEmail(email);
+		List<Integer> list = new ArrayList<Integer>();
 		for (int i = 0; i < scraps.size(); i++) {
-			Feed feed = feedService.findByFeedcode(scraps.get(i).getFeedcode());
+			list.add(scraps.get(i).getFeedcode());
+		}
+		List<Feed> feeds = scrapService.findByFeedcodeInOrderByRegtimeDesc(list);
+		for (int i = 0; i < feeds.size(); i++) {
+			Feed feed = feeds.get(i);
 			List<Image> images = feedService.findAllByfeedcode(feed.getFeedcode());
 			feed.setImages(images);
 			scraps.get(i).setFeed(feed);
 		}
 		return new ResponseEntity<List<Scrap>>(scraps, HttpStatus.OK);
 	}
-	
-//	@GetMapping(value="/{scrapcode}")
-//	@ApiOperation(value="스크랩 보기", notes="스크랩한 피드 반환")
-//	public void findByScrapcode(@PathVariable("scrapcode") Integer scrapcode){
-//		
-//	}
 	
 	@DeleteMapping(value="/{scrapcode}")
 	@ApiOperation(value="스크랩삭제", notes="scrapcode을 입력 받아 스크랩 삭제")

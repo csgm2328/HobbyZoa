@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.web.curation.feed.model.Feed;
+import com.web.curation.feed.repo.FeedRepo;
 import com.web.curation.scrap.model.Scrap;
 import com.web.curation.scrap.repo.ScrapRepo;
 
@@ -13,6 +15,9 @@ public class ScrapServiceImpl implements ScrapService {
 
 	@Autowired
 	private ScrapRepo scrapRepo;
+	
+	@Autowired
+	private FeedRepo feedRepo;
 	
 	@Override
 	public Scrap save(Scrap scrap) {
@@ -42,5 +47,10 @@ public class ScrapServiceImpl implements ScrapService {
 	@Override
 	public Scrap findByEmailAndFeedcode(String email, Integer feedcode) {
 		return scrapRepo.findByEmailAndFeedcode(email, feedcode);
+	}
+
+	@Override
+	public List<Feed> findByFeedcodeInOrderByRegtimeDesc(List<Integer> list) {
+		return feedRepo.findByFeedcodeInOrderByRegtimeDesc(list);
 	}
 }

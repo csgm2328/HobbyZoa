@@ -2,6 +2,7 @@ package com.web.curation.scrap.service;
 
 import java.util.List;
 
+import com.web.curation.feed.model.Feed;
 import com.web.curation.scrap.model.Scrap;
 
 public interface ScrapService {
@@ -18,4 +19,5 @@ public interface ScrapService {
 	Boolean existsByEmailAndFeedcode(String email, Integer feedcode);
 	//이메일과 피드코드로 스크랩 찾기
 	Scrap findByEmailAndFeedcode(String email, Integer feedcode);
+	List<Feed> findByFeedcodeInOrderByRegtimeDesc(List<Integer> list);
 }
