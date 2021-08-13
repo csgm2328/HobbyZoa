@@ -39,20 +39,42 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            color="green darken-1"
-            text
-            @click="$emit('close')"
+          <div
+            v-if="todo"
           >
-            cancle
-          </v-btn>
-          <v-btn
-            color="green darken-1"
-            text
-            @click="check"
+            <v-btn
+              color="green darken-1"
+              text
+              @click="$emit('close')"
+            >
+              cancle
+            </v-btn>
+            <v-btn
+              color="green darken-1"
+              text
+              @click="check(); $emit('close');"
+            >
+              save
+            </v-btn>
+          </div>
+          <div
+            v-else
           >
-            save
-          </v-btn>
+            <v-btn
+              color="green darken-1"
+              text
+              @click="check(); $emit('close');"
+            >
+              Update
+            </v-btn>
+            <v-btn
+              color="red darken-1"
+              text
+              @click="check(); $emit('close');"
+            >
+              Delete
+            </v-btn>
+          </div>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -70,6 +92,7 @@
         endtime: null,
         comment: null,
         request_user: null,
+        todo: true,
       }
     },
     created() {
@@ -149,7 +172,7 @@
         form.append('end', end)
         form.append('start', start)
         form.append('hobbycode', this.hobbycode)
-        this.$store.dispatch('profileStore/createCheck', form)
+        this.$store.dispatch('profileStore/createCheck', [form, this.hobbycode])
       }
     }
   }

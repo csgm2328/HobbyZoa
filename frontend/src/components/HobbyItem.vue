@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-top: 50px;">
     <div style="display: flex; justify-content: space-between;">
       <h3 style="display: inline-block;">
         {{ hobby.name }}

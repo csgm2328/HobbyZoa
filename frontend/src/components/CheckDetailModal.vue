@@ -8,7 +8,7 @@
       <v-card>
         <v-card-title class="text-h6" style="margin-bottom: 20px;">
           <span>{{ date }}</span>
-          <span>{{ hobbycode }}</span>
+          <!-- <span>{{ hobbycode }}</span> -->
           <span>오늘의 취미 기록</span>
         </v-card-title>
         <v-card-text>
