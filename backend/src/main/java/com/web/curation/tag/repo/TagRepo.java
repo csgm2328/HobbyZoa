@@ -13,7 +13,7 @@ import com.web.curation.tag.model.Tag;
 
 @Repository
 public interface TagRepo extends JpaRepository<Tag, String> {
-
+	boolean existsByTagname(String tagname);
 	Tag findByTagname(String tagname);
 	Tag findByTagnameContaining(String tagname);	
 	@Transactional
@@ -21,6 +21,4 @@ public interface TagRepo extends JpaRepository<Tag, String> {
 	@Query(value = "update tag t set t.cnt=t.cnt+1 where t.tagname = :tagname")
 	void updateTagCnt(@Param("tagname") String tagname);
 	List<Tag> findTop10ByOrderByCntDesc();
-
-
 }

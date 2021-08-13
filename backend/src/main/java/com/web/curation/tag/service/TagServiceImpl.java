@@ -23,6 +23,12 @@ public class TagServiceImpl implements TagService {
 	@Autowired
 	private OrderByFeedRepo orderByFeedRepo;
 
+	@Override
+	public boolean existsByTagname(String tagname) {
+		return tagRepo.existsByTagname(tagname);
+	}
+	
+	@Override
 	public Tag findByTagname(String tagname) {
 		return tagRepo.findByTagname(tagname);
 	}

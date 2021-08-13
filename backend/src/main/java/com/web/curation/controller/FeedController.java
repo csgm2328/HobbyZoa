@@ -68,24 +68,28 @@ public class FeedController {
 			@Valid @RequestParam("nickname") String nickname, @RequestParam("comment") String comment,
           @Valid @RequestPart("files") List<MultipartFile> files,
           @RequestParam(value="tags", required=false) List<String> tags) throws Exception {        
-		Feed feed = feedService.save(Feed.builder().email(email).nickname(nickname).comment(comment).build(), files);
-
-		Tag tag = new Tag();
+        Feed feed = feedService.save(Feed.builder().email(email).nickname(nickname).comment(comment).build(), files);
+        
 		for (int i = 0; i < tags.size(); i++) {
 			String tagname = tags.get(i);
-			Tag tagCheck = tagService.findByTagname(tagname);
-			if (tagCheck != null) {
+			boolean tagCheck = tagService.existsByTagname(tagname);
+			Tag tag = new Tag();
+			if (tagCheck) {
 				//원래 있는 운동태그이면 cnt늘리기
-				tagService.updateTagCnt(tagCheck);
+				//tagService.updateTagCnt(tagCheck);
+				Tag existTag = tagService.findByTagname(tagname);
+				existTag.setTagcode(existTag.getTagcode());
+				existTag.setTagname(existTag.getTagname());
+				existTag.setCnt(existTag.getCnt()+1);
+				tagService.saveFeedtags(Feedtags.builder().feed(feed).tag(existTag).build());
+				//이렇게 하면 cnt만 바뀐 값이 새로 추가 되지 않나..? update되어야 하는데! -> update가 되네..?
 			} else {
 				//새로운 운동태그이면 save하기
 				tag.setTagname(tagname);
 				tag.setCnt(1);
 				tagService.saveTag(tag);
+				tagService.saveFeedtags(Feedtags.builder().feed(feed).tag(tag).build());
 			}
-			//운동태그의 tagcode가져오기 
-			tag.setTagcode(tagService.findByTagname(tagname).getTagcode());
-			tagService.saveFeedtags(Feedtags.builder().feed(feed).tag(tag).build());
 		}
 
 		URI uriLocation = new URI("/feed/" + feed.getFeedcode());
