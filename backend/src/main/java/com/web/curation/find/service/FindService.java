@@ -1,7 +1,6 @@
 package com.web.curation.find.service;
 
 import java.util.List;
-
 import com.web.curation.find.model.History;
 import com.web.curation.user.model.User;
 

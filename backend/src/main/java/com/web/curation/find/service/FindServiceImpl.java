@@ -1,10 +1,8 @@
 package com.web.curation.find.service;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.web.curation.find.model.History;
 import com.web.curation.find.repo.FindHistoryRepo;
 import com.web.curation.find.repo.FindRepo;
