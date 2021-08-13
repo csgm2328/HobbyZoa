@@ -17,5 +17,6 @@ public interface FeedRepo extends JpaRepository<Feed, Integer>{
 	// 프로필에서 피드수 리턴
 	int countByEmail(String email);
 	List<Feed> findByEmailInOrderByRegtimeDesc(List<String> list);
+	List<Feed> findByFeedcodeInOrderByRegtimeDesc(List<Integer> list);
 }
 

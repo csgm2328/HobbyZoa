@@ -1,6 +1,5 @@
 package com.web.curation.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +36,17 @@ public class ShowController {
 	FollowService followService;
 	
 	@GetMapping(value="/following")
-	@ApiOperation(value = "해당 계정이 팔로우한 모든 피드 조회", notes = "계정 이메일 받아서 해당 계정의 피드와 이미지 엮어서 반환")
+	@ApiOperation(value = "해당 계정이 팔로우한 모든 피드 조회", notes = "계정 이메일 받아서 팔로우한 계정 피드 반환")
 	public ResponseEntity<List<Feed>> getFollowingFeedByEmail(@RequestParam String email){
 		List<String> followings = followService.ShowFollowingList(email);
 		List<Feed> feeds = feedService.findByEmailInOrderByRegtimeDesc(followings);
+		return new ResponseEntity<List<Feed>>(feeds, HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/like")
+	@ApiOperation(value = "해당 계정이 좋아요한 모든 피드 조회", notes = "계정 이메일 받아서 좋아요한 피드 반환")
+	public ResponseEntity<List<Feed>> getLikeFeedByEmail(@RequestParam String email){
+		List<Feed> feeds = feedService.getLikeFeedByEmail(email);
 		return new ResponseEntity<List<Feed>>(feeds, HttpStatus.OK);
 	}
 	
