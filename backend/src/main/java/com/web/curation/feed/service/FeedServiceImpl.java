@@ -136,6 +136,19 @@ public class FeedServiceImpl implements FeedService{
 	}
 
 	@Override
+	public void updateByFeedcodeNoImage(Integer feedcode, Feed feed) {
+		Optional<Feed> e = feedRepo.findById(feedcode);
+		if(e.isPresent()) {
+			e.get().setFeedcode(feed.getFeedcode());
+			e.get().setComment(feed.getComment());
+			e.get().setLikes(likeRepo.countByFeedcode(feedcode));
+			e.get().setScrap(feed.getScrap());
+			feedRepo.save(e.get());
+		}
+		
+	}
+	
+	@Override
 	@Transactional
 	public String LikeFeed(String email, Integer feedcode) {
 		Optional<FeedLike> e = likeRepo.findByEmailAndFeedcode(email, feedcode);

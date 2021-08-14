@@ -146,10 +146,14 @@ public class FeedController {
 	@PutMapping(value = "/{feedcode}")
 	@ApiOperation(value = "피드 수정", notes = "feedcode로 수정 후 수정 피드 반환")
 	public ResponseEntity<Feed> updateFeed(@PathVariable("feedcode") Integer feedcode,
-			@RequestParam("comment") String comment, @RequestPart("files") List<MultipartFile> files) throws Exception {
+			@RequestParam("comment") String comment, @RequestPart(value="files", required=false) List<MultipartFile> files) throws Exception {
 		Feed feed = feedService.findByFeedcode(feedcode);
 		feed.setComment(comment);
-		feedService.updateByFeedcode(feedcode, feed, files);
+		if(files==null) {
+			feedService.updateByFeedcodeNoImage(feedcode, feed);
+		}else {
+			feedService.updateByFeedcode(feedcode, feed, files);
+		}
 		return new ResponseEntity<Feed>(feed, HttpStatus.OK);
 	}
 

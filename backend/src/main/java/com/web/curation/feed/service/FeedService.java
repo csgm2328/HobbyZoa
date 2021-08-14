@@ -18,6 +18,7 @@ public interface FeedService {
 	void deleteByFeedcode(Integer feedcode);
 	Feed save(Feed feed, List<MultipartFile> files ) throws Exception;
 	void updateByFeedcode(Integer feedcode, Feed feed, List<MultipartFile> files) throws Exception;
+	void updateByFeedcodeNoImage(Integer feedcode, Feed feed);
 	String LikeFeed(String email ,Integer feedcode);
 	boolean CheckLike(String email, Integer feedcode);
 	List<String> ShowLikeList(Integer feedcode);
