@@ -11,6 +11,7 @@ import UserSetting from '@/views/User/UserSetting.vue'
 import FeedCreate from '@/views/Feed/CreateFeed.vue'
 import FeedUpdate from '@/views/Feed/FeedUpdate.vue'
 import FeedDetail from '@/views/Feed/FeedDetail.vue'
+import TagRanking from '@/views/Feed/TagRanking.vue'
 import Tag from '@/views/Feed/Tag.vue'
 import FollowFeed from '@/views/Feed/FollowFeed.vue'
 import LikeFeed from '@/views/Feed/LikeFeed.vue'
@@ -129,18 +130,24 @@ const routes = [
     beforeEnter: requireAuth
   },
   {
+    path: '/ranking',
+    name: 'TagRanking',
+    component: TagRanking,
+    beforeEnter: requireAuth
+  },
+  {
     path: "/404",
     name: "NotFoundPage",
     component: NotFoundPage
   },
   {
-    path: '*',
-    redirect: "/404"
-  },
-  {
     path: '/error',
     name: "ErrorPage",
     component: ErrorPage
+  },
+  {
+    path: '*',
+    redirect: "/404"
   },
 ]
 

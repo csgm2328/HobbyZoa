@@ -5,8 +5,18 @@
       <v-layout column justify-center>
         <div 
           v-if="isMyFeed"
-          class="d-flex justify-end"
+          class="d-flex justify-space-between"
         >
+          <div>
+            <v-btn
+              text
+              @click="toProfile(feed.feed.email)"
+            >
+              <h2>
+                {{ feed.feed.nickname }}
+              </h2>
+            </v-btn>
+          </div>
           <v-menu
             bottom
             left
@@ -35,6 +45,7 @@
             </v-list>
           </v-menu>
         </div>
+
         <v-carousel
           hide-delimiters
           :continuous="false"
@@ -48,10 +59,17 @@
             contain
           ></v-carousel-item>
         </v-carousel>
-        <h2 class="ms-1">{{ feed.feed.nickname }}</h2>
+        <h2 
+          class="ms-1"
+        >{{ feed.feed.nickname }}</h2>
         <div>
-          <v-chip>
-            {{ feed.feed.tag }}
+          <v-chip
+            v-for="(tag, i) in feed.tags"
+            :key="i"
+            :class="color[i%3]"
+            class="me-1"
+          >
+            {{ tag }}
           </v-chip>
         </div>
         <h4 class="ms-1">{{ feed.feed.comment }}</h4>
@@ -213,6 +231,7 @@ export default {
       feedcode: '',
       snackbar: false,
       message: '',
+      color: ['yellow', 'blue', 'red']
     }
   },
   created() {
@@ -262,6 +281,9 @@ export default {
       urlInput.select()
       document.execCommand('copy')
     },
+    toProfile(email) {
+      this.$router.push(`/user/${email}`)
+    }
   },
   computed: {
     feed() {
@@ -300,11 +322,14 @@ export default {
     },
     likeList() {
       return this.$store.getters.getLikeList
-    }
-  }
+    },
+  },
 }
 </script>
 
-<style>
-
+<style scoped>
+.container {
+  background: white;
+  max-width: 600px;
+}
 </style>

@@ -15,3 +15,9 @@ export default {
   }),
 };
 </script>
+
+<style scoped>
+.v-main {
+  background: rgb(238, 238, 238);
+}
+</style>
