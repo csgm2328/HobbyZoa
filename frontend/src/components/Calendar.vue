@@ -43,12 +43,21 @@
           color="primary"
           :events="events"
           @change="getEvents"
-          @click:date="openhobby(focus, event.name)"
+          @click:event="showHobbyEvent"
         ></v-calendar>
       </v-sheet>
-      <v-btn
-        @click="open"
-      >출석 체크</v-btn>
+      <div >
+
+        <v-btn
+          v-if="!checkhobbycheck"
+          class="mx-auto"
+          @click="open"
+          rounded
+          color="primary darken-1"
+          dark
+        >출석 체크</v-btn>
+      </div>
+
       <div>
       </div>
     </v-col>
@@ -62,9 +71,8 @@
   <CheckDetailModal
     v-if="hobbycheck" 
     @close="hobbycheck=false"
-    :date="date"
     :hobbycode="hobbycode"
-  />  
+  />
   </div>
 </template>
 
@@ -73,15 +81,20 @@ import CalendarModal from '@/components/CalendarModal'
 import CheckDetailModal from '@/components/CheckDetailModal'
 
   export default {
-    data: () => ({
-      focus: '',
-      dialog: false,
-      hobbycheck: false, 
-      picker: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-      events: [],
-      value: '',
-      event: null,
-    }),
+    data() {
+      return {
+        focus: '',
+        dialog: false,
+        hobbycheck: false, 
+        picker: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+        events: [],
+        value: '',
+        event: null,
+        hobbydetailcode: '',
+        names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+        checkhobbycheck: false,
+      }
+    },
     components: {
       CalendarModal,
       CheckDetailModal,
@@ -91,21 +104,40 @@ import CheckDetailModal from '@/components/CheckDetailModal'
         type: Number
       },
     },
+    watch: {
+      hobbyevents: function () {
+        this.getEvents()
+      }
+    },
     created() {
       this.$store.dispatch('profileStore/fetchHobbyEvent', this.hobbycode)
-    
+        .then(() => {
+          this.hobbyevents = this.$store.getters['profileStore/getHobbyEvent']
+          console.log('hobbyevenvt', this.hobbyevents)
+          this.getEvents()
+        })
     },
     computed: {
-      hobbyevents() {
-        return this.$store.getters['profileStore/getHobbyEvent']
+      hobbyevents: {
+        get() {
+          return this.$store.getters['profileStore/getHobbyEvent']
+        },
+        set() {
+          this.getEvents()
+        }
       },
+      // checkhobbycheck: {
+      //   get() {
+      //     return this.$store.getters['profileStore/getHobbyCheck']
+      //   },
+      //   set() {}
+      // }
     },
 
     mounted () {
       this.$refs.calendar.checkChange()
     },
     methods: {
-
       getEventColor (event) {
         return event.color
       },
@@ -120,13 +152,13 @@ import CheckDetailModal from '@/components/CheckDetailModal'
       },
       open() {
         this.dialog = true
+        
       },
-      openhobby(date, event) {
+      openhobby(date) {
         console.log(date)
-        console.log(event)
-        this.date = date
-        this.hobbycheck = true
+        
       },
+
       getEvents () {
         const events = []
         for (let i=0; i < this.hobbyevents.length; i ++) {
@@ -138,20 +170,39 @@ import CheckDetailModal from '@/components/CheckDetailModal'
           if (end.length == 1) {
             end = '0' + end
           }
+          if (end == '24') {
+            end = '23'
+          }
+          const allDay = this.rnd(0, 3) === 0
           let min = new Date(`${this.hobbyevents[i].regtime.substr(0,10)}T${start}:00:00`)
           let max = new Date(`${this.hobbyevents[i].regtime.substr(0,10)}T${end}:59:00`)
           let firstTimestamp = this.rnd(min.getTime(), max.getTime()) 
           let first = new Date(firstTimestamp - (firstTimestamp % 900000))
+          let checkcode = String(this.hobbyevents[i].checkcode)
           events.push({
-            name: this.hobbyevents[i].hobbycode,
+            name: checkcode,
             start: first,
-            end:first,
+            end: first,
+            color: "None",
+            timed: !allDay,
           })
         }
         this.events = events
       },
       rnd (a, b) {
         return Math.floor((b - a + 1) * Math.random()) + a
+      },
+
+
+      showHobbyEvent ({ nativeEvent, event }) {
+        console.log('event click')
+        console.log(nativeEvent, event)
+        this.hobbydetailcode = event.name
+        this.hobbycheck = true
+        console.log(event, event.name)
+        this.$store.dispatch('profileStore/fetchHobbyCheckCode', Number(event.name))
+        nativeEvent.stopPropagation()
+
       },
     },
   }
@@ -162,22 +213,28 @@ import CheckDetailModal from '@/components/CheckDetailModal'
 
 <style>
 div.pl-1 {
-  color: transparent;
+  color: transparent !important;
+  background-color: transparent;
   background-image: url('../assets/images/check.png') !important;
   background-size: 6vh;
   background-position: center center;
-  width: 100%;
-  height: 10vh;
+  width: 100% !important;
+  height: 10vh !important;
   margin-right: 0px !important;
 }
+
 div.v-event {
-  height: 80px !important;
-  width: 80px !important;
+  background-color: transparent;
+  height: 10vh !important;
+  width: 100% !important;
   margin: 0px !important;
 }
+
+/*
 .v-event-more {
   background-color: transparent !important;
   height: 10vh !important;
   content: none !important;
-}
+} */
+
 </style>

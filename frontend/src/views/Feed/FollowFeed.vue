@@ -13,10 +13,11 @@
   </div>
 </template>
 
+
 <script>
-import Header from '@/components/Header'
 import FeedListItem from '@/components/FeedListItem'
 import InfiniteLoading from 'vue-infinite-loading'
+import Header from '@/components/Header'
 
 export default {
   name: 'FollowFeed',

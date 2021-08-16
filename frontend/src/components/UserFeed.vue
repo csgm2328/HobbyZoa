@@ -37,9 +37,8 @@ export default {
       return this.$store.getters['profileStore/getUserFeed']
     },
     feed_num() {
-        return this.$store.getters['profileStore/getFeedNum']
-      
-      },
+      return this.$store.getters['profileStore/getFeedNum']
+    },
   },
 
   methods: {

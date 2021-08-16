@@ -8,6 +8,7 @@ import profileStore from '././modules/profileStore'
 import searchStore from '././modules/searchStore'
 import followStore from '././modules/followStore'
 import errorStore from '././modules/errorStore'
+import showStore from '././modules/showStore'
 
 Vue.use(Vuex)
 
@@ -43,5 +44,6 @@ export default new Vuex.Store({
     searchStore,
     followStore,
     errorStore,
+    showStore,
   }
 })

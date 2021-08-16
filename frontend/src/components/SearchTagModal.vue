@@ -7,7 +7,7 @@
     >
       <v-card>
         <v-card-title class="text-h6">
-          검색어를 입력해주세요
+          <h5>검색어를 입력해주세요</h5>
         </v-card-title>
         <v-card-text>
           <v-text-field
