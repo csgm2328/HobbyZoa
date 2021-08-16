@@ -7,22 +7,23 @@
     >
       <v-card>
         <v-card-title class="text-h6" style="margin-bottom: 20px;">
-          <span>{{ date }}</span>
+          <!-- <h1>{{ hobbydetailcode }}</h1> -->
+          <!-- <div>{{checkdetail}}</div> -->
           <!-- <span>{{ hobbycode }}</span> -->
           <span>오늘의 취미 기록</span>
         </v-card-title>
         <v-card-text>
           <div style="margin-bottom: 20px;">
             <h3>시작시간</h3>
-            <h5>00시</h5>
+            <h5>{{ start }}</h5>
           </div>
           <div style="margin-bottom: 20px;">
             <h3>종료시간</h3>
-            <h5>08시</h5>
+            <h5>{{ end }}</h5>
           </div>
           <div>
             <h3>comment</h3>
-            <div>하윙</div>
+            <h5>{{ comment }}</h5>
           </div>
         </v-card-text>
         <v-card-actions>
@@ -32,14 +33,19 @@
             text
             @click="$emit('close')"
           >
-            cancle
+            Close
           </v-btn>
           <v-btn
             color="green darken-1"
             text
+            @click="openupdate();"
           >
-            save
+            Update
           </v-btn>
+          <CalendarUpdateModal
+            v-if="updatedialog" 
+            @close="updatedialog=false"
+          /> 
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -47,25 +53,47 @@
 </template>
 
 <script>
+import CalendarUpdateModal from '@/components/CalendarUpdateModal'
+
   export default {
     data () {
       return {
-          hobbycheck: true
+        hobbycheck: true,
+        start: '',
+        end: '',
+        comment: '',
+        updatedialog: false,
       }
+    },
+    components: {
+      CalendarUpdateModal
     },
     created() {
       this.request_user = localStorage.email
-
+      this.hobbycheckdetail()
     },
     computed: {
-    },
-    props: {
-      date: {
-        type: String
+      hobbydetailcode() {
+        return this.$store.getters['profileStore/getHobbyCode']
       },
-      hobbycode: {
-        type: Number
-      }
+      // checkdetail() {
+      //   return this.$store.getters['profileStore/getCheckDetail']
+      // }
+
+    },
+    methods: {
+      hobbycheckdetail() {
+        this.$store.dispatch('profileStore/fetchHobbyCheckDetail', this.hobbydetailcode)
+          .then(() => {
+            const checkdetail = this.$store.getters['profileStore/getCheckDetail']
+            this.start = checkdetail.start
+            this.end = checkdetail.end
+            this.comment = checkdetail.comment
+          })
+      },
+      openupdate() {
+        this.updatedialog = true
+      },
     }
   }
 </script>

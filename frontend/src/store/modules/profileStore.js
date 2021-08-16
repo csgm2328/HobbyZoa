@@ -14,7 +14,10 @@ const profileStore = {
     feeds: [],
     saved: [],
     badge: [],
-    hobbyevents: []
+    hobbyevents: [],
+    hobbycheckcode: null,
+    hobbycheckdetail: null,
+    checkhobbycheck: null,
   },
   getters: {
     getEmail(state) {
@@ -49,6 +52,15 @@ const profileStore = {
     },
     getHobbyEvent(state) {
       return state.hobbyevents
+    },
+    getHobbyCode(state) {
+      return state.hobbycheckcode
+    },
+    getCheckDetail(state) {
+      return state.hobbycheckdetail
+    },
+    getHobbyCheck(state) {
+      return state.checkhobbycheck
     }
   },
   mutations: {
@@ -71,7 +83,17 @@ const profileStore = {
     },
     FETCH_HOBBY_CALENDER(state, res) {
       state.hobbyevents = res
-    }
+    },
+    FETCH_HOBBY_CHECK_CODE(state, res) {
+      console.log('저장', res)
+      state.hobbycheckcode = res
+    },
+    FETCH_HOBBY_CHECK_DETAIL(state, res) {
+      state.hobbycheckdetail = res
+    },
+    FETCH_HOBBY_CHECK(state, res) {
+      state.checkhobbycheck = res
+    },
   },
   actions: {
     async fetchProfile({ commit }, username) {
@@ -170,7 +192,8 @@ const profileStore = {
       await axios.post(CREATE_CHECK_URL, form)
       dispatch('profileStore/fetchHobbyEvent', hobbycode , { root: true })
     },
-    fetchHobbyEvent({ commit }, hobbycode) {
+    async fetchHobbyEvent({ commit }, hobbycode) {
+      return new Promise((resolve, reject) => {
       const FETCH_CHECK_URL = '/hobby/check'
       axios.get(FETCH_CHECK_URL, { 
         params: {
@@ -179,12 +202,36 @@ const profileStore = {
       })
         .then((res) => {
           commit('FETCH_HOBBY_CALENDER', res.data)
+          resolve()
+        })
+        .catch((err) => {
+          console.log(err)
+          reject()
+        })
+      })
+    },
+    fetchHobbyCheckCode({ commit }, hobbycode) {
+      commit('FETCH_HOBBY_CHECK_CODE', hobbycode)
+    },
+    async fetchHobbyCheckDetail({ commit }, checkcode) {
+      return new Promise((resolve, reject) => {
+      const FETCH_HOBBY_DETAIL = '/hobby/check/' + checkcode
+      axios.get(FETCH_HOBBY_DETAIL, { 
+        params: {
+          checkcode: checkcode
+        }
+      })
+        .then((res) => {
+          commit('FETCH_HOBBY_CHECK_DETAIL', res.data)
+          resolve()
           
         })
-        .catch((err) => 
+        .catch((err) => {
           console.log(err)
-        )
-    }
+          reject()
+        })
+      }
+    )},
   }
 }
 
