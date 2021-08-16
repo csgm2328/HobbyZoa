@@ -24,7 +24,7 @@
           <v-col cols="8">
             <v-row class="pa-3">
               <v-col cols="12" class="mt-1 pa-0">
-                <h1 class="title hover">{{ email }}</h1>
+                <h3 class="">{{ email }}</h3>
               </v-col>
               <v-col
                 cols="4"

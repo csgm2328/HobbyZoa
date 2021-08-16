@@ -59,7 +59,12 @@ const searchStore = {
         })
         .then((res) => {
           const long = res.data.length
-          commit('FIND_HISTORY', res.data.slice(long-5, long))
+          if (long > 5) {
+            commit('FIND_HISTORY', res.data.slice(long-5, long))
+          }
+          else {
+            commit('FIND_HISTORY', res.data)
+          }
         })
         .catch(err => console.log(err))
     },

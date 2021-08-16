@@ -39,9 +39,6 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <div
-            v-if="todo"
-          >
             <v-btn
               color="green darken-1"
               text
@@ -52,29 +49,10 @@
             <v-btn
               color="green darken-1"
               text
-              @click="check(); $emit('close');"
+              @click="check();"
             >
               save
             </v-btn>
-          </div>
-          <div
-            v-else
-          >
-            <v-btn
-              color="green darken-1"
-              text
-              @click="check(); $emit('close');"
-            >
-              Update
-            </v-btn>
-            <v-btn
-              color="red darken-1"
-              text
-              @click="check(); $emit('close');"
-            >
-              Delete
-            </v-btn>
-          </div>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -87,7 +65,7 @@
       return {
         dialog: true,
         search: "",
-        times: ['0am', '1am', '2am', '3am', '4am', '5am', '6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '8pm', '9pm', '11pm', '12am'],
+        times: ['0am', '1am', '2am', '3am', '4am', '5am', '6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '8pm', '9pm', '10pm', '11pm', '12am'],
         starttime: null,
         endtime: null,
         comment: null,
@@ -97,7 +75,6 @@
     },
     created() {
       this.request_user = localStorage.email
-
     },
     computed: {
     },
@@ -173,6 +150,7 @@
         form.append('start', start)
         form.append('hobbycode', this.hobbycode)
         this.$store.dispatch('profileStore/createCheck', [form, this.hobbycode])
+          .then(() => {})
       }
     }
   }
