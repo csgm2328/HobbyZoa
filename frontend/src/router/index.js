@@ -29,7 +29,8 @@ const requireAuth = function(to, from, next) {
     // }
     next()
   } else {
-    next('/login')
+    next('/login') // 지울 부분
+    // next('/login')
   }
 }
 
