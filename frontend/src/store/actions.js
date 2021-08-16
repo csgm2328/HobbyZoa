@@ -211,14 +211,23 @@ export default {
     commit('DELETE_ERROR_CODE')
   },
   async FETCH_KEYWORD_FEED({ commit }, keyword) {
-    const KEYWORD_FEED_URL = `/orderby/date/${keyword}`
+    const KEYWORD_FEED_URL = `/order/bydate/${keyword}`
     const response = await axios.get(KEYWORD_FEED_URL)
-    console.log(response.data)
     commit('FETCH_FEED_LIST', response.data)
   },
   async FETCH_KEYWORD_LIKE_FEED({ commit }, keyword) {
-    const KEYWORD_LIKE_FEED_URL = `/orderby/likes/${keyword}`
+    const KEYWORD_LIKE_FEED_URL = `/order/bylikes/${keyword}`
     const response = await axios.get(KEYWORD_LIKE_FEED_URL)
+    commit('FETCH_FEED_LIST', response.data)
+  },
+  async FETCH_LIKE_FEED({ commit }, email) {
+    const FETCH_LIKE_FEED_URL = `/show/like`
+    const response = await axios.get(FETCH_LIKE_FEED_URL, {params: {'email': email}})
+    commit('FETCH_FEED_LIST', response.data)
+  },
+  async FETCH_FOLLOW_FEED({ commit }, email) {
+    const FETCH_FOLLOW_FEED_URL = `/show/following`
+    const response = await axios.get(FETCH_FOLLOW_FEED_URL, {params: {'email': email}})
     commit('FETCH_FEED_LIST', response.data)
   },
   async FETCH_ALARM_LIST({ commit }, email) {

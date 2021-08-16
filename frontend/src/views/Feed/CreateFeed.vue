@@ -140,9 +140,12 @@
           form.append('email', localStorage.getItem('email'))
           form.append('nickname', localStorage.getItem('user'))
           form.append('comment', this.text)
-          form.append('tags', '이혜은')
-          // form.append('tags', [])
-          // form.append('tags', this.tags)
+          console.log(this.tags)
+          // for (let i = 0; i < this.tags.length; i++) {
+          //   form.append('tags', this.tags[i])
+          // }
+          form.append('tags', this.tags)
+
           this.$store.dispatch('CREATE_FEED', form)
             .then(() => {
               this.$router.push('/main')

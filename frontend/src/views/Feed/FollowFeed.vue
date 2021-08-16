@@ -1,9 +1,10 @@
 <template>
   <div>
     <Header/>
+    follow피드
     <v-container>
       <FeedListItem
-        v-for="feed in feeds"
+        v-for="feed in feedList"
         :key="feed.feedcode"
         :feed="feed"
       />
@@ -12,7 +13,7 @@
   </div>
 </template>
 
-<script src="https://unpkg.com/vue-infinite-loading@^2/dist/vue-infinite-loading.js"></script>
+
 <script>
 import FeedListItem from '@/components/FeedListItem'
 import InfiniteLoading from 'vue-infinite-loading'
@@ -20,48 +21,46 @@ import Header from '@/components/Header'
 
 export default {
   name: 'FollowFeed',
-  data() {
-    return {
-      feeds: [],
-      username: null,
-    }
-  },
   components: {
     Header,
     FeedListItem,
     InfiniteLoading,
   },
-  created() {
-    this.username = localStorage.email
-    this.$store.dispatch('showStore/fetchFollowFeed', this.username)
+  data() {
+    return {
+      feedList: []
+    }
   },
   computed: {
-    all_feeds() {
-      return this.$store.getters['showStore/getFollowFeed']
+    all_feedList() {
+      return this.$store.getters.getFeedList
     },
+    email() {
+      return this.$store.getters.getEmail
+    }
   },
   methods: {
     reserve () {
       setTimeout(() => (this.loading = false), 2000)
     },
     infiniteHandler($state) {
-      this.$store.dispatch('showStore/fetchFollowFeed', this.username)
+      this.$store.dispatch('FETCH_FOLLOW_FEED', this.email)
         .then(() => {
-          if (this.feeds.length < this.all_feeds.length) {
+          if (this.feedList.length < this.all_feedList.length) {
             setTimeout(() => {
               const temp = [];
-            for (let i = this.feeds.length; i <= this.feeds.length + 3 && i < this.all_feeds.length; i++) {
-              temp.push(this.all_feeds[i].feed);
+            for (let i = this.feedList.length; i <= this.feedList.length + 3 && i < this.all_feedList.length; i++) {
+              temp.push(this.all_feedList[i]);
             }
-            this.feeds = this.feeds.concat(temp);
+            this.feedList = this.feedList.concat(temp);
             $state.loaded();
             }, 500);
           }
           else {
-           $state.complete() 
+            $state.complete() 
           }
         })
-    },
+    }
   },
 }
 </script>

@@ -1,7 +1,5 @@
 <template>
   <div>
-    <Header/>
-    Like피드
     <v-container>
       <FeedListItem
         v-for="feed in feedList"
@@ -14,28 +12,24 @@
 </template>
 
 <script>
-import Header from '@/components/Header'
 import FeedListItem from '@/components/FeedListItem'
 import InfiniteLoading from 'vue-infinite-loading'
 
 export default {
-  name: 'LikeFeed',
-  components: {
-    Header,
-    FeedListItem,
-    InfiniteLoading,
-  },
+  name: 'TagFeedLikeList',
   data() {
     return {
       feedList: []
     }
   },
+  props: ['searchTag'],
+  components: {
+    FeedListItem,
+    InfiniteLoading,
+  },
   computed: {
     all_feedList() {
       return this.$store.getters.getFeedList
-    },
-    email() {
-      return this.$store.getters.getEmail
     }
   },
   methods: {
@@ -43,7 +37,7 @@ export default {
       setTimeout(() => (this.loading = false), 2000)
     },
     infiniteHandler($state) {
-      this.$store.dispatch('FETCH_LIKE_FEED', this.email)
+      this.$store.dispatch('FETCH_KEYWORD_LIKE_FEED', this.searchTag)
         .then(() => {
           if (this.feedList.length < this.all_feedList.length) {
             setTimeout(() => {
@@ -61,6 +55,7 @@ export default {
         })
     }
   },
+  
 }
 </script>
 

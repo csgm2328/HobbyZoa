@@ -43,7 +43,6 @@
       >
         <v-list
           nav
-          dense
         >
           <v-list-item-group
             v-model="group"
@@ -86,10 +85,16 @@
               <v-list-item-title><h1 style="height: 6vh">Likes</h1></v-list-item-title>
             </v-list-item>
            
-            <v-list-item
-              @click="dialog=true">
-              <v-list-item-title>
-              <h1 style="height: 6vh">Search Tags</h1></v-list-item-title>
+            <v-list-item>
+              <v-list-item-title
+                @click="dialog=true"
+              >
+                <h1>Search Tags</h1>
+              </v-list-item-title>
+            </v-list-item>
+            
+            <v-list-item>
+              <v-list-item-title @click="tagRanking()"><h1>Tag Ranking</h1></v-list-item-title>
             </v-list-item>
 
           </v-list-item-group>
@@ -332,16 +337,19 @@ export default {
     likefeed() {
       this.$router.push({ name: 'LikeFeed' })
     },
-    
+    tagRanking() {
+      this.$router.push({ name: 'TagRanking' })
+    },
   },
 }
 </script>
 
-<style>
+<style scoped>
 .logo {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
 </style>
