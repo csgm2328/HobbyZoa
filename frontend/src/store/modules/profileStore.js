@@ -190,11 +190,35 @@ const profileStore = {
       const hobbycode = info[1]
       const CREATE_CHECK_URL = `/hobby/check`
       await axios.post(CREATE_CHECK_URL, form)
-      dispatch('profileStore/fetchHobbyEvent', hobbycode , { root: true })
+        .then(() => {
+          dispatch('profileStore/fetchHobbyEvent', hobbycode , { root: true })
+        })
+    },
+    async updateCheck({ dispatch }, info) {
+      const form = info[0]
+      const checkcode = info[2]
+      console.log(checkcode, 'updatecheck action')
+      const hobbycode = info[1]
+      const UPDATE_CHECK_URL = `/hobby/check/` + checkcode
+      await axios.put(UPDATE_CHECK_URL, form)
+        .then(() => {
+          dispatch('profileStore/fetchHobbyEvent', hobbycode , { root: true })
+        })
+    },
+    async deleteCheck({ dispatch }, info) {
+      const hobbycode = info[0]
+      const checkcode = info[1]
+      console.log(hobbycode, checkcode)
+      const DELETE_CHECK_URL = `/hobby/check/` + checkcode
+      axios.delete(DELETE_CHECK_URL)
+        .then(() => {
+          dispatch('profileStore/fetchHobbyEvent', hobbycode , { root: true })
+        })
     },
     async fetchHobbyEvent({ commit }, hobbycode) {
       return new Promise((resolve, reject) => {
       const FETCH_CHECK_URL = '/hobby/check'
+      console.log('새롭게 패치합니다')
       axios.get(FETCH_CHECK_URL, { 
         params: {
           hobbycode: hobbycode

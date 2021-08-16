@@ -68,9 +68,9 @@
             </div>
             
             <!-- profile btn -->
-            <div v-else class="ms-2" :to="profile">
-              <router-link :to="{ name: 'Profile', params: { username: request_user }}">
-                <v-icon>mdi-account-circle</v-icon>
+            <div v-else class="ms-2">
+              <router-link :to="{ name: 'Profile', params: { username: request_user }}" style="text-decoration: none; color: black;">
+                <v-icon class="mr-1">mdi-account-circle</v-icon>
                 <span class="font-weight-black">{{ nickname }}</span> 님
               </router-link>
             </div>
@@ -78,17 +78,18 @@
             <v-divider class="my-3"></v-divider>
 
             <!-- menu bar list item(s) -->
-            <v-list-item>
-              <v-list-item-title @click="followfeed()"><h1>Followings</h1></v-list-item-title>
+            <v-list-item @click="followfeed()">
+              <v-list-item-title><h1 style="height: 6vh">Followings</h1></v-list-item-title>
             </v-list-item>
 
-            <v-list-item>
-              <v-list-item-title @click="likefeed()"><h1>Likes</h1></v-list-item-title>
+            <v-list-item @click="likefeed()">
+              <v-list-item-title><h1 style="height: 6vh">Likes</h1></v-list-item-title>
             </v-list-item>
            
-            <v-list-item>
-              <v-list-item-title
-              @click="dialog=true"><h1>Search Tags</h1></v-list-item-title>
+            <v-list-item
+              @click="dialog=true">
+              <v-list-item-title>
+              <h1 style="height: 6vh">Search Tags</h1></v-list-item-title>
             </v-list-item>
 
           </v-list-item-group>
@@ -152,7 +153,7 @@
         </div>
 
         <!-- search history -->
-        <v-list v-if="searchhistory.length != 0 && this.results.length == 0" rounded>
+        <v-list v-if="searchhistory.length != 0 && results.length == 0" rounded>
           <v-subheader>최근 검색어</v-subheader>
             <v-list-item-group color="primary">
               <v-list-item
@@ -161,14 +162,11 @@
                 <v-list-item-content
                   class="d-flex justify-center"
                 >
-                <button>
-
                 <v-list-item-title
                   @click="searchHistoryUser(history.nickname)"
                   class="ma-0 d-inline"
                   v-text="history.nickname"
                 ></v-list-item-title>
-                </button>
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
