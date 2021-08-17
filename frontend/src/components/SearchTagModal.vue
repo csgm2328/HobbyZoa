@@ -6,7 +6,7 @@
       max-width="290"
     >
       <v-card>
-        <v-card-title class="text-h6">
+        <v-card-title>
           <h5>검색어를 입력해주세요</h5>
         </v-card-title>
         <v-card-text>

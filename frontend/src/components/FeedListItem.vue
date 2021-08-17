@@ -22,8 +22,8 @@
 
       <v-card-text>
         <!-- likes && register Date -->
-        <div class="my-2 text-subtitle-1" style="font-weight: bold;">
-          <h4>좋아요 {{ feed.likes }}개</h4>
+        <div class="my-2" style="font-weight: bold;">
+          <h3>좋아요 {{ feed.likes }}개</h3>
           <h5 class="font-weight-light">
             {{ feed.regtime.substring(0, 10) }}
           </h5>
