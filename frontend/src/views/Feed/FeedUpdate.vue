@@ -85,7 +85,8 @@
         url: [],
         selected_picture: true,
         pic_error: false,
-        text_error: false
+        text_error: false,
+        fileChange: false,
       }
     },
     methods: {
@@ -93,6 +94,7 @@
         this.text_error = false
       },
       addFiles() {
+        this.fileChange = true
         this.url.length = 0
         this.files.forEach(file => {
           this.url.push(URL.createObjectURL(file))
@@ -121,9 +123,12 @@
           const form = new FormData()
           const files = this.files
           
-          for (let i = 0; i < files.length; i++) {
-            form.append('files', files[i])
+          if (this.fileChange) {
+            for (let i = 0; i < files.length; i++) {
+              form.append('files', files[i])
+            }
           }
+
           form.append('comment', this.text)
           form.append('feedcode', this.feed.feedcode)
           this.$store.dispatch('UPDATE_FEED', form)
@@ -139,11 +144,11 @@
         return this.$store.getters.getFeedDetail.feed
       },
     },
-    created() {
+    async created() {
       this.text = this.$store.getters.getFeedDetail.feed.comment
       for (const image of this.$store.getters.getFeedDetail.images) {
         var imgurl = `http://i5c102.p.ssafy.io/api/feed/${image.newname}`
-        const response = fetch(imgurl)
+        const response = await fetch(imgurl)
         const data = response.blob()
         const ext = image.newname.split(".").pop()
         const filename = image.orgname

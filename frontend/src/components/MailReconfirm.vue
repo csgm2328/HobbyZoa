@@ -15,11 +15,6 @@ export default {
       load: false,
     }
   },
-  props: {
-    email: {
-      type: String
-    }
-  },
   methods: {
     mailConfirm() {
       this.load = true
@@ -28,6 +23,11 @@ export default {
           this.load = false
         })
       
+    }
+  },
+  computed: {
+    email() {
+      return this.$store.getters.getEmail
     }
   }
 

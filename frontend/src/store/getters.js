@@ -44,5 +44,11 @@ export default {
   },
   getAlarmList(state) {
     return state.alarmList
+  },
+  getEmailMessage(state) {
+    return state.eamilMessage
+  },
+  getTagRanking(state) {
+    return state.tagRanking
   }
 }

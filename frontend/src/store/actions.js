@@ -20,8 +20,14 @@ export default {
   // signup action
   async SIGNUP_CONFIRM({ commit }, signup_token) {
     const SIGNUP_CONFRIM_URL = '/user/confirm-email'
-    const response = await axios.get(SIGNUP_CONFRIM_URL, { params: {token: signup_token}})
-    console.log(commit, response)
+    await axios.get(SIGNUP_CONFRIM_URL, { params: {token: signup_token}})
+            .then(() => {
+              commit('SIGNUP_CONFIRM', true)
+            })
+            .catch(() => {
+              commit('SIGNUP_CONFIRM', false)
+            })
+
   },
   async SIGNUP_RE_CONFIRM({ commit }, signup_mail) {
     const SIGNUP_RECONFRIM_URL = '/user/reconfirm_email'
@@ -239,5 +245,10 @@ export default {
     const AlARM_CHECK_URL = `alarm/${alarmcode}`
     await axios.put(AlARM_CHECK_URL)
     commit('DELETE_ERROR_CODE')
+  },
+  async FETCH_TAG_RANKING({ commit }) {
+    const TAG_RANKING_URL = 'order/tagranking'
+    const response = await axios.get(TAG_RANKING_URL)
+    commit('FETCH_TAG_RANKING', response.data)
   }
 }
