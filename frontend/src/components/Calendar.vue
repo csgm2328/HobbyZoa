@@ -107,6 +107,7 @@ import CheckDetailModal from '@/components/CheckDetailModal'
     watch: {
       hobbyevents: function () {
         this.getEvents()
+        this.getTodayCheck()
       }
     },
     created() {
@@ -156,6 +157,11 @@ import CheckDetailModal from '@/components/CheckDetailModal'
       },
       openhobby(date) {
         console.log(date)
+      },
+      getTodayCheck() {
+        console.log('tdoay check')
+        this.$store.dispatch('profileStore/fetchTodayCheck', this.hobbycode)
+        this.todaycheck = this.$store.getters['profileStore/getHobbyCheck']
       },
       getEvents () {
         const events = []

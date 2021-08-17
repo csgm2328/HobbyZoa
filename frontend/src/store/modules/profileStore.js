@@ -250,7 +250,7 @@ const profileStore = {
         })
       }
     )},
-    fetchNowSelectedHobby({ commit }, hobbycode) {
+    fetchNowSelectedHobby({ commit}, hobbycode) {
       commit('FETCH_NOW_SELECTED_HOBBY', hobbycode)
     },
     fetchTodayCheck({ commit }, hobbycode) {
