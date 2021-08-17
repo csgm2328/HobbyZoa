@@ -24,7 +24,7 @@ public class Hobby {
 	
 	private String name;
 	
-	private String email; //(fk)
+	private String email; 
 	
 	@OneToMany(mappedBy = "hobby", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference

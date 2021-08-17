@@ -109,7 +109,6 @@ public class ProfileController {
 			@RequestParam(required = true) @ApiParam(value = "email") final String to) {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
-		// from, to 이메일 검증 & from != to 체크
 		if (!userService.findById(from).isPresent() || !userService.findById(to).isPresent() || from.equals(to)) {
 			result.status = false;
 			result.data = "fail: 등록된 유저만 팔로우를 할 수 있습니다. 혹은 올바르지 않은 팔로우 요청입니다";

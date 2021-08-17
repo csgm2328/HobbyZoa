@@ -9,10 +9,19 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Data
+@Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -33,29 +42,5 @@ public class Tag {
 	@OneToMany(mappedBy = "tag")
 	@JsonManagedReference
 	private List<Feedtags> feedtags;
-
-	public Integer getTagcode() {
-		return tagcode;
-	}
-
-	public void setTagcode(Integer tagcode) {
-		this.tagcode = tagcode;
-	}
-
-	public String getTagname() {
-		return tagname;
-	}
-
-	public void setTagname(String tagname) {
-		this.tagname = tagname;
-	}
-
-	public Integer getCnt() {
-		return cnt;
-	}
-
-	public void setCnt(Integer cnt) {
-		this.cnt = cnt;
-	}
 
 }
