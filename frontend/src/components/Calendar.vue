@@ -49,7 +49,7 @@
       <div >
 
         <v-btn
-          v-if="!checkhobbycheck"
+          v-if="!todaycheck"
           class="mx-auto"
           @click="open"
           rounded
@@ -110,10 +110,10 @@ import CheckDetailModal from '@/components/CheckDetailModal'
       }
     },
     created() {
+      this.$store.dispatch('profileStore/fetchTodayCheck', this.hobbycode)
       this.$store.dispatch('profileStore/fetchHobbyEvent', this.hobbycode)
         .then(() => {
           this.hobbyevents = this.$store.getters['profileStore/getHobbyEvent']
-          console.log('hobbyevenvt', this.hobbyevents)
           this.getEvents()
         })
     },
@@ -126,12 +126,12 @@ import CheckDetailModal from '@/components/CheckDetailModal'
           this.getEvents()
         }
       },
-      // checkhobbycheck: {
-      //   get() {
-      //     return this.$store.getters['profileStore/getHobbyCheck']
-      //   },
-      //   set() {}
-      // }
+      todaycheck: {
+        get() {
+          return this.$store.getters['profileStore/getHobbyCheck']
+        },
+        set() {}
+      }
     },
 
     mounted () {
@@ -156,9 +156,7 @@ import CheckDetailModal from '@/components/CheckDetailModal'
       },
       openhobby(date) {
         console.log(date)
-        
       },
-
       getEvents () {
         const events = []
         for (let i=0; i < this.hobbyevents.length; i ++) {
@@ -192,17 +190,11 @@ import CheckDetailModal from '@/components/CheckDetailModal'
       rnd (a, b) {
         return Math.floor((b - a + 1) * Math.random()) + a
       },
-
-
       showHobbyEvent ({ nativeEvent, event }) {
-        console.log('event click')
-        console.log(nativeEvent, event)
         this.hobbydetailcode = event.name
         this.hobbycheck = true
-        console.log(event, event.name)
         this.$store.dispatch('profileStore/fetchHobbyCheckCode', Number(event.name))
         nativeEvent.stopPropagation()
-
       },
     },
   }

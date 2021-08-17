@@ -8,7 +8,6 @@
       <v-card>
         <v-card-title class="text-h6" style="margin-bottom: 20px;">
           <span>{{ date }}</span>
-          <span>{{ hobbycode }}</span>
           <span>오늘의 취미 활동</span>
         </v-card-title>
         <v-card-text>
@@ -151,6 +150,7 @@
         form.append('hobbycode', this.hobbycode)
         this.$store.dispatch('profileStore/createCheck', [form, this.hobbycode])
           .then(() => {})
+        this.$emit('close')
       }
     }
   }

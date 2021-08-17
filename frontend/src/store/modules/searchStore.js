@@ -33,6 +33,7 @@ const searchStore = {
       const search = params[0]
       const request_user = params[1]
       const SAVE_SEARCH_URL = SERVER_URL + '/find/savehistory/' + request_user + "/" +  search
+      // axios.post(SAVE_SEARCH_URL)
       axios.get(SAVE_SEARCH_URL)
         .then(() => {
           dispatch('searchStore/findHistory', request_user , { root: true })
@@ -40,7 +41,6 @@ const searchStore = {
         .catch(err => console.log(err))
     },
 
-    
     autoSearch({ commit }, search) {
       const SEARCH_URL = SERVER_URL + '/find/autocomplete/' + search
         axios.get(SEARCH_URL)

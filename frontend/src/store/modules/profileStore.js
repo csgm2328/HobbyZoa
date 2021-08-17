@@ -17,7 +17,8 @@ const profileStore = {
     hobbyevents: [],
     hobbycheckcode: null,
     hobbycheckdetail: null,
-    checkhobbycheck: null,
+    todaycheck: null,
+    nowselected: null,
   },
   getters: {
     getEmail(state) {
@@ -60,7 +61,10 @@ const profileStore = {
       return state.hobbycheckdetail
     },
     getHobbyCheck(state) {
-      return state.checkhobbycheck
+      return state.todaycheck
+    },
+    getNowSelectedHobby(state) {
+      return state.nowselected
     }
   },
   mutations: {
@@ -85,7 +89,6 @@ const profileStore = {
       state.hobbyevents = res
     },
     FETCH_HOBBY_CHECK_CODE(state, res) {
-      console.log('저장', res)
       state.hobbycheckcode = res
     },
     FETCH_HOBBY_CHECK_DETAIL(state, res) {
@@ -94,6 +97,12 @@ const profileStore = {
     FETCH_HOBBY_CHECK(state, res) {
       state.checkhobbycheck = res
     },
+    FETCH_NOW_SELECTED_HOBBY(state, res) {
+      state.nowselected = res
+    },
+    FETCH_TODAY_CHECK(state, res) {
+      state.todaycheck = res
+    }
   },
   actions: {
     async fetchProfile({ commit }, username) {
@@ -132,14 +141,12 @@ const profileStore = {
     async fetchUserSaved({ commit }, username) {
       return new Promise((resolve, reject) => {
       const USER_SAVED_URL = SERVER_URL + '/scrap'
-      console.log(username)
       axios.get(USER_SAVED_URL, {
         params: {
           email: username
         }
       }) 
         .then((res) => {
-          console.log(res)
           commit('FETCH_USER_SAVED', res.data)
           resolve()
         }) 
@@ -158,7 +165,6 @@ const profileStore = {
         }
       }) 
         .then((res) => {
-          console.log(res)
           commit('FETCH_HOBBY', res.data)
           resolve()
         }) 
@@ -171,18 +177,15 @@ const profileStore = {
     async createHobby({ dispatch }, info) {
       const data = info[0]
       const username = info[1]
-      console.log(data)
-      console.log(username)
       const CREATE_HOBBY_URL = '/hobby'
       await axios.post(CREATE_HOBBY_URL, data)
       dispatch('profileStore/fetchHobby',username, { root: true })
     },
-    async deleteHobby({ commit, dispatch }, info) {
+    async deleteHobby({ dispatch }, info) {
       const hobbycode = info[0]
       const username = info[1]
       const DELETE_HOBBY_URL = '/hobby/' + hobbycode
-      const response = await axios.delete(DELETE_HOBBY_URL)
-      console.log(commit, response)
+      await axios.delete(DELETE_HOBBY_URL)
       dispatch('profileStore/fetchHobby', username , { root: true })
     },
     async createCheck({ dispatch }, info) {
@@ -190,35 +193,26 @@ const profileStore = {
       const hobbycode = info[1]
       const CREATE_CHECK_URL = `/hobby/check`
       await axios.post(CREATE_CHECK_URL, form)
-        .then(() => {
-          dispatch('profileStore/fetchHobbyEvent', hobbycode , { root: true })
-        })
+      dispatch('profileStore/fetchHobbyEvent', hobbycode , { root: true })
     },
-    async updateCheck({ dispatch }, info) {
+    async DELETECheck({ dispatch }, info) {
       const form = info[0]
-      const checkcode = info[2]
-      console.log(checkcode, 'updatecheck action')
-      const hobbycode = info[1]
-      const UPDATE_CHECK_URL = `/hobby/check/` + checkcode
+      const checkcode = info[1]
+      const hobbycode = info[2]
+      const UPDATE_CHECK_URL = `/hobby/check/` + checkcode 
       await axios.put(UPDATE_CHECK_URL, form)
-        .then(() => {
-          dispatch('profileStore/fetchHobbyEvent', hobbycode , { root: true })
-        })
+      dispatch('profileStore/fetchHobbyEvent', hobbycode , { root: true })
     },
     async deleteCheck({ dispatch }, info) {
-      const hobbycode = info[0]
       const checkcode = info[1]
-      console.log(hobbycode, checkcode)
-      const DELETE_CHECK_URL = `/hobby/check/` + checkcode
-      axios.delete(DELETE_CHECK_URL)
-        .then(() => {
-          dispatch('profileStore/fetchHobbyEvent', hobbycode , { root: true })
-        })
+      const hobbycode = info[0]
+      const DELETE_CHECK_URL = `/hobby/check/` + checkcode 
+      await axios.delete(DELETE_CHECK_URL)
+      dispatch('profileStore/fetchHobbyEvent', hobbycode , { root: true })
     },
     async fetchHobbyEvent({ commit }, hobbycode) {
       return new Promise((resolve, reject) => {
       const FETCH_CHECK_URL = '/hobby/check'
-      console.log('새롭게 패치합니다')
       axios.get(FETCH_CHECK_URL, { 
         params: {
           hobbycode: hobbycode
@@ -256,6 +250,19 @@ const profileStore = {
         })
       }
     )},
+    fetchNowSelectedHobby({ commit }, hobbycode) {
+      commit('FETCH_NOW_SELECTED_HOBBY', hobbycode)
+    },
+    fetchTodayCheck({ commit }, hobbycode) {
+      const TODAY_CHECK_URL = '/hobby/check/checkattendance'
+      axios.get(TODAY_CHECK_URL, { params: {
+        hobbycode: hobbycode
+      }
+    })
+      .then(res => {
+        commit('FETCH_TODAY_CHECK', res.data)
+      })
+    }
   }
 }
 
