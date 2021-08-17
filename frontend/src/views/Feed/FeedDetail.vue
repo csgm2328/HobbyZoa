@@ -11,10 +11,18 @@
             <v-btn
               text
               @click="toProfile(feed.feed.email)"
-            >
-              <h2>
-                {{ feed.feed.nickname }}
-              </h2>
+            > 
+              <div
+                class="d-flex align-center"
+              >
+                <v-icon
+                  class="me-2"
+                  size="25"
+                >mdi-account-circle</v-icon>
+                <h2>
+                  {{ feed.feed.nickname }}
+                </h2>
+              </div>
             </v-btn>
           </div>
           <v-menu
@@ -59,10 +67,9 @@
             contain
           ></v-carousel-item>
         </v-carousel>
-        <h2 
-          class="ms-1"
-        >{{ feed.feed.nickname }}</h2>
-        <div>
+        <div
+          class="mt-3"
+        >
           <v-chip
             v-for="(tag, i) in feed.tags"
             :key="i"
@@ -72,7 +79,7 @@
             {{ tag }}
           </v-chip>
         </div>
-        <h4 class="ms-1">{{ feed.feed.comment }}</h4>
+        <h4 class="ms-2 mt-5">{{ feed.feed.comment }}</h4>
         <div class="d-flex justify-end">
           
           <v-btn icon class="me-2" @click="likeFeed">
