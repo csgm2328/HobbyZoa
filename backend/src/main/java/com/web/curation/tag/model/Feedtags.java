@@ -39,5 +39,4 @@ public class Feedtags {
 	@JsonBackReference
 	private Tag tag;
 
-
 }

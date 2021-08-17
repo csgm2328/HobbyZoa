@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,15 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.find.model.History;
 import com.web.curation.find.service.FindService;
-import com.web.curation.login.model.LoginRequest;
 import com.web.curation.login.service.JwtService;
 import com.web.curation.response.BasicResponse;
 import com.web.curation.user.model.User;
@@ -68,8 +63,6 @@ public class FindController {
 	@ApiOperation(value = "검색 내역 저장", notes = "검색 버튼 누르면 history에 저장")
 	public ResponseEntity<BasicResponse> searchNickname(@PathVariable("email") String email, @PathVariable("searchword") String searchword) {
 		ResponseEntity<BasicResponse> response = null;
-		List<Map<String, Object>> searchList = new ArrayList<>();
-		System.out.println("저장할 단어: " + searchword);
 		History history = new History();
 		history.setEmail(email);
 		history.setSearchWord(searchword);

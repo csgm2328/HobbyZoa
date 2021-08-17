@@ -14,16 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.web.curation.feed.model.Feed;
 import com.web.curation.feed.service.FeedService;
 import com.web.curation.follow.service.FollowService;
-import com.web.curation.response.BasicResponse;
 
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
-@ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
-		@ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
-		@ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
-		@ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 @CrossOrigin(origins = { "*" })
 @RestController
 @RequestMapping(value = "/show")

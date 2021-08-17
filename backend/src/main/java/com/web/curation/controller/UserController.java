@@ -5,7 +5,6 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import com.web.curation.user.service.UserService;
-import com.web.curation.alarm.model.MessageType;
 import com.web.curation.alarm.service.AlarmService;
 import com.web.curation.email.service.EmailTokenService;
 import com.web.curation.response.BasicResponse;
@@ -77,9 +76,7 @@ public class UserController {
 			result.status = true;
 			result.data = "success";
 			response = new ResponseEntity<>(result, HttpStatus.OK);
-			// 회원가입 후 이메일 인증 하기:
-			// 토큰생성(token save) --> 토큰ID와 함께 이메일 인증 링크 전송 -->
-			// 만료전(5분) 링크 접속시 인증완료 --> 인증된 이메일로 처리
+			
 			emailTokenService.createEmailConfirmationToken(userInfo.getEmail(), userInfo.getEmail());
 		} else {
 			result.status = false;
@@ -115,7 +112,6 @@ public class UserController {
 			@RequestParam(required = true, value = "인증메일 받을 이메일") final String recieverEmail) {
 		ResponseEntity<BasicResponse> response = null;
 		final BasicResponse result = new BasicResponse();
-		// 기존 토큰 삭제 후 재 생성
 		emailTokenService.reCreateToken(userEmail, recieverEmail);
 		result.status = true;
 		result.data = "success";
