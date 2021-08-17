@@ -38,8 +38,6 @@ public class ProfileController {
 	FollowService followService;
 	@Autowired
 	UserService userService;
-	@Autowired
-	WSController alarmController;
 
 	@GetMapping("{email}")
 	@ApiOperation(value = "프로필 보기", notes = "요청시 게시물 수, 팔로워, 팔로잉 수 업데이트, 코멘트는 계정설정에서 가져옴")
