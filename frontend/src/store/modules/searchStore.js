@@ -30,11 +30,10 @@ const searchStore = {
   actions: {
     // 
     findUser({ dispatch }, params) {
-      const search = params[0]
+      const form = params[0]
       const request_user = params[1]
-      const SAVE_SEARCH_URL = SERVER_URL + '/find/savehistory/' + request_user + "/" +  search
-      // axios.post(SAVE_SEARCH_URL)
-      axios.get(SAVE_SEARCH_URL)
+      const SAVE_SEARCH_URL = SERVER_URL + '/find'
+      axios.post(SAVE_SEARCH_URL, form)
         .then(() => {
           dispatch('searchStore/findHistory', request_user , { root: true })
         })
