@@ -26,7 +26,8 @@ public class ReplyServiceImpl implements ReplyService{
 	}
 
 	public Reply findByReplycode(Integer replycode) {
-		return replyRepo.findByReplycode(replycode);
+		Optional<Reply> e = replyRepo.findById(replycode);
+		return e.get();
 	}
 	
 	@Override
@@ -40,7 +41,7 @@ public class ReplyServiceImpl implements ReplyService{
 			e.get().setContent(reply.getContent());
 			e.get().setHide(reply.getHide());
 			e.get().setFeedcode(reply.getFeedcode());
-			replyRepo.save(reply);
+			replyRepo.save(e.get());
 		}
 		
 	}

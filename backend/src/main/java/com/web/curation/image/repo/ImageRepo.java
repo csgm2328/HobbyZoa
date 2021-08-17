@@ -12,11 +12,8 @@ import com.web.curation.image.model.Image;
 @Repository
 public interface ImageRepo extends JpaRepository<Image, Integer>{
 
-	//해당 피드코드 이미지 모두 가져오기
     List<Image> findAllByFeed(Feed feed);
-    //해당 피드코드 이미지 하나만 가져오기
     Image findOneByFeed(Feed feed);
-    //새이름으로 이미지 가져오기
     Image findByNewname(String newname);
     @Transactional
     void deleteAllByFeed(Feed feed);
