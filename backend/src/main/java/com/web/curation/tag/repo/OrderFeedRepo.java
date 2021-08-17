@@ -7,7 +7,7 @@ import com.web.curation.feed.model.Feed;
 
 
 @Repository
-public interface OrderByFeedRepo extends JpaRepository<Feed, Integer> {
+public interface OrderFeedRepo extends JpaRepository<Feed, Integer> {
 	List<Feed> findAllByOrderByLikesDesc();
 	List<Feed> findByFeedcodeInOrderByLikesDesc(List<Integer> list);
 	List<Feed> findByFeedcodeInOrderByRegtimeDesc(List<Integer> list);

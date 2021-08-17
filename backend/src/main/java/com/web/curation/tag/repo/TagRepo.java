@@ -16,9 +16,9 @@ public interface TagRepo extends JpaRepository<Tag, String> {
 	boolean existsByTagname(String tagname);
 	Tag findByTagname(String tagname);
 	List<Tag> findByTagnameContaining(String tagname);	
+	List<Tag> findTop10ByOrderByCntDesc();
 	@Transactional
 	@Modifying
 	@Query(value = "update tag t set t.cnt=t.cnt+1 where t.tagname = :tagname")
 	void updateTagCnt(@Param("tagname") String tagname);
-	List<Tag> findTop10ByOrderByCntDesc();
 }
