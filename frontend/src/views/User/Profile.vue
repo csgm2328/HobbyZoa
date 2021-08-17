@@ -24,7 +24,7 @@
           <v-col cols="8">
             <v-row class="pa-3">
               <v-col cols="12" class="mt-1 pa-0">
-                <h3 class="">{{ email }}</h3>
+                <h3 class="">{{ nickname }}</h3>
               </v-col>
               <v-col
                 cols="4"
@@ -211,6 +211,9 @@
 
       email() {
         return this.$store.getters['profileStore/getEmail']
+      },
+      nickname() {
+        return this.$store.getters['profileStore/getNickName']
       },
       feed: {
         get() {return this.$store.getters['profileStore/getFeedNum']

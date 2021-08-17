@@ -6,6 +6,7 @@ const profileStore = {
   namespaced: true,
   state: {
     email: null,
+    nickname: null,
     feed: null,
     following: null,
     follower: null,
@@ -23,6 +24,9 @@ const profileStore = {
   getters: {
     getEmail(state) {
       return state.email
+    },
+    getNickName(state) {
+      return state.nickname
     },
     getFeedNum(state) {
       return state.feed
@@ -68,7 +72,10 @@ const profileStore = {
     }
   },
   mutations: {
-    FETCH_PROFILE(state, info) {
+    FETCH_PROFILE(state, data) {
+      const info = data[0]
+      const nickname = data[1]
+      state.nickname = nickname
       state.email = info.email
       state.feed = info.feeds
       state.following = info.following
@@ -109,7 +116,9 @@ const profileStore = {
       return new Promise((resolve, reject) => {
         axios.get(SERVER_URL + '/profile/' + username)
           .then((res) => {
-            const info = res.data.object
+            console.log(res)
+            const nickname = res.data.data
+            const info = [res.data.object, nickname]
             commit('FETCH_PROFILE', info)
             resolve()
           })

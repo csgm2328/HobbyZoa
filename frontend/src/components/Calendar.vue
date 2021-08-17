@@ -17,6 +17,9 @@
               mdi-chevron-left
             </v-icon>
           </v-btn>
+          <!-- <v-toolbar-title v-if="$refs.calendar">
+            {{ $refs.calendar.title }}
+          </v-toolbar-title> -->
           <v-spacer></v-spacer>
           <v-btn
             fab
@@ -46,11 +49,10 @@
           @click:event="showHobbyEvent"
         ></v-calendar>
       </v-sheet>
-      <div >
+      <div class="mt-3 d-flex justify-center" >
 
         <v-btn
           v-if="!todaycheck"
-          class="mx-auto"
           @click="open"
           rounded
           color="primary darken-1"
