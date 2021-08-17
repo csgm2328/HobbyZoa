@@ -25,11 +25,11 @@
         <div class="my-2 text-subtitle-1" style="font-weight: bold;">
           <h4>좋아요 {{ feed.likes }}개</h4>
           <h5 class="font-weight-light">
-            작성일 {{ feed.regtime.substring(0, 10) }}
+            {{ feed.regtime.substring(0, 10) }}
           </h5>
         </div>
         <!-- content -->
-        <h4>{{ feed.comment }}</h4>
+        <h5>{{ feed.comment }}</h5>
       </v-card-text>
 
       <v-divider class="mx-4"></v-divider>

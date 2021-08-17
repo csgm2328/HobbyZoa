@@ -7,9 +7,6 @@
     >
       <v-card>
         <v-card-title class="text-h6" style="margin-bottom: 20px;">
-          <!-- <h1>{{ hobbydetailcode }}</h1> -->
-          <!-- <div>{{checkdetail}}</div> -->
-          <!-- <span>{{ hobbycode }}</span> -->
           <span>오늘의 취미 기록</span>
         </v-card-title>
         <v-card-text>
@@ -131,7 +128,7 @@
               this.starttime = '12pm'
             }
             else {
-              if (this.starttime.length == 1) {
+              if (Number(this.starttime) < 12) {
                 this.starttime = this.starttime + 'am'
               }
               else {
@@ -149,7 +146,7 @@
               this.endtime = '12pm'
             }
             else {
-              if (this.endtime.length == 1) {
+              if (Number(this.endtime) < 12) {
                 this.endtime = this.endtime + 'am'
               }
               else {
@@ -165,6 +162,7 @@
       deleteCheck() {
         const info = [this.hobbycode, this.hobbydetailcode]
         this.$store.dispatch('profileStore/deleteCheck', info)
+        this.$emit('close')
       },
       check() {
         let start = ''
@@ -227,11 +225,7 @@
         form.append('comment', this.comment)
         form.append('end', end)
         form.append('start', start)
-        console.log(form)
-        this.$store.dispatch('profileStore/updateCheck', [form, this.hobbycode, this.hobbydetailcode])
-          // .then(() => {
-            
-          // })
+        this.$store.dispatch('profileStore/updateCheck', [form, this.hobbydetailcode, this.hobbycode])
         this.update = false
       }
     }
