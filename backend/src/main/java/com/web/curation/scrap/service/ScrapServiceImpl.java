@@ -25,12 +25,12 @@ public class ScrapServiceImpl implements ScrapService {
 	}
 
 	@Override
-	public List<Scrap> findByEmail(String email) { //모두보기
+	public List<Scrap> findByEmail(String email) { 
 		return scrapRepo.findByEmail(email);
 	}
 
 	@Override
-	public Scrap findByScrapcode(Integer scrapcode) { //상세보기
+	public Scrap findByScrapcode(Integer scrapcode) { 
 		return scrapRepo.findByScrapcode(scrapcode);
 	}
 
