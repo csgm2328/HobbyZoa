@@ -11,6 +11,8 @@
               color="primary"
               v-bind="attrs"
               v-on="on"
+              rounded
+              class="my-4"
             >취미 추가</v-btn>
           </template>
           <template v-slot:default="dialog">

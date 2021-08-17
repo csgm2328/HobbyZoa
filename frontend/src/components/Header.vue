@@ -12,6 +12,7 @@
         color="white accent-4"
         dark
       >
+
         <v-app-bar-nav-icon color="secondary" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
         <v-spacer></v-spacer>
@@ -78,23 +79,25 @@
 
             <!-- menu bar list item(s) -->
             <v-list-item @click="followfeed()">
-              <v-list-item-title><h1 style="height: 6vh">Followings</h1></v-list-item-title>
+              <h3 style="height: 100%">Followings</h3>
             </v-list-item>
 
             <v-list-item @click="likefeed()">
-              <v-list-item-title><h1 style="height: 6vh">Likes</h1></v-list-item-title>
+              <h3 style="height: 100%">Likes</h3>
             </v-list-item>
            
-            <v-list-item>
-              <v-list-item-title
-                @click="dialog=true"
-              >
-                <h1>Search Tags</h1>
-              </v-list-item-title>
+            <v-list-item
+            @click="dialog=true">
+                <h3
+                  style="height: 100%;"
+                >Search Tags</h3>
+              
             </v-list-item>
             
-            <v-list-item>
-              <v-list-item-title @click="tagRanking()"><h1>Tag Ranking</h1></v-list-item-title>
+            <v-list-item
+              @click="tagRanking()"
+            >
+              <h3 style="height: 100%">Tag Ranking</h3>
             </v-list-item>
 
           </v-list-item-group>
@@ -308,12 +311,18 @@ export default {
     searchUser(searchword) {
       // 사실 여기에 대해 보호가 필요했다... vue는 제공을 안한다...
       if (searchword.trim().length) {
-        const params = [searchword, this.request_user]
-        this.$store.dispatch('searchStore/findUser', params)
+
+        const form = new FormData()
+        form.append('email', this.request_user)
+        form.append('searchword', this.search)
+
+        this.$store.dispatch('searchStore/findUser', [form, this.request_user])
       }
       else {
         this.$store.dispatch('searchStore/deleteSearch', this.search)
       }
+
+
     },
     autoSearch() {
       if (this.search.trim().length) {
@@ -344,12 +353,11 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .logo {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
 </style>
