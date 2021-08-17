@@ -58,5 +58,11 @@ export default {
   },
   FETCH_ALARM_LIST(state, alarmList) {
     state.alarmList = alarmList
+  },
+  SIGNUP_CONFIRM(state, eamilMessage) {
+    state.eamilMessage = eamilMessage
+  },
+  FETCH_TAG_RANKING(state, tagRanking) {
+    state.tagRanking = tagRanking
   }
 }
