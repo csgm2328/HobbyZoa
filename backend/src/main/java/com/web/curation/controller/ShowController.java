@@ -31,7 +31,7 @@ public class ShowController {
 	@GetMapping(value="/following")
 	@ApiOperation(value = "해당 계정이 팔로우한 모든 피드 조회", notes = "계정 이메일 받아서 팔로우한 계정 피드 반환")
 	public ResponseEntity<List<Feed>> getFollowingFeedByEmail(@RequestParam String email){
-		List<String> followings = followService.ShowFollowingList(email);
+		List<String> followings = followService.getFollowingEmailList(email);
 		List<Feed> feeds = feedService.findByEmailInOrderByRegtimeDesc(followings);
 		return new ResponseEntity<List<Feed>>(feeds, HttpStatus.OK);
 	}
