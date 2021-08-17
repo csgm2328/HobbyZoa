@@ -45,7 +45,6 @@ public class FeedServiceImpl implements FeedService{
 			List<Image> images = new ArrayList<Image>();
 			imageRepo.findAllByFeed(feeds.get(i)).forEach(e -> images.add(e));
 			feeds.get(i).setImages(images);
-			feeds.get(i).setLikes(likeRepo.countByFeedcode(feeds.get(i).getFeedcode()));
 		}
 		return feeds;
 	}
@@ -57,7 +56,6 @@ public class FeedServiceImpl implements FeedService{
 			List<Image> images = new ArrayList<Image>();
 			imageRepo.findAllByFeed(feeds.get(i)).forEach(e -> images.add(e));
 			feeds.get(i).setImages(images);
-			feeds.get(i).setLikes(likeRepo.countByFeedcode(feeds.get(i).getFeedcode()));
 		}
 		return feeds;
 	}
@@ -76,7 +74,6 @@ public class FeedServiceImpl implements FeedService{
 	@Override 
 	public Feed findByFeedcode(Integer feedcode) { 
 		Feed feed = feedRepo.findByFeedcode(feedcode);
-		feed.setLikes(likeRepo.countByFeedcode(feedcode));
 		return feedRepo.findByFeedcode(feedcode); 
 	}
 
@@ -111,7 +108,6 @@ public class FeedServiceImpl implements FeedService{
 			e.get().setEmail(feed.getEmail());
 			e.get().setNickname(feed.getNickname());
 			e.get().setComment(feed.getComment());
-			e.get().setLikes(likeRepo.countByFeedcode(feedcode));
 			e.get().setScrap(feed.getScrap());
 			newfeed = feedRepo.save(feed);
 		}
@@ -134,7 +130,6 @@ public class FeedServiceImpl implements FeedService{
 		if(e.isPresent()) {
 			e.get().setFeedcode(feed.getFeedcode());
 			e.get().setComment(feed.getComment());
-			e.get().setLikes(likeRepo.countByFeedcode(feedcode));
 			e.get().setScrap(feed.getScrap());
 			feedRepo.save(e.get());
 		}
@@ -144,12 +139,19 @@ public class FeedServiceImpl implements FeedService{
 	@Transactional
 	public String LikeFeed(String email, Integer feedcode) {
 		Optional<FeedLike> e = likeRepo.findByEmailAndFeedcode(email, feedcode);
-		if(e.isPresent()) //이미 좋아요 했다면 취소
+		if(e.isPresent()) 
 			if(likeRepo.deleteByEmailAndFeedcode(email, feedcode) != 0)
 				return "좋아요 취소";
 		likeRepo.save(
 				FeedLike.builder().email(email).feedcode(feedcode).build());
-		Feed feed = feedRepo.findByFeedcode(feedcode); //피드 소유자 찾기
+		Feed feed = feedRepo.findByFeedcode(feedcode);
+		
+		updateByFeedcodeNoImage(feedcode, feed);
+		feed.setFeedcode(feed.getFeedcode());
+		feed.setComment(feed.getComment());
+		feed.setLikes(likeRepo.countByFeedcode(feedcode));
+		feed.setScrap(feed.getScrap());
+		
 		String alarmMsg = feed.getNickname() + "님이 회원님의 "+ feedcode + "번 피드를 좋아합니다.";
 		alarmService.createAlarm(MessageType.LIKE, email, feed.getEmail(), alarmMsg);
 		return "좋아요";

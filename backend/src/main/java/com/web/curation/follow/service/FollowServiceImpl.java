@@ -79,5 +79,11 @@ public class FollowServiceImpl implements FollowService {
 				userRepo.findById(e.getToemail()).get().getNickname()));
 		return followings;
 	}
-
+	
+	public List<String> getFollowingEmailList(String email){
+		List<String> followings = new ArrayList<String>();
+		followRepo.findAllByFromemail(email).forEach(e -> followings.add(
+				userRepo.findById(e.getToemail()).get().getEmail()));
+		return followings;
+	}
 }

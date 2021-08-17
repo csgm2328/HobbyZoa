@@ -9,4 +9,5 @@ public interface FollowService {
 	boolean Check(String from, String to);
 	List<String> ShowFollowerList(String email);
 	List<String> ShowFollowingList(String email);
+	public List<String> getFollowingEmailList(String email);
 }
