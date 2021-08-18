@@ -40,7 +40,7 @@ deploy-back:
         - develop
     script :
         - cd $HOME
-        - /home/ubuntu/restart_backend1.sh
+        - /home/ubuntu/restart_backend.sh
     tags : 
         - prd
 
