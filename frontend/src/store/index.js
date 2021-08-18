@@ -32,6 +32,9 @@ const state = {
   likeList: [],
   error_code: null,
   alarmList: [],
+  profile_url: null,
+  eamilMessage: false,
+  tagRanking: [],
   eamilMessage: false,
   tagRanking: [],
 }

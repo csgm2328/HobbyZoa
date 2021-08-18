@@ -59,6 +59,9 @@ export default {
   FETCH_ALARM_LIST(state, alarmList) {
     state.alarmList = alarmList
   },
+  FETCH_PROFILE_URL(state, profile_url) {
+    state.profile_url = profile_url
+  },
   SIGNUP_CONFIRM(state, eamilMessage) {
     state.eamilMessage = eamilMessage
   },

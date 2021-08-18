@@ -86,17 +86,17 @@ export default {
     return new Promise((resolve, reject) => {
       const FEED_DETAIL_URL = `/feed/search/${feedcode}`
       axios.get(FEED_DETAIL_URL)
-        .then((response) => {
-          commit('FETCH_FEED_DETAIL', response.data)
-          dispatch('IS_SCRAP', feedcode)
-          dispatch('IS_LIKE', feedcode)
-          dispatch('FETCH_LIKE_LIST', feedcode)
-          resolve()
-        })
-        .catch((err) => {
-          commit('FETCH_ERROR', err.response.status , { root: true })
-          reject()
-        })
+      .then((response) => {
+        commit('FETCH_FEED_DETAIL', response.data)
+        dispatch('IS_SCRAP', feedcode)
+        dispatch('IS_LIKE', feedcode)
+        dispatch('FETCH_LIKE_LIST', feedcode)
+        resolve()
+      })
+      .catch((err) => {
+        commit('FETCH_ERROR', err.response.status , { root: true })
+        reject()
+      })
     })
   },
   // update feed
@@ -127,7 +127,7 @@ export default {
     var is_scrap = false
     const SCRAP_FEED_URL = `/scrap`
     const response = await axios.get(SCRAP_FEED_URL, {params: {email: email}})
-
+    
     for (const feed of response.data) {
       if (feed.feedcode == feedcode) {
         is_scrap = true
@@ -197,7 +197,7 @@ export default {
       else {
         form.append(key, reply[key])
       }
-
+      
     }
     const response = await axios.put(UPDATE_REPLY_URL, form)
     console.log(commit, response)
@@ -247,6 +247,25 @@ export default {
     const AlARM_CHECK_URL = `alarm/${alarmcode}`
     await axios.put(AlARM_CHECK_URL)
     commit('DELETE_ERROR_CODE')
+  },
+  // update profile image
+  async UPDATE_PROFILE_IMAGE({ commit }, info)  {
+    const data = info[0]
+    const email = info[1]
+    let config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    }
+    const UPDATE_PROFILE_URL = '/profile/image/' + email
+    const response = await axios.put(UPDATE_PROFILE_URL, data, config)
+    console.log(commit, response.data)
+  },
+  async fetchProfileImage({ commit }, email) {
+    const FETCH_PROFILE_URL = '/profile/image/' + email
+    const response = await axios.get(FETCH_PROFILE_URL)
+    console.log(response.data.object.imgpath)
+    commit("FETCH_PROFILE_URL", response.data.object.imgpath)
   },
   async FETCH_TAG_RANKING({ commit }) {
     const TAG_RANKING_URL = 'order/tagranking'

@@ -187,28 +187,21 @@
               color="primary"
             >
               <v-list-item v-for="(result, idx) in results" :key="idx"> 
+                <!-- <router-link :to="{ name: 'Profile', params: { username: result.email }}"> -->
                 <v-list-item-content
                   class="d-flex justify-center"
+                  @click="toProfile(result.email)"  
                 > 
                   <v-list-item-title
-                    class="ma-0 d-inline"
+                    class="ma-0 d-inline" style="color: black; text-decoration: none;"
                   >
-                    <!-- filter를 이용한 방법 -->
-                      <!-- {{ result.nickname | highlight(search) }} -->
-                      <!-- <div v-html="highlight(result.nickname, search)"></div> -->
-
-                    <!-- vue text highlight를 이용한 방법 -->
-                    <div>
-                      <text-highlight :queries="search">{{ result.nickname }}</text-highlight>
-                    </div>
+                    <text-highlight :queries="search">{{ result.nickname }}</text-highlight>
                   </v-list-item-title>
 
                   <!-- 바로가기 btn -->
                   <div>
-                    <router-link :to="{ name: 'Profile', params: { username: result.email }}">
                       <br>
                       {{ result.email }}
-                    </router-link>
                   </div>
                 </v-list-item-content>
               </v-list-item>
@@ -255,6 +248,7 @@ export default {
   },
   created() {
     this.$store.dispatch('searchStore/findHistory', localStorage.getItem('email'))
+    this.deleteSearch()
   },
   watch: {
     group () {
@@ -321,8 +315,7 @@ export default {
       else {
         this.$store.dispatch('searchStore/deleteSearch', this.search)
       }
-
-
+      this.$store.dispatch('searchStore/deleteSearch', this.search)
     },
     autoSearch() {
       if (this.search.trim().length) {
@@ -333,8 +326,18 @@ export default {
       }
     },
     searchHistoryUser(searchword) {
-      const params = [searchword, this.request_user]
-      this.$store.dispatch('searchStore/searchHistoryUser', params)
+      console.log('vue', searchword)
+      if (searchword.trim().length) {
+
+        const form = new FormData()
+        form.append('email', this.request_user)
+        form.append('searchword', searchword)
+
+        this.$store.dispatch('searchStore/searchHistoryUser', [form, this.request_user, searchword])
+      }
+      else {
+        this.$store.dispatch('searchStore/deleteSearch', this.search)
+      }
     },
     deleteSearch() {
       this.search = ''
@@ -349,6 +352,9 @@ export default {
     tagRanking() {
       this.$router.push({ name: 'TagRanking' })
     },
+    toProfile(email) {
+      this.$router.push(`/user/${email}`)
+    }
   },
 }
 </script>
