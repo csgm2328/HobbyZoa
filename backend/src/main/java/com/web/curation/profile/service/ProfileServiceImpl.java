@@ -15,6 +15,7 @@ import com.web.curation.profile.model.Profile;
 import com.web.curation.profile.model.ProfileImage;
 import com.web.curation.profile.repo.ProfileImageRepo;
 import com.web.curation.profile.repo.ProfileRepo;
+import com.web.curation.user.model.User;
 import com.web.curation.user.repo.UserRepo;
 
 import lombok.RequiredArgsConstructor;
@@ -54,13 +55,15 @@ public class ProfileServiceImpl implements ProfileService {
 	//프로필 정보 얻기: 회원 가입시 자동 생성하고 보기 요청마다 팔로워, 피드수를 계속 업데이트해야므로 save() 동작
 	public Profile findProfileById(String email) {
 		Optional<ProfileImage> e =profileImageRepo.findById(email);
+		Optional<User> u = userRepo.findById(email);
 		return profileRepo.save(Profile.builder()
 					.email(email)
+					.nickname(u.get().getNickname())
 					.following(followRepo.countByFromemail(email))
 					.follower(followRepo.countByToemail(email))
 					.feeds(feedRepo.countByEmail(email))
 					.imgpath(e.isPresent() ? e.get().getImgpath() : null)
-					.comment(userRepo.findById(email).get().getComment())
+					.comment(u.get().getComment())
 					.build());
 	}
 
