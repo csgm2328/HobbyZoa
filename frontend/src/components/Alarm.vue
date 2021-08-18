@@ -59,13 +59,6 @@ export default {
       console.log("소켓 연결 성공", payload)
       //subscribe to 서버의 엔드포인트
       this.stompClient.subscribe("/queue/" + this.$store.getters.getEmail, this.onMessageReceived)
-
-      //서버에 JOIN한 유저 알리기
-      this.stompClient.send(
-        "app/chat.addUser",
-        {},
-        JSON.stringify({ sender: this.sender, type: "JOIN" })
-      );
     },
     onError(payload) {
       console.log("소켓 연결 실패", payload)

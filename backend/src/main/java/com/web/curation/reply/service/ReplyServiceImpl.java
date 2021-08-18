@@ -35,12 +35,11 @@ public class ReplyServiceImpl implements ReplyService{
 		Feed feed = feedRepo.findByFeedcode(reply.getFeedcode());
 		Optional<User> u = userRepo.findById(reply.getEmail());
 		
-		Tag tag = new Tag();
 		String alarmMsg = "";
-		List<Feedtags> tags = feed.getFeedtags();
-		if (tags.size() != 0) {
-			tag = tags.get(0).getTag();
-			alarmMsg = u.get().getNickname() + "님이 " + tag.toString() + "태그가 추가된 회원님의 피드에 댓글을 달았습니다.";
+		List<Feedtags> tags = feedtagsRepo.findByFeed(feed);
+		if(tags.size() != 0) {
+			Tag tag = tags.get(0).getTag();
+			alarmMsg = u.get().getNickname() +"님이 " + tag.getTagname() + "태그가 추가된 회원님의 피드를 좋아합니다.";
 		} else
 			alarmMsg = u.get().getNickname() + "님이 회원님의 피드에 댓글을 달았습니다.";
 		alarmService.createAlarm(MessageType.SCRAP, reply.getEmail(), feed.getEmail(), reply.getFeedcode(), alarmMsg);
