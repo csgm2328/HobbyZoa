@@ -23,15 +23,13 @@ Vue.use(VueRouter)
 
 const requireAuth = function(to, from, next) {
   if (localStorage.getItem('token')) {
-    // if (localStorage.getItem('emailVerified') == 'true') {
-    //   next()
-    // } else {
-    //   next('/reconfirm')
-    // }
-    next()
+    if (localStorage.getItem('emailVerified') == 'true') {
+      next()
+    } else {
+      next('/reconfirm')
+    }
   } else {
-    next('/login') // 지울 부분
-    // next('/login')
+    next('/login')
   }
 }
 

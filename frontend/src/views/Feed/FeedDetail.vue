@@ -4,7 +4,6 @@
     <v-container>
       <v-layout column justify-center>
         <div 
-          v-if="isMyFeed"
           class="d-flex justify-space-between"
         >
           <div>
@@ -28,6 +27,7 @@
           <v-menu
             bottom
             left
+            v-if="isMyFeed"
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
