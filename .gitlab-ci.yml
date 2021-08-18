@@ -9,7 +9,8 @@ build-back:
         - develop
     script :
         - cd $CI_PROJECT_DIR/backend
-        - sudo mvn package
+        - chmod +x mvnw
+        - ./mvnw package
         - cp target/*.jar ~/app1.jar
     tags : 
     # !! tag 값이 동일하게 설정된 Runner만 파이프라인을 동작시킴
