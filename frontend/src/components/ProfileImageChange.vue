@@ -12,19 +12,21 @@
         justify="center"
       >
         <v-card>
-          <v-card-title class="d-flex justify-center">
-            <h5 style="color: green;" @click="changeProfileImage">사진 업로드</h5>
-          </v-card-title>
           <v-file-input
+            class="px-5 pt-5"
             accept="image/png, image/jpeg, image/bmp"
             v-model="file"
+            prepend-icon="mdi-camera"
+            label="image upload"
           ></v-file-input>
-          <v-card-title class="d-flex justify-center">
-            <h5 style="color: red;">현재 사진 삭제</h5>
-          </v-card-title>
-          <v-card-title class="d-flex justify-center" @click="dialog = false">
-            <h5>CLOSE</h5>
-          </v-card-title>
+          <div class="d-flex justify-center">
+            <v-card-title class="d-flex justify-center">
+              <h5 style="color: green;" @click="changeProfileImage">UPLOAD</h5>
+            </v-card-title>
+            <v-card-title class="d-flex justify-center" @click="dialog = false">
+              <h5>CLOSE</h5>
+            </v-card-title>
+          </div>
         </v-card>
       </v-dialog>
     </v-row>
