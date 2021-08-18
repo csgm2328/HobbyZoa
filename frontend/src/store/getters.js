@@ -44,5 +44,8 @@ export default {
   },
   getAlarmList(state) {
     return state.alarmList
+  },
+  getProfileUrl(state) {
+    return state.profile_url
   }
 }

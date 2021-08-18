@@ -69,16 +69,21 @@ const searchStore = {
     },
 
     searchHistoryUser({ dispatch }, params) {
-      const search = params[0]
+      const form = params[0]
       const request_user = params[1]
-      const SAVE_SEARCH_URL = SERVER_URL + '/find/savehistory/' + request_user + "/" +  search
-      axios.get(SAVE_SEARCH_URL)
+      const search = params[2]
+      console.log(form)
+      console.log(request_user)
+      console.log(search)
+      const SAVE_SEARCH_URL = SERVER_URL + '/find'
+      axios.post(SAVE_SEARCH_URL, form)
         .then(() => {
           dispatch('searchStore/autoSearch', search , { root: true })
           dispatch('searchStore/findHistory', request_user , { root: true })
         })
         .catch(err => console.log(err))
     },
+
 
     // 공백 처리
     deleteSearch({ commit }) {

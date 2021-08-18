@@ -10,6 +10,7 @@
         <v-divider class="my-3"></v-divider> -->
         <v-subheader>프로필 메세지 변경</v-subheader>
         <ProfileCommentChange/>
+        <ProfileImageChange/>
         <v-divider class="my-3"></v-divider>
         <v-subheader class="my-3">이메일 인증</v-subheader>
         <div class="d-flex justify-space-around">
@@ -37,6 +38,7 @@ import Header from '@/components/Header'
 import PasswordChange from '@/components/PasswordChange'
 import NicknameChange from '@/components/NicknameChange'
 import ProfileCommentChange from '@/components/ProfileCommentChange'
+import ProfileImageChange from '@/components/ProfileImageChange'
 import MailReconfirm from '@/components/MailReconfirm'
 
 export default {
@@ -46,6 +48,7 @@ export default {
     PasswordChange,
     NicknameChange,
     ProfileCommentChange,
+    ProfileImageChange,
     MailReconfirm
   },
   created() {

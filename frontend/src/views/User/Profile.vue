@@ -11,7 +11,7 @@
                 <!-- :src="'http://localhost:9990/feed/' + imgpath" -->
               <img 
                 v-if="imgpath" 
-                :src="'http://i5c102.p.ssafy.io/api/feed/' + imgpath"
+                :src="profile_url"
                 alt="profile img">
               <v-icon 
                 v-else
@@ -156,6 +156,9 @@
         />
       </div>
     </div>
+    <FeedCreateButton
+      v-if="requestuser_email==username"
+    />
   </div>
 
 
@@ -168,6 +171,8 @@
   import UserLevel from '@/components/UserLevel'
   import FollowModal from '@/components/FollowModal'
   import FollowerModal from '@/components/FollowerModal'
+  import FeedCreateButton from '@/components/FeedCreateButton'
+
   
   export default {
     name: "Profile",
@@ -178,6 +183,7 @@
       UserLevel,
       FollowModal,
       FollowerModal,
+      FeedCreateButton
     },
     data() {
       return {
@@ -187,7 +193,7 @@
         showFollowerModal: false,
         requestuser_email: null,
         // isLiked: null,
-        
+        // profile_url: null,
       }
     },
     created() {
@@ -200,6 +206,7 @@
            if (this.$store.getters.getErrorCode == 500) {
            this.$router.push({ name: 'ErrorPage' })}
         })
+      // this.fetchProfileImage()
     },
     watch: {
       $route(to, from) {
@@ -211,6 +218,9 @@
 
       email() {
         return this.$store.getters['profileStore/getEmail']
+      },
+      profile_url() {
+        return `http://i5c102.p.ssafy.io/api/profile/image/${this.username}`
       },
       nickname() {
         return this.$store.getters['profileStore/getNickName']
@@ -263,6 +273,12 @@
 
           })
       },
+      // fetchProfileImage() {
+      //   this.$store.dispatch('fetchProfileImage', this.username)
+      //     .then(() => {
+      //       this.profile_url = `http://i5c102.p.ssafy.io/api/profile/image/${this.username}`
+      //     })
+      // }
     }
   }
 </script>

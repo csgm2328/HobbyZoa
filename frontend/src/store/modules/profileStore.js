@@ -20,6 +20,7 @@ const profileStore = {
     hobbycheckdetail: null,
     todaycheck: null,
     nowselected: null,
+    check_profile_url: false,
   },
   getters: {
     getEmail(state) {
@@ -72,10 +73,8 @@ const profileStore = {
     }
   },
   mutations: {
-    FETCH_PROFILE(state, data) {
-      const info = data[0]
-      const nickname = data[1]
-      state.nickname = nickname
+    FETCH_PROFILE(state, info) {
+      state.nickname = info.nickname
       state.email = info.email
       state.feed = info.feeds
       state.following = info.following
@@ -116,9 +115,7 @@ const profileStore = {
       return new Promise((resolve, reject) => {
         axios.get(SERVER_URL + '/profile/' + username)
           .then((res) => {
-            console.log(res)
-            const nickname = res.data.data
-            const info = [res.data.object, nickname]
+            const info = res.data.object
             commit('FETCH_PROFILE', info)
             resolve()
           })

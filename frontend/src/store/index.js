@@ -31,7 +31,9 @@ const state = {
   isLike: false,
   likeList: [],
   error_code: null,
-  alarmList: []
+  alarmList: [],
+  profile_url: null,
+  check_profile_url: false,
 }
 
 export default new Vuex.Store({
