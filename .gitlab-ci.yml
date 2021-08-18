@@ -8,7 +8,7 @@ build-back:
         - master
         - develop
     script :
-        - cd ~/SubPJT3/S05P13C102/backend
+        - cd /home/ubuntu/SubPJT3/S05P13C102/backend
         - sudo mvn package
         - cp target/*.jar ~/app1.jar
     tags : 
@@ -26,7 +26,7 @@ build-front:
         - master
         - develop
     script :
-        - cd ~/SubPJT3/S05P13C102/frontend
+        - cd /home/ubuntu/SubPJT3/S05P13C102/frontend
         - npm install
         - npm run build
     tags :
@@ -39,7 +39,7 @@ deploy-back:
         - develop
     script :
         - cd $HOME
-        - ~/restart_backend1.sh
+        - /home/ubuntu/restart_backend1.sh
     tags : 
         - prd
 
@@ -50,6 +50,6 @@ deploy-front:
         - develop
     script :
         # 배포는 이미 끝나서 단순 확인하기 위한 job으로만 구성
-        - ls -al ~/SubPJT3/S05P13C102/frontend/dist
+        - ls -al /home/ubuntu/SubPJT3/S05P13C102/frontend/dist
     tags :
         - prd
