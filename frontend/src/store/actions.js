@@ -42,10 +42,12 @@ export default {
       axios.post(AUTH_USER_URL, data)
         .then((response) => {
           const token = response.data['access-token']
+          if (token) {
+            localStorage.setItem('token', token)
+            commit('AUTH_USER', token)
+            axios.defaults.headers.common['access-token'] = token
+          }
           
-          localStorage.setItem('token', token)
-          commit('AUTH_USER', token)
-          axios.defaults.headers.common['access-token'] = token
 
           axios.get('/auth/loginInfo')
             .then((res) => {

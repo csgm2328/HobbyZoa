@@ -12,8 +12,15 @@
       <v-col
         cols="10"
       > 
-        <div class="font-weight-black">
-          {{ reply.nickname }}
+        <div 
+          class="font-weight-black" 
+        >
+          <span
+            class="profile"
+            @click="toProfile"
+          >
+            {{ reply.nickname }}
+          </span>
         </div>
         <div v-if="!reply.hide">
           {{ reply.content }}
@@ -115,6 +122,9 @@ export default {
         .then(() => {
           this.$store.dispatch('FETCH_FEED_DETAIL', this.feed.feedcode)
         })
+    },
+    toProfile() {
+      this.$router.push(`/user/${this.reply.email}`)
     }
   },
   computed: {
@@ -132,6 +142,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.profile:hover {
+  background: rgb(202, 200, 200);
+  border-radius: 5px;
+}
 </style>
