@@ -13,6 +13,7 @@ import com.web.curation.feed.repo.FeedRepo;
 import com.web.curation.scrap.model.Scrap;
 import com.web.curation.scrap.repo.ScrapRepo;
 import com.web.curation.tag.model.Feedtags;
+import com.web.curation.tag.repo.FeedtagsRepo;
 import com.web.curation.tag.model.Tag;
 import com.web.curation.user.model.User;
 import com.web.curation.user.repo.UserRepo;
@@ -25,6 +26,9 @@ public class ScrapServiceImpl implements ScrapService {
 
 	@Autowired
 	private FeedRepo feedRepo;
+
+	@Autowired
+	FeedtagsRepo feedtagsRepo;
 
 	@Autowired
 	private UserRepo userRepo;

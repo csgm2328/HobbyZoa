@@ -13,6 +13,7 @@ import com.web.curation.feed.repo.FeedRepo;
 import com.web.curation.reply.model.Reply;
 import com.web.curation.reply.repo.ReplyRepo;
 import com.web.curation.tag.model.Feedtags;
+import com.web.curation.tag.repo.FeedtagsRepo;
 import com.web.curation.tag.model.Tag;
 import com.web.curation.user.model.User;
 import com.web.curation.user.repo.UserRepo;
@@ -26,6 +27,8 @@ public class ReplyServiceImpl implements ReplyService{
 	private FeedRepo feedRepo;
 	@Autowired
 	private AlarmService alarmService;
+	@Autowired
+	FeedtagsRepo feedtagsRepo;
 	@Autowired
 	UserRepo userRepo;
 	
