@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.web.curation.alarm.model.MessageType;
-import com.web.curation.alarm.service.AlarmService;
 import com.web.curation.feed.model.Feed;
 import com.web.curation.feed.service.FeedService;
 import com.web.curation.image.model.Image;
@@ -36,8 +34,6 @@ public class ScrapController {
 	
 	@Autowired
 	FeedService feedService;
-	@Autowired
-	AlarmService alarmService;
 	
 	@PostMapping
 	@ApiOperation(value="스크랩저장", notes="email과 feedcode를 입력 받아 스크랩 중복 검사 후  uri를 반환")
@@ -50,9 +46,6 @@ public class ScrapController {
 					.feedcode(feedcode)
 					.build());
 			URI uriLocation = new URI("/scrap/"+scrap.getScrapcode());
-			Feed feed = feedService.findByFeedcode(feedcode);
-			String alarmMsg = feed.getNickname() + "님이 회원님의 "+ feedcode + "번 피드를 스크랩했습니다.";
-			alarmService.createAlarm(MessageType.SCRAP, email, feed.getEmail(), alarmMsg);
 			return ResponseEntity.created(uriLocation).body("{}");
 		}
 		else { 

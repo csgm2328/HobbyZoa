@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 				.build());
 		profileService.findProfileById(userInfo.getEmail());
 		String welcomeMsg = userInfo.getNickname() + "님 Hobby Zoa에 오신걸 환영합니다!😃";
-		alarmService.createAlarm(MessageType.JOIN, "admin@hobbyzoa.com", userInfo.getEmail(), welcomeMsg); //관리자가 보내주는 웰컴메시지
+		alarmService.createAlarm(MessageType.JOIN, "admin@hobbyzoa.com", userInfo.getEmail(),0, welcomeMsg); //관리자가 보내주는 웰컴메시지
 		return result;
 	}
 

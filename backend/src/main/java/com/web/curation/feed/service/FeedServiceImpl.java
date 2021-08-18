@@ -20,6 +20,8 @@ import com.web.curation.image.repo.ImageRepo;
 import com.web.curation.image.service.FileHandler;
 import com.web.curation.like.model.FeedLike;
 import com.web.curation.like.repo.LikeRepo;
+import com.web.curation.tag.model.Feedtags;
+import com.web.curation.tag.model.Tag;
 
 
 @Service
@@ -73,7 +75,6 @@ public class FeedServiceImpl implements FeedService{
 	
 	@Override 
 	public Feed findByFeedcode(Integer feedcode) { 
-		Feed feed = feedRepo.findByFeedcode(feedcode);
 		return feedRepo.findByFeedcode(feedcode); 
 	}
 
@@ -131,6 +132,7 @@ public class FeedServiceImpl implements FeedService{
 			e.get().setFeedcode(feed.getFeedcode());
 			e.get().setComment(feed.getComment());
 			e.get().setScrap(feed.getScrap());
+			e.get().setLikes(likeRepo.countByFeedcode(feedcode));
 			feedRepo.save(e.get());
 		}
 	}
@@ -145,15 +147,18 @@ public class FeedServiceImpl implements FeedService{
 		likeRepo.save(
 				FeedLike.builder().email(email).feedcode(feedcode).build());
 		Feed feed = feedRepo.findByFeedcode(feedcode);
-		
 		updateByFeedcodeNoImage(feedcode, feed);
-		feed.setFeedcode(feed.getFeedcode());
-		feed.setComment(feed.getComment());
-		feed.setLikes(likeRepo.countByFeedcode(feedcode));
-		feed.setScrap(feed.getScrap());
 		
-		String alarmMsg = feed.getNickname() + "님이 회원님의 "+ feedcode + "번 피드를 좋아합니다.";
-		alarmService.createAlarm(MessageType.LIKE, email, feed.getEmail(), alarmMsg);
+		Tag tag = new Tag();
+		String alarmMsg = "";
+		List<Feedtags> tags = feed.getFeedtags();
+		if(tags.size() != 0) {
+			tag = tags.get(0).getTag();
+			alarmMsg = feed.getNickname() +"님이 " + tag.toString()+ "태그가 추가된 회원님의 피드를 좋아합니다.";
+		}
+		else
+			alarmMsg = feed.getNickname() +"님이 회원님의 피드를 좋아합니다.";
+		alarmService.createAlarm(MessageType.LIKE, email, feed.getEmail(), feedcode, alarmMsg);
 		return "좋아요";
 	}
 

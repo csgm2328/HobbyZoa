@@ -6,18 +6,40 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.web.curation.alarm.model.MessageType;
+import com.web.curation.alarm.service.AlarmService;
+import com.web.curation.feed.model.Feed;
+import com.web.curation.feed.repo.FeedRepo;
 import com.web.curation.reply.model.Reply;
 import com.web.curation.reply.repo.ReplyRepo;
+import com.web.curation.tag.model.Feedtags;
+import com.web.curation.tag.model.Tag;
 
 @Service
 public class ReplyServiceImpl implements ReplyService{
 
 	@Autowired
 	private ReplyRepo replyRepo;
+	@Autowired
+	private FeedRepo feedRepo;
+	@Autowired
+	private AlarmService alarmService;
 	
 	@Override
 	public Reply save(Reply reply) {
-		return replyRepo.save(reply);
+		Reply result = replyRepo.save(reply);
+		Feed feed = feedRepo.findByFeedcode(reply.getFeedcode());
+
+		Tag tag = new Tag();
+		String alarmMsg = "";
+		List<Feedtags> tags = feed.getFeedtags();
+		if (tags.size() != 0) {
+			tag = tags.get(0).getTag();
+			alarmMsg = feed.getNickname() + "님이 " + tag.toString() + "태그가 추가된 회원님의 피드에 댓글을 달았습니다.";
+		} else
+			alarmMsg = feed.getNickname() + "님이 회원님의 피드에 댓글을 달았습니다.";
+		alarmService.createAlarm(MessageType.SCRAP, reply.getEmail(), feed.getEmail(), reply.getFeedcode(), alarmMsg);
+		return result;
 	}
 
 	@Override
