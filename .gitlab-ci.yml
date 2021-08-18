@@ -39,7 +39,7 @@ deploy-back:
         - master
         - develop
     script :
-        - cd $HOME
+        - cd $HOME/backend
         - ~/restart_backend1.sh
     tags : 
         - prd
