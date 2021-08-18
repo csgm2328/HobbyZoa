@@ -22,6 +22,8 @@ import com.web.curation.like.model.FeedLike;
 import com.web.curation.like.repo.LikeRepo;
 import com.web.curation.tag.model.Feedtags;
 import com.web.curation.tag.model.Tag;
+import com.web.curation.user.model.User;
+import com.web.curation.user.repo.UserRepo;
 
 
 @Service
@@ -33,6 +35,8 @@ public class FeedServiceImpl implements FeedService{
 	private ImageRepo imageRepo;
 	@Autowired
 	LikeRepo likeRepo;
+	@Autowired
+	UserRepo userRepo;
 	@Autowired
 	FileHandler fileHandler;
 	@Autowired
@@ -141,6 +145,8 @@ public class FeedServiceImpl implements FeedService{
 	@Transactional
 	public String LikeFeed(String email, Integer feedcode) {
 		Optional<FeedLike> e = likeRepo.findByEmailAndFeedcode(email, feedcode);
+		Optional<User> u = userRepo.findById(email);
+		
 		if(e.isPresent()) 
 			if(likeRepo.deleteByEmailAndFeedcode(email, feedcode) != 0)
 				return "좋아요 취소";
@@ -154,10 +160,11 @@ public class FeedServiceImpl implements FeedService{
 		List<Feedtags> tags = feed.getFeedtags();
 		if(tags.size() != 0) {
 			tag = tags.get(0).getTag();
-			alarmMsg = feed.getNickname() +"님이 " + tag.toString()+ "태그가 추가된 회원님의 피드를 좋아합니다.";
+			alarmMsg = u.get().getNickname() +"님이 " + tag.toString()+ "태그가 추가된 회원님의 피드를 좋아합니다.";
 		}
 		else
-			alarmMsg = feed.getNickname() +"님이 회원님의 피드를 좋아합니다.";
+			alarmMsg = u.get().getNickname() +"님이 회원님의 피드를 좋아합니다.";
+		System.out.println("여기까지");
 		alarmService.createAlarm(MessageType.LIKE, email, feed.getEmail(), feedcode, alarmMsg);
 		return "좋아요";
 	}

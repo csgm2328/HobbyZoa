@@ -1,6 +1,7 @@
 package com.web.curation.scrap.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ import com.web.curation.scrap.model.Scrap;
 import com.web.curation.scrap.repo.ScrapRepo;
 import com.web.curation.tag.model.Feedtags;
 import com.web.curation.tag.model.Tag;
+import com.web.curation.user.model.User;
+import com.web.curation.user.repo.UserRepo;
 
 @Service
 public class ScrapServiceImpl implements ScrapService {
@@ -24,21 +27,25 @@ public class ScrapServiceImpl implements ScrapService {
 	private FeedRepo feedRepo;
 
 	@Autowired
+	private UserRepo userRepo;
+	
+	@Autowired
 	AlarmService alarmService;
 
 	@Override
 	public Scrap save(Scrap scrap) {
 		Scrap result = scrapRepo.save(scrap);
 		Feed feed = feedRepo.findByFeedcode(scrap.getFeedcode());
-
+		Optional<User> u = userRepo.findById(scrap.getEmail());
+		
 		Tag tag = new Tag();
 		String alarmMsg = "";
 		List<Feedtags> tags = feed.getFeedtags();
 		if (tags.size() != 0) {
 			tag = tags.get(0).getTag();
-			alarmMsg = feed.getNickname() + "님이 " + tag.toString() + "태그가 추가된 회원님의 피드를 스크랩했습니다.";
+			alarmMsg = u.get().getNickname() + "님이 " + tag.toString() + "태그가 추가된 회원님의 피드를 스크랩했습니다.";
 		} else
-			alarmMsg = feed.getNickname() + "님이 회원님의 피드를 스크랩했습니다.";
+			alarmMsg = u.get().getNickname() + "님이 회원님의 피드를 스크랩했습니다.";
 		alarmService.createAlarm(MessageType.SCRAP, scrap.getEmail(), feed.getEmail(), scrap.getFeedcode(), alarmMsg);
 		return result;
 	}
