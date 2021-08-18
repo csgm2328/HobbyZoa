@@ -35,8 +35,6 @@ const state = {
   profile_url: null,
   eamilMessage: false,
   tagRanking: [],
-  eamilMessage: false,
-  tagRanking: [],
 }
 
 export default new Vuex.Store({
