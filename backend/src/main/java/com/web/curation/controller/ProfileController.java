@@ -47,7 +47,7 @@ public class ProfileController {
 		result.object = profileService.findProfileById(email);
 		if (result.object != null) {
 			result.status = true;
-			result.data = userService.findById(email).get().getNickname();
+			result.data = "success";
 			response = new ResponseEntity<>(result, HttpStatus.OK);
 		} else {
 			result.status = false;
