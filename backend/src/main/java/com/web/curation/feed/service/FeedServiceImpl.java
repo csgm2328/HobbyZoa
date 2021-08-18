@@ -22,6 +22,7 @@ import com.web.curation.like.model.FeedLike;
 import com.web.curation.like.repo.LikeRepo;
 import com.web.curation.tag.model.Feedtags;
 import com.web.curation.tag.model.Tag;
+import com.web.curation.tag.repo.FeedtagsRepo;
 import com.web.curation.user.model.User;
 import com.web.curation.user.repo.UserRepo;
 
@@ -37,6 +38,8 @@ public class FeedServiceImpl implements FeedService{
 	LikeRepo likeRepo;
 	@Autowired
 	UserRepo userRepo;
+	@Autowired
+	FeedtagsRepo feedtagsRepo;
 	@Autowired
 	FileHandler fileHandler;
 	@Autowired
@@ -155,12 +158,11 @@ public class FeedServiceImpl implements FeedService{
 		Feed feed = feedRepo.findByFeedcode(feedcode);
 		updateByFeedcodeNoImage(feedcode, feed);
 		
-		Tag tag = new Tag();
 		String alarmMsg = "";
-		List<Feedtags> tags = feed.getFeedtags();
+		List<Feedtags> tags = feedtagsRepo.findByFeed(feed);
 		if(tags.size() != 0) {
-			tag = tags.get(0).getTag();
-			alarmMsg = u.get().getNickname() +"님이 " + tag.toString()+ "태그가 추가된 회원님의 피드를 좋아합니다.";
+			Tag tag = tags.get(0).getTag();
+			alarmMsg = u.get().getNickname() +"님이 " + tag.getTagname() + "태그가 추가된 회원님의 피드를 좋아합니다.";
 		}
 		else
 			alarmMsg = u.get().getNickname() +"님이 회원님의 피드를 좋아합니다.";
