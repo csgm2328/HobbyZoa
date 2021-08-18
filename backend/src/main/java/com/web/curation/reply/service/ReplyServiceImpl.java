@@ -14,6 +14,8 @@ import com.web.curation.reply.model.Reply;
 import com.web.curation.reply.repo.ReplyRepo;
 import com.web.curation.tag.model.Feedtags;
 import com.web.curation.tag.model.Tag;
+import com.web.curation.user.model.User;
+import com.web.curation.user.repo.UserRepo;
 
 @Service
 public class ReplyServiceImpl implements ReplyService{
@@ -24,20 +26,23 @@ public class ReplyServiceImpl implements ReplyService{
 	private FeedRepo feedRepo;
 	@Autowired
 	private AlarmService alarmService;
+	@Autowired
+	UserRepo userRepo;
 	
 	@Override
 	public Reply save(Reply reply) {
 		Reply result = replyRepo.save(reply);
 		Feed feed = feedRepo.findByFeedcode(reply.getFeedcode());
-
+		Optional<User> u = userRepo.findById(reply.getEmail());
+		
 		Tag tag = new Tag();
 		String alarmMsg = "";
 		List<Feedtags> tags = feed.getFeedtags();
 		if (tags.size() != 0) {
 			tag = tags.get(0).getTag();
-			alarmMsg = feed.getNickname() + "님이 " + tag.toString() + "태그가 추가된 회원님의 피드에 댓글을 달았습니다.";
+			alarmMsg = u.get().getNickname() + "님이 " + tag.toString() + "태그가 추가된 회원님의 피드에 댓글을 달았습니다.";
 		} else
-			alarmMsg = feed.getNickname() + "님이 회원님의 피드에 댓글을 달았습니다.";
+			alarmMsg = u.get().getNickname() + "님이 회원님의 피드에 댓글을 달았습니다.";
 		alarmService.createAlarm(MessageType.SCRAP, reply.getEmail(), feed.getEmail(), reply.getFeedcode(), alarmMsg);
 		return result;
 	}
