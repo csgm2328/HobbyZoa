@@ -8,8 +8,7 @@ build-back:
         - master
         - develop
     script :
-        - cd /home/ubuntu/SubPJT3/S05P13C102/backend
-        - sudo usermod -a -G sudo gitlab-runner
+        - cd $CI_PROJECT_DIR/backend
         - sudo mvn package
         - cp target/*.jar ~/app1.jar
     tags : 
@@ -27,8 +26,7 @@ build-front:
         - master
         - develop
     script :
-        - cd /home/ubuntu/SubPJT3/S05P13C102/frontend
-        - sudo usermod -a -G sudo gitlab-runner
+        - cd $CI_PROJECT_DIR/frontend
         - npm install
         - npm run build
     tags :
@@ -41,7 +39,6 @@ deploy-back:
         - develop
     script :
         - cd $HOME
-        - sudo usermod -a -G sudo gitlab-runner
         - /home/ubuntu/restart_backend1.sh
     tags : 
         - prd
