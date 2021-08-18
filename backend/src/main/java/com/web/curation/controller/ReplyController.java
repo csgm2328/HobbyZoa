@@ -16,9 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.web.curation.alarm.model.MessageType;
-import com.web.curation.alarm.service.AlarmService;
-import com.web.curation.feed.model.Feed;
 import com.web.curation.feed.service.FeedService;
 import com.web.curation.reply.model.Reply;
 import com.web.curation.reply.service.ReplyService;
@@ -32,10 +29,6 @@ public class ReplyController {
 	
 	@Autowired
 	ReplyService replyService;
-	
-	@Autowired
-	AlarmService alarmService;
-	
 	@Autowired
 	FeedService feedService;
 
@@ -52,10 +45,6 @@ public class ReplyController {
 				.feedcode(feedcode)
 				.build());
 		URI uriLocation = new URI("/reply/" + reply.getReplycode());
-		
-		Feed feed = feedService.findByFeedcode(feedcode);
-		String alarmMsg = nickname + "님이 회원님의 "+ feedcode + "번 피드에 댓글을 달았습니다.";
-		alarmService.createAlarm(MessageType.REPLY, email, feed.getEmail(), alarmMsg);
         return ResponseEntity.created(uriLocation).body("{}");
 	}
 	
