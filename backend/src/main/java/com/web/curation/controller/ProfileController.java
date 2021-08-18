@@ -1,9 +1,15 @@
 package com.web.curation.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Optional;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.curation.follow.service.FollowService;
+import com.web.curation.profile.model.ProfileImage;
 import com.web.curation.profile.service.ProfileService;
 import com.web.curation.response.BasicResponse;
 import com.web.curation.user.service.UserService;
@@ -57,22 +64,15 @@ public class ProfileController {
 		return response;
 	}
 
-	@GetMapping("/image/{email}")
+	@GetMapping(value = "/image/{email}", produces = MediaType.IMAGE_JPEG_VALUE)
 	@ApiOperation(value = "프로필 이미지 보기", notes = "이메일당 하나의 프로필 이미지")
-	public ResponseEntity<BasicResponse> ShowProfileImage(@PathVariable String email) {
-		ResponseEntity<BasicResponse> response = null;
-		final BasicResponse result = new BasicResponse();
-		result.object = profileService.findProfileImageById(email).get();
-		if (result.object != null) {
-			result.status = true;
-			result.data = "success";
-			response = new ResponseEntity<>(result, HttpStatus.OK);
-		} else {
-			result.status = false;
-			result.data = "fail: 프로필 이미지 조회 오류";
-			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-		}
-		return response;
+	public ResponseEntity<byte[]> ShowProfileImage(@PathVariable String email) throws IOException {
+		Optional<ProfileImage> e = profileService.findProfileImageById(email);
+		String absolutePath = new File("").getAbsolutePath() + "/";
+		InputStream imageStream = new FileInputStream(absolutePath + e.get().getImgpath());
+		byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+		imageStream.close();
+		return new ResponseEntity<byte[]>(imageByteArray, HttpStatus.OK);
 	}
 
 	@PutMapping("/image/{email}")
