@@ -1,7 +1,6 @@
 <template>
   <div>
     <Header/>
-    Like피드
     <v-container>
       <FeedListItem
         v-for="feed in feedList"
