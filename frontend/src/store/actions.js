@@ -20,8 +20,14 @@ export default {
   // signup action
   async SIGNUP_CONFIRM({ commit }, signup_token) {
     const SIGNUP_CONFRIM_URL = '/user/confirm-email'
-    const response = await axios.get(SIGNUP_CONFRIM_URL, { params: {token: signup_token}})
-    console.log(commit, response)
+    await axios.get(SIGNUP_CONFRIM_URL, { params: {token: signup_token}})
+            .then(() => {
+              commit('SIGNUP_CONFIRM', true)
+            })
+            .catch(() => {
+              commit('SIGNUP_CONFIRM', false)
+            })
+
   },
   async SIGNUP_RE_CONFIRM({ commit }, signup_mail) {
     const SIGNUP_RECONFRIM_URL = '/user/reconfirm_email'
@@ -36,10 +42,12 @@ export default {
       axios.post(AUTH_USER_URL, data)
         .then((response) => {
           const token = response.data['access-token']
+          if (token) {
+            localStorage.setItem('token', token)
+            commit('AUTH_USER', token)
+            axios.defaults.headers.common['access-token'] = token
+          }
           
-          localStorage.setItem('token', token)
-          commit('AUTH_USER', token)
-          axios.defaults.headers.common['access-token'] = token
 
           axios.get('/auth/loginInfo')
             .then((res) => {
@@ -258,5 +266,10 @@ export default {
     const response = await axios.get(FETCH_PROFILE_URL)
     console.log(response.data.object.imgpath)
     commit("FETCH_PROFILE_URL", response.data.object.imgpath)
+  },
+  async FETCH_TAG_RANKING({ commit }) {
+    const TAG_RANKING_URL = 'order/tagranking'
+    const response = await axios.get(TAG_RANKING_URL)
+    commit('FETCH_TAG_RANKING', response.data)
   }
 }

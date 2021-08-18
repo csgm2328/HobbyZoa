@@ -65,7 +65,7 @@ public class ProfileImageHandler{
 				.imgname(uploadFile.getOriginalFilename())
 				.content_type(contentType)
 				.imgsize(uploadFile.getSize())
-				.imgpath(absolutePath  + path + "/" + new_file_name).build();
+				.imgpath(path + "/" + new_file_name).build();
 
 		// 저장된 파일로 변경하여 이를 보여주기 위함
 		// Update: 폴더 내 말고 절대경로로 변경

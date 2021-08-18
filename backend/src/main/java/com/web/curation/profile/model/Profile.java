@@ -24,6 +24,8 @@ public class Profile {
 	@Email
 	String email;
 	@Column
+	String nickname;
+	@Column
 	int following;
 	@Column
 	int follower;

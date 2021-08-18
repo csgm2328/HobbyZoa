@@ -37,7 +37,7 @@ public class FeedServiceImpl implements FeedService{
 	AlarmService alarmService;
 	
 	@Override
-	public List<Feed> findAllFeeds() { //전체 레코드 불러오기 findAll()
+	public List<Feed> findAllFeeds() { 
 		List<Feed> feeds = new ArrayList<Feed>();
 		feedRepo.findAll(Sort.by(Sort.Direction.DESC, "regtime")).forEach(e -> feeds.add(e));
 
@@ -45,50 +45,40 @@ public class FeedServiceImpl implements FeedService{
 			List<Image> images = new ArrayList<Image>();
 			imageRepo.findAllByFeed(feeds.get(i)).forEach(e -> images.add(e));
 			feeds.get(i).setImages(images);
-			feeds.get(i).setLikes(likeRepo.countByFeedcode(feeds.get(i).getFeedcode()));
 		}
 		return feeds;
 	}
 
 	@Override
-	public List<Feed> findByEmail(String email) { //해당 계정 피드 모아보기
+	public List<Feed> findByEmail(String email) { 
 		List<Feed> feeds = feedRepo.findByEmailOrderByRegtimeDesc(email);
 		for (int i = 0; i < feeds.size(); i++) {
 			List<Image> images = new ArrayList<Image>();
 			imageRepo.findAllByFeed(feeds.get(i)).forEach(e -> images.add(e));
 			feeds.get(i).setImages(images);
-			feeds.get(i).setLikes(likeRepo.countByFeedcode(feeds.get(i).getFeedcode()));
 		}
 		return feeds;
 	}
 	
 	@Override
-	public Image findOneByfeedcode(Integer feedcode) { // 해당 피드코드 이미지 하나만 반환
-		Feed feed = feedRepo.findByFeedcode(feedcode);
-		return imageRepo.findOneByFeed(feed);
-	}
-	
-	@Override
-	public Image findByNewname(String newname) { // 새이름으로 이미지 반환
+	public Image findByNewname(String newname) {
 		return imageRepo.findByNewname(newname);
 	}
 	
 	@Override
-	public List<Image> findAllByfeedcode(Integer feedcode){ //해당 피드코드 이미지 모두 반환
+	public List<Image> findAllByfeedcode(Integer feedcode){ 
 		Feed feed = feedRepo.findByFeedcode(feedcode);
 		return imageRepo.findAllByFeed(feed);
 	}
 	
 	@Override 
-	public Feed findByFeedcode(Integer feedcode) { //피드 누르면 상세보기 가능하도록
+	public Feed findByFeedcode(Integer feedcode) { 
 		Feed feed = feedRepo.findByFeedcode(feedcode);
-		//좋아요수 업데이트
-		feed.setLikes(likeRepo.countByFeedcode(feedcode));
-		return feedRepo.findByFeedcode(feedcode); //수정 후 리턴
+		return feedRepo.findByFeedcode(feedcode); 
 	}
 
 	@Override
-	public void deleteByFeedcode(Integer feedcode) { //레코드 삭제 delete()
+	public void deleteByFeedcode(Integer feedcode) { 
 		feedRepo.deleteById(feedcode);
 	}
 
@@ -96,15 +86,15 @@ public class FeedServiceImpl implements FeedService{
 	public Feed save(Feed feed, List<MultipartFile> files ) throws Exception {
 		Feed savedFeed = feedRepo.save(feed);
 		
-        // 파일을 저장하고 그 image 에 대한 list 를 가지고 있는다
         List<Image> list = fileHandler.parseFileInfo(savedFeed, files);
 
-        if(!list.isEmpty()){ // 파일 없는 경우는 없을 것, !list.isEmpty()로 바꿔서 코드 줄이기
+        if(!list.isEmpty()){ 
             List<Image> imageList = new ArrayList<>();
-            for(Image image : list) { //현재 list에는 새로운 이름으로 저장된 파일의 위치 리스트가 저장되어있다.
-            	Image savedImage = imageRepo.save(image); //계속 null 던짐
-            	imageList.add(savedImage); //imgcode까지 추가된 이미지 리스트
+            for(Image image : list) { 
+            	Image savedImage = imageRepo.save(image); 
+            	imageList.add(savedImage); 
             }
+            feed.setImages(imageList);
         }
 		return feed;
 	}
@@ -118,18 +108,17 @@ public class FeedServiceImpl implements FeedService{
 			e.get().setEmail(feed.getEmail());
 			e.get().setNickname(feed.getNickname());
 			e.get().setComment(feed.getComment());
-			e.get().setLikes(likeRepo.countByFeedcode(feedcode));
 			e.get().setScrap(feed.getScrap());
 			newfeed = feedRepo.save(feed);
 		}
-		//이미지 받아서 업데이트하는 과정 추가
-		imageRepo.deleteAllByFeed(newfeed); //기존 이미지 삭제
+
+		imageRepo.deleteAllByFeed(newfeed);
 		List<Image> list = fileHandler.parseFileInfo(newfeed, files);
 
         if(!list.isEmpty()){
             List<Image> imageList = new ArrayList<>();
             for(Image image : list) { 
-            	Image savedImage = imageRepo.save(image); //새로운 이미지 저장
+            	Image savedImage = imageRepo.save(image);
             	imageList.add(savedImage);
             }
         }
@@ -141,23 +130,28 @@ public class FeedServiceImpl implements FeedService{
 		if(e.isPresent()) {
 			e.get().setFeedcode(feed.getFeedcode());
 			e.get().setComment(feed.getComment());
-			e.get().setLikes(likeRepo.countByFeedcode(feedcode));
 			e.get().setScrap(feed.getScrap());
 			feedRepo.save(e.get());
 		}
-		
 	}
 	
 	@Override
 	@Transactional
 	public String LikeFeed(String email, Integer feedcode) {
 		Optional<FeedLike> e = likeRepo.findByEmailAndFeedcode(email, feedcode);
-		if(e.isPresent()) //이미 좋아요 했다면 취소
+		if(e.isPresent()) 
 			if(likeRepo.deleteByEmailAndFeedcode(email, feedcode) != 0)
 				return "좋아요 취소";
 		likeRepo.save(
 				FeedLike.builder().email(email).feedcode(feedcode).build());
-		Feed feed = feedRepo.findByFeedcode(feedcode); //피드 소유자 찾기
+		Feed feed = feedRepo.findByFeedcode(feedcode);
+		
+		updateByFeedcodeNoImage(feedcode, feed);
+		feed.setFeedcode(feed.getFeedcode());
+		feed.setComment(feed.getComment());
+		feed.setLikes(likeRepo.countByFeedcode(feedcode));
+		feed.setScrap(feed.getScrap());
+		
 		String alarmMsg = feed.getNickname() + "님이 회원님의 "+ feedcode + "번 피드를 좋아합니다.";
 		alarmService.createAlarm(MessageType.LIKE, email, feed.getEmail(), alarmMsg);
 		return "좋아요";

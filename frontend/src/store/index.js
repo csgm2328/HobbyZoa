@@ -33,7 +33,10 @@ const state = {
   error_code: null,
   alarmList: [],
   profile_url: null,
-  check_profile_url: false,
+  eamilMessage: false,
+  tagRanking: [],
+  eamilMessage: false,
+  tagRanking: [],
 }
 
 export default new Vuex.Store({

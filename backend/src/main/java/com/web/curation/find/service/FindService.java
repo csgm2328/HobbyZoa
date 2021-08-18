@@ -8,9 +8,6 @@ import com.web.curation.user.model.User;
 public interface FindService {
 
 	List<User> findSearchWord(String nickname);
-
 	History saveHistory(History history);
-	
 	List<History> showHistory(String email);
-
 }

@@ -85,7 +85,8 @@
         url: [],
         selected_picture: true,
         pic_error: false,
-        text_error: false
+        text_error: false,
+        fileChange: false,
       }
     },
     methods: {
@@ -93,15 +94,41 @@
         this.text_error = false
       },
       addFiles() {
+        this.fileChange = true
         this.url.length = 0
+
+        var maxSize = 5 * 1024 * 1024
+        var maxSumSize = 10 * 1024 * 1024
+        var sizebool = true
+        var sizesum = 0
+
         this.files.forEach(file => {
-          this.url.push(URL.createObjectURL(file))
-        });
-        this.selected_picture = true
-        if (this.files.length == 0) {
-          this.selected_picture = false
+          var fileSize = file.size
+          sizesum += fileSize
+          if (fileSize > maxSize){
+            alert("첨부파일 사이즈는 5MB 이내로 등록 가능합니다.")
+            sizebool = false
+            this.files.length = 0
+          }
+        })
+
+        if (sizesum > maxSumSize) {
+          alert("첨부파일 합계 사이즈는 10MB 이내로 등록 가능합니다.")
+          sizebool = false
+          this.files.length = 0
         }
-        this.pic_error = false
+        
+        if (sizebool) {
+          this.files.forEach(file => {
+            this.url.push(URL.createObjectURL(file))
+          });
+          this.selected_picture = true
+          if (this.files.length == 0) {
+            this.selected_picture = false
+          }
+          this.pic_error = false
+        }
+
       },
       checkForm() {
         if (this.files.length == 0) {
@@ -121,9 +148,12 @@
           const form = new FormData()
           const files = this.files
           
-          for (let i = 0; i < files.length; i++) {
-            form.append('files', files[i])
+          if (this.fileChange) {
+            for (let i = 0; i < files.length; i++) {
+              form.append('files', files[i])
+            }
           }
+
           form.append('comment', this.text)
           form.append('feedcode', this.feed.feedcode)
           this.$store.dispatch('UPDATE_FEED', form)
@@ -139,11 +169,11 @@
         return this.$store.getters.getFeedDetail.feed
       },
     },
-    created() {
+    async created() {
       this.text = this.$store.getters.getFeedDetail.feed.comment
       for (const image of this.$store.getters.getFeedDetail.images) {
         var imgurl = `http://i5c102.p.ssafy.io/api/feed/${image.newname}`
-        const response = fetch(imgurl)
+        const response = await fetch(imgurl)
         const data = response.blob()
         const ext = image.newname.split(".").pop()
         const filename = image.orgname

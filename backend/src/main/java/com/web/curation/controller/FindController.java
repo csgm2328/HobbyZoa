@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,18 +12,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.web.curation.find.model.History;
 import com.web.curation.find.service.FindService;
-import com.web.curation.login.model.LoginRequest;
 import com.web.curation.login.service.JwtService;
-import com.web.curation.response.BasicResponse;
 import com.web.curation.user.model.User;
-
 import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = { "*" })
@@ -45,7 +37,6 @@ public class FindController {
 		List<User> list = findService.findSearchWord(searchWord);
 		List<Map<String, Object>> searchList = new ArrayList<>();
 		System.out.println("검색단어: " + searchWord);
-
 		if (!list.isEmpty()) {
 			for (int i = 0; i < list.size(); i++) {
 				Map<String, Object> map = new HashMap<>();
@@ -55,36 +46,25 @@ public class FindController {
 				map.put("email", emails);
 				searchList.add(map);
 			}
-
 		} else {
 			System.out.println("해당 닉네임 없음");
 		}
-
 		return new ResponseEntity<List<Map<String, Object>>>(searchList, HttpStatus.OK);
 	}
 
 	
-	@GetMapping(value = "/savehistory/{email}/{searchword}")
+	@PostMapping
 	@ApiOperation(value = "검색 내역 저장", notes = "검색 버튼 누르면 history에 저장")
-	public ResponseEntity<BasicResponse> searchNickname(@PathVariable("email") String email, @PathVariable("searchword") String searchword) {
-		ResponseEntity<BasicResponse> response = null;
-		List<Map<String, Object>> searchList = new ArrayList<>();
-		System.out.println("저장할 단어: " + searchword);
-		History history = new History();
-		history.setEmail(email);
-		history.setSearchWord(searchword);
-		findService.saveHistory(history);
-
-		return response;
+	public ResponseEntity<Void> searchNickname(@RequestParam("email") String email, @RequestParam("searchword") String searchword) {
+		findService.saveHistory(History.builder().email(email).searchWord(searchword).build());
+		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 
 	@GetMapping(value = "/history/{email}")
 	@ApiOperation(value = "최근 검색 내역 조회", notes = "검색 내역 조회")
 	public ResponseEntity<List<Map<String, Object>>> showHistory(@PathVariable("email") String email) {
-
 		List<History> list = findService.showHistory(email);
 		List<Map<String, Object>> historyList = new ArrayList<>();
-
 		for (int i = 0; i < list.size(); i++) {
 			Map<String, Object> map = new HashMap<>();
 			String nicknames = list.get(i).getSearchWord();
@@ -93,7 +73,6 @@ public class FindController {
 			map.put("email", emails);
 			historyList.add(map);
 		}
-
 		return new ResponseEntity<List<Map<String, Object>>>(historyList, HttpStatus.OK);
 	}
 }

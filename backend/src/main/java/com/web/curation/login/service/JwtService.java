@@ -1,6 +1,5 @@
 package com.web.curation.login.service;
 
-import java.util.Map;
 
 public interface JwtService {
 

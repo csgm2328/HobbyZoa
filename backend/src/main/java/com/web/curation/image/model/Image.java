@@ -3,7 +3,6 @@ package com.web.curation.image.model;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.sun.istack.NotNull;
 import com.web.curation.feed.model.Feed;
 
 import lombok.*;

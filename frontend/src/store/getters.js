@@ -47,5 +47,11 @@ export default {
   },
   getProfileUrl(state) {
     return state.profile_url
+  },
+  getEmailMessage(state) {
+    return state.eamilMessage
+  },
+  getTagRanking(state) {
+    return state.tagRanking
   }
 }

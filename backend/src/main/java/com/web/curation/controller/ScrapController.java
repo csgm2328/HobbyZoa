@@ -21,20 +21,11 @@ import com.web.curation.alarm.service.AlarmService;
 import com.web.curation.feed.model.Feed;
 import com.web.curation.feed.service.FeedService;
 import com.web.curation.image.model.Image;
-import com.web.curation.response.BasicResponse;
 import com.web.curation.scrap.model.Scrap;
 import com.web.curation.scrap.service.ScrapService;
 
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
-@ApiResponses(value = { 
-		@ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
-        @ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
-        @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
-        @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) 
-		})
 @CrossOrigin(origins = { "*" })
 @RestController
 @RequestMapping(value = "/scrap")
@@ -53,7 +44,7 @@ public class ScrapController {
 	public ResponseEntity<?> saveScrap(@RequestParam("email") String email, @RequestParam("feedcode") Integer feedcode) throws Exception{
 		
 		Boolean flag = scrapService.existsByEmailAndFeedcode(email, feedcode);
-		if(!flag) { //중복 없으면 저장
+		if(!flag) { 
 			Scrap scrap = scrapService.save(Scrap.builder()
 					.email(email)
 					.feedcode(feedcode)
@@ -64,7 +55,7 @@ public class ScrapController {
 			alarmService.createAlarm(MessageType.SCRAP, email, feed.getEmail(), alarmMsg);
 			return ResponseEntity.created(uriLocation).body("{}");
 		}
-		else { //이미 있으면 스크랩 해제
+		else { 
 			Scrap scrap = scrapService.findByEmailAndFeedcode(email, feedcode);
 			scrapService.deleteByScrapcode(scrap.getScrapcode());
 			return ResponseEntity.noContent().build();
@@ -95,6 +86,5 @@ public class ScrapController {
 		scrapService.deleteByScrapcode(scrapcode);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT); 
 	}
-	
 	
 }

@@ -20,20 +20,20 @@ import com.web.curation.tag.model.Feedtags;
 public class Feed {
 
 	
-	private String email; //이메일주소
+	private String email; 
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY) //기본 키 생성을 데이터베이스 AI에 위임
-	private int feedcode; //피드구별번호, 기본키
+	@GeneratedValue(strategy = GenerationType.IDENTITY) 
+	private int feedcode; 
 
-	private String nickname; //닉네임
+	private String nickname; 
 	
 	@Column(insertable=false, updatable=false)
-	private LocalDateTime regtime; //등록일, 날짜 포맷
+	private LocalDateTime regtime; 
 	
-	private String comment; //한줄설명
-	private Integer likes; //좋아요 수
-	private Integer scrap; //스크랩 수
+	private String comment; 
+	private Integer likes; 
+	private Integer scrap; 
 	
 	
 	@OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -48,31 +48,10 @@ public class Feed {
 	@JsonManagedReference
 	private List<Feedtags> feedtags;	
 	
-	//default 0이거나 원래 값 넣어주기
 	@PrePersist
     public void prePersist() {
         this.likes = this.likes == null ? 0 : this.likes;
         this.scrap = this.scrap == null ? 0 : this.scrap;
     }
-	//image연결 함수
-	public void addImage(Image image) {
-	    images.add(image);
-	    image.setFeed(this);
-	}
-
-	public void removeImage(Image image) {
-	    images.remove(image);
-	    image.setFeed(null);
-	}
-	//reply연결 함수
-	public void addReply(Reply reply) {
-	    replies.add(reply);
-	    reply.setFeed(this);
-	}
-
-	public void removeReply(Reply reply) {
-		replies.remove(reply);
-	    reply.setFeed(null);
-	}
 
 }

@@ -43,10 +43,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
-		@ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
-		@ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
-		@ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
+@ApiResponses(value = { @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 @CrossOrigin(origins = { "*" })
 @RestController
 @RequestMapping(value = "/feed")
@@ -61,7 +58,6 @@ public class FeedController {
 	@Autowired
 	TagService tagService;
 
-	// 피드 생성
 	@PostMapping
 	@ApiOperation(value = "피드 생성", notes = "email, nickname, comment와 file리스트를 입력받아 uri를 반환")
 	public ResponseEntity<?> createFeed(@Valid @RequestParam("email") String email,
@@ -75,16 +71,12 @@ public class FeedController {
 			boolean tagCheck = tagService.existsByTagname(tagname);
 			Tag tag = new Tag();
 			if (tagCheck) {
-				//원래 있는 운동태그이면 cnt늘리기
-				//tagService.updateTagCnt(tagCheck);
 				Tag existTag = tagService.findByTagname(tagname);
 				existTag.setTagcode(existTag.getTagcode());
 				existTag.setTagname(existTag.getTagname());
 				existTag.setCnt(existTag.getCnt()+1);
 				tagService.saveFeedtags(Feedtags.builder().feed(feed).tag(existTag).build());
-				//이렇게 하면 cnt만 바뀐 값이 새로 추가 되지 않나..? update되어야 하는데! -> update가 되네..?
 			} else {
-				//새로운 운동태그이면 save하기
 				tag.setTagname(tagname);
 				tag.setCnt(1);
 				tagService.saveTag(tag);
@@ -97,7 +89,6 @@ public class FeedController {
 
 	}
 
-	// 모든 피드 조회 (이미지 엮어서 보내주기)
 	@GetMapping(value = "/all")
 	@ApiOperation(value = "모든 피드 조회", notes = "모든 피드 반환")
 	public ResponseEntity<List<Feed>> getAllFeeds() {
@@ -105,16 +96,13 @@ public class FeedController {
 		return new ResponseEntity<List<Feed>>(feeds, HttpStatus.OK);
 	}
 
-	// 해당 계정 피드 조회
 	@GetMapping(value = "/mine")
 	@ApiOperation(value = "해당 계정의 모든 피드 조회", notes = "계정 이메일 받아서 해당 계정의 피드와 이미지 엮어서 반환")
 	public ResponseEntity<List<Feed>> getFeedsByEmail(@RequestParam("email") String email) {
-		// email에 해당하는 모든 피드 list
 		List<Feed> list = feedService.findByEmail(email);
 		return new ResponseEntity<List<Feed>>(list, HttpStatus.OK);
 	}
 
-	// 해당 feedcode 피드 상세보기
 	@GetMapping(value = "/search/{feedcode}")
 	@ApiOperation(value = "해당 feedcode의 피드 상세보기", notes = "피드 정보 담긴 객체와 이미지리스트 반환")
 	public ResponseEntity<Map<String, Object>> getFeedByFeedcode(@PathVariable("feedcode") Integer feedcode) {
@@ -134,7 +122,6 @@ public class FeedController {
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 
-	// 피드번호로 피드 삭제
 	@DeleteMapping(value = "/{feedcode}")
 	@ApiOperation(value = "피드 삭제", notes = "feedcode로 삭제")
 	public ResponseEntity<Void> deleteFeed(@PathVariable("feedcode") Integer feedcode) {
@@ -142,7 +129,6 @@ public class FeedController {
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 
-	// 피드 번호로 피드수정
 	@PutMapping(value = "/{feedcode}")
 	@ApiOperation(value = "피드 수정", notes = "feedcode로 수정 후 수정 피드 반환")
 	public ResponseEntity<Feed> updateFeed(@PathVariable("feedcode") Integer feedcode,
@@ -157,11 +143,9 @@ public class FeedController {
 		return new ResponseEntity<Feed>(feed, HttpStatus.OK);
 	}
 
-	// 이미지 리턴
 	@GetMapping(value = "{newname}", produces = MediaType.IMAGE_JPEG_VALUE)
 	public ResponseEntity<byte[]> imageSearch(@PathVariable("newname") String newname) throws IOException {
 		Image image = feedService.findByNewname(newname);
-//		String absolutePath = new File("").getAbsolutePath() + "\\";
 		String absolutePath = new File("").getAbsolutePath() + "/"; // 리눅스 버전
 		InputStream imageStream = new FileInputStream(absolutePath + image.getImgpath());
 		byte[] imageByteArray = IOUtils.toByteArray(imageStream);
@@ -169,7 +153,6 @@ public class FeedController {
 		return new ResponseEntity<byte[]>(imageByteArray, HttpStatus.OK);
 	}
 
-	// 좋아요 & 좋아요 취소
 	@GetMapping("/like/{email}/{feedcode}")
 	@ApiOperation(value = "좋아요 기능", notes = "이미 좋아요 했다면 취소됨")
 	public ResponseEntity<String> LikeFeed(@PathVariable("email") String email,
@@ -178,7 +161,6 @@ public class FeedController {
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
 
-	// 좋아요 여부 체크
 	@GetMapping("checklike/{email}/{feedcode}")
 	@ApiOperation(value = "좋아요 여부 체크", notes = "")
 	public ResponseEntity<BasicResponse> checkLike(@PathVariable("email") String email,
@@ -197,7 +179,6 @@ public class FeedController {
 		return response;
 	}
 
-	// 해당 피드를 좋아요 누른 유저목록 반환
 	@GetMapping("/likelist/{feedcode}")
 	@ApiOperation(value = "좋아요 누른 유저들 보기", notes = "입력한 email 유저를 팔로우하는 from_email 리스트")
 	public ResponseEntity<BasicResponse> ShowLikeList(@PathVariable("feedcode") Integer feedcode) {

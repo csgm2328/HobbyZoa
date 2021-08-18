@@ -61,5 +61,11 @@ export default {
   },
   FETCH_PROFILE_URL(state, profile_url) {
     state.profile_url = profile_url
+  },
+  SIGNUP_CONFIRM(state, eamilMessage) {
+    state.eamilMessage = eamilMessage
+  },
+  FETCH_TAG_RANKING(state, tagRanking) {
+    state.tagRanking = tagRanking
   }
 }

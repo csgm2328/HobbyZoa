@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL) //null아닌것만 responseBody에 포함
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
     @Id
     private String email;
