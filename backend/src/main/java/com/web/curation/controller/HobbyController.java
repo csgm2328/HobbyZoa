@@ -123,6 +123,13 @@ public class HobbyController {
 					.hobby(hobby)
 					.daytot(1)
 					.timetot(time).build());
+			String timesbadge = attendanceaccService.checkTimetot(attendanceacc);
+			if(timesbadge != "no") {
+				badgeService.save(Badge.builder()
+						.name(timesbadge)
+						.hobby(hobby)
+						.build());
+			}
 		}
 		
 		URI uriLocation = new URI("hobby/check/" + attendance.getCheckcode());
