@@ -16,7 +16,6 @@ local.properties
 .recommenders
 
 # ignore properties file
-application.yml
 
 # External tool builders
 .externalToolBuilders/
@@ -204,5 +203,6 @@ Servers/
 backend/Servers/
 backend/nohup*
 backend/images/
+backend/2
 
 # End of https://www.toptal.com/developers/gitignore/api/vue,vuejs,eclipse,windows,macos,visualstudiocode,maven,java

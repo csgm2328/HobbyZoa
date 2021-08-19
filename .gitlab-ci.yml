@@ -30,7 +30,6 @@ build-front:
         - cd $CI_PROJECT_DIR/frontend
         - npm install
         - npm run build
-        - rm -rf ~/frontend/dist
         - cp -rf dist ~/dist
     tags :
         - prd
@@ -53,6 +52,6 @@ deploy-front:
         - develop
     script :
         # 배포는 이미 끝나서 단순 확인하기 위한 job으로만 구성
-        - ls -al ~/frontend/dist
+        - ls -al ~/dist
     tags :
         - prd
