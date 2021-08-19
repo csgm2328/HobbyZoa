@@ -149,13 +149,17 @@ public class FeedServiceImpl implements FeedService{
 	public String LikeFeed(String email, Integer feedcode) {
 		Optional<FeedLike> e = likeRepo.findByEmailAndFeedcode(email, feedcode);
 		Optional<User> u = userRepo.findById(email);
+		Feed feed = feedRepo.findByFeedcode(feedcode);
 		
-		if(e.isPresent()) 
-			if(likeRepo.deleteByEmailAndFeedcode(email, feedcode) != 0)
+		if(e.isPresent()) {
+			if(likeRepo.deleteByEmailAndFeedcode(email, feedcode) != 0) {
+				updateByFeedcodeNoImage(feedcode, feed);
 				return "좋아요 취소";
+			}
+		}
+				
 		likeRepo.save(
 				FeedLike.builder().email(email).feedcode(feedcode).build());
-		Feed feed = feedRepo.findByFeedcode(feedcode);
 		updateByFeedcodeNoImage(feedcode, feed);
 		
 		String alarmMsg = "";
