@@ -23,7 +23,10 @@ export default {
   props: {
     badges: {
       type: Array
-    }
+    },
+    request_user: {
+      type: String
+    },
   },
 }
 </script>

@@ -50,9 +50,8 @@
         ></v-calendar>
       </v-sheet>
       <div class="mt-3 d-flex justify-center" >
-
         <v-btn
-          v-if="!todaycheck"
+          v-if="!todaycheck && user_email == request_user"
           @click="open"
           rounded
           color="primary darken-1"
@@ -74,6 +73,8 @@
     v-if="hobbycheck" 
     @close="hobbycheck=false"
     :hobbycode="hobbycode"
+    :request_user="request_user"
+    :user_email="user_email"
   />
   </div>
 </template>
@@ -105,6 +106,9 @@ import CheckDetailModal from '@/components/CheckDetailModal'
       hobbycode: {
         type: Number
       },
+      request_user: {
+        type: String
+      }
     },
     watch: {
       hobbyevents: function () {
@@ -113,6 +117,7 @@ import CheckDetailModal from '@/components/CheckDetailModal'
       }
     },
     created() {
+      this.user_email = localStorage.email
       this.$store.dispatch('profileStore/fetchTodayCheck', this.hobbycode)
       this.$store.dispatch('profileStore/fetchHobbyEvent', this.hobbycode)
         .then(() => {

@@ -201,7 +201,7 @@ const profileStore = {
       await axios.post(CREATE_CHECK_URL, form)
       dispatch('profileStore/fetchHobbyEvent', hobbycode , { root: true })
     },
-    async DELETECheck({ dispatch }, info) {
+    async updateCheck({ dispatch }, info) {
       const form = info[0]
       const checkcode = info[1]
       const hobbycode = info[2]
