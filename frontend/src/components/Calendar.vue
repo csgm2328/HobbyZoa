@@ -223,24 +223,22 @@ div.pl-1 {
   color: transparent !important;
   background-color: transparent;
   background-image: url('../assets/images/check.png') !important;
-  background-size: 5vh;
+  background-size: contain !important;
   background-position: center center;
   width: 100% !important;
-  height: 6vh !important;
+  height: 40px !important;
   margin-right: 0px !important;
 }
 
 div.v-event {
-  padding-top: 2vh !important;
   background-color: transparent;
-  height: 7vh !important;
+  height: 40px !important;
+  /* height: inherit; */
   width: 100% !important;
   margin: 0px !important;
 }
-
-
-.v-event-more {
-  width: 90% !important;
+.v-calendar-weekly__day-label {
+  margin-bottom: 10px !important;
 }
 
 </style>
