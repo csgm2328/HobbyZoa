@@ -315,7 +315,7 @@ export default {
       else {
         this.$store.dispatch('searchStore/deleteSearch', this.search)
       }
-      this.$store.dispatch('searchStore/deleteSearch', this.search)
+      this.$store.dispatch('searchStore/autoSearch', this.search)
     },
     autoSearch() {
       if (this.search.trim().length) {
@@ -338,6 +338,7 @@ export default {
       else {
         this.$store.dispatch('searchStore/deleteSearch', this.search)
       }
+      this.$store.dispatch('searchStore/autoSearch', this.searchword)
     },
     deleteSearch() {
       this.search = ''

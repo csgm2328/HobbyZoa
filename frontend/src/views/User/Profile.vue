@@ -153,6 +153,7 @@
         />
         <UserLevel
           v-else-if="selected=='level'"
+          :username="username"
         />
       </div>
     </div>

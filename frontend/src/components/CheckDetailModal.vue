@@ -44,7 +44,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            v-if="!update"
+            v-if="!update && user_email == request_user"
             color="green darken-1"
             text
             @click="updateChange"
@@ -52,7 +52,7 @@
             Update
           </v-btn>
           <v-btn
-            v-else
+            v-else-if="user_email == request_user"
             color="green darken-1"
             text
             @click="check"
@@ -60,7 +60,7 @@
             Save
           </v-btn>
           <v-btn
-            v-if="update"
+            v-if="update && user_email == request_user"
             color="green darken-1"
             text
             @click="deleteCheck"
@@ -95,12 +95,18 @@
     components: {
     },
     created() {
-      this.request_user = localStorage.email
+      // this.request_user = localStorage.email
       this.hobbycheckdetail()
     },
     props: {
       hobbycode: {
         type: Number
+      },
+      request_user: {
+        type: String
+      },
+      user_email: {
+        type: String
       }
     },
     computed: {

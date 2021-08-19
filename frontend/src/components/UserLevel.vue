@@ -8,6 +8,7 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <v-btn
+              v-if="request_user==user_email"
               color="primary"
               v-bind="attrs"
               v-on="on"
@@ -71,11 +72,17 @@ export default {
       request_user: null,
     }
   },
+  props: {
+    username: {
+      type: String
+    }
+  },
   components: {
     HobbyItem
   },
   created() {
-    this.request_user = localStorage.email
+    this.request_user = this.username
+    this.user_email = localStorage.email
     this.$store.dispatch('profileStore/fetchHobby', this.request_user)
   },
   computed: {
