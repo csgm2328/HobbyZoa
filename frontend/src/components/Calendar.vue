@@ -45,6 +45,7 @@
           v-model="focus"
           color="primary"
           :events="events"
+          :event-more="false"
           @change="getEvents"
           @click:event="showHobbyEvent"
         ></v-calendar>
@@ -232,7 +233,7 @@ div.pl-1 {
 div.v-event {
   padding-top: 2vh !important;
   background-color: transparent;
-  height: 7.5vh !important;
+  height: 7vh !important;
   width: 100% !important;
   margin: 0px !important;
 }
