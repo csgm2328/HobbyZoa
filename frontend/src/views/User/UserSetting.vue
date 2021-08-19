@@ -8,9 +8,13 @@
       >
         <!-- <v-subheader>프로필 사진 변경</v-subheader>
         <v-divider class="my-3"></v-divider> -->
-        <v-subheader>프로필 메세지 변경</v-subheader>
-        <ProfileCommentChange/>
+        <v-subheader>프로필 이미지 변경</v-subheader>
         <ProfileImageChange/>
+        <v-divider class="my-3"></v-divider>
+        <v-subheader>프로필 메세지 변경</v-subheader>
+        <ProfileCommentChange
+          :accComment="user.comment"
+        />
         <v-divider class="my-3"></v-divider>
         <v-subheader class="my-3">이메일 인증</v-subheader>
         <div class="d-flex justify-space-around">
@@ -24,7 +28,9 @@
         </div>
         <v-divider class="my-3"></v-divider>
         <v-subheader>닉네임 변경</v-subheader>
-        <NicknameChange/>
+        <NicknameChange
+          :accNickname="user.nickname"
+        />
         <v-divider class="my-3"></v-divider>
         <v-subheader>비밀번호 변경</v-subheader>
         <PasswordChange/>

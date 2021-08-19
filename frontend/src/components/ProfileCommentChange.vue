@@ -18,8 +18,8 @@
     </v-alert>
     <v-text-field
       v-model="comment"
-      label="comment"
       outlined
+      :placeholder="accComment"
     >
     </v-text-field>
     <div class="d-flex justify-end">
@@ -40,6 +40,7 @@ export default {
       isChange: false,
     }
   },
+  props: ['accComment'],
   computed: {
     user() {
       return this.$store.getters.getUser

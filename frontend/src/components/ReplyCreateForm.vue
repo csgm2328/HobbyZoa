@@ -9,8 +9,8 @@
       clearable
       label="댓글 달기"
       type="text"
-      :rules="[rules.required]"
       @click:append-outer="createReply"
+      @keyup.enter="createReply"
       @click:clear="clearMessage"
     ></v-text-field>
   </div>
@@ -22,9 +22,6 @@ export default {
   data() {
     return {
       message: '',
-      rules: {
-        required: value => !!value || '댓글을 입력해주세요.',
-      },
     }
   },
 

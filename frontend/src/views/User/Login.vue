@@ -36,6 +36,7 @@
             type="password"
             outlined
             :rules="[rules.required]"
+            @keyup.enter="Login"
           >
           </v-text-field>
         </v-form>

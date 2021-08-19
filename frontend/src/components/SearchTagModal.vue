@@ -15,6 +15,7 @@
             placeholder="ex) 운동"
             outlined
             v-model="search"
+            @keyup.enter="searchTag"
           ></v-text-field>
         </v-card-text>
         <v-card-actions>
