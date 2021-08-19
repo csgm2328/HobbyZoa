@@ -19,9 +19,16 @@
             prepend-icon="mdi-camera"
             label="image upload"
           ></v-file-input>
+          <div
+            v-if="err"
+            class="px-5"
+            style="color: red;"
+          >
+            {{ err }}
+          </div>
           <div class="d-flex justify-center">
             <v-card-title class="d-flex justify-center">
-              <h5 style="color: green;" @click="changeProfileImage">UPLOAD</h5>
+              <h5 style="color: green;" @click="changeProfileImage();">UPLOAD</h5>
             </v-card-title>
             <v-card-title class="d-flex justify-center" @click="dialog = false">
               <h5>CLOSE</h5>
@@ -51,8 +58,9 @@ export default {
       this.dialog = !this.dialog
     },
     changeProfileImage() {
+      console.log(this.file)
       if (this.file == null) {
-        this.err = true
+        this.err = '이미지를 입력해주세요'
       }
       else {
         this.err = false
@@ -66,6 +74,7 @@ export default {
 
         const info = [form, localStorage.getItem('email')]
         this.$store.dispatch('UPDATE_PROFILE_IMAGE', info)
+        this.dialog = false
       }
     },
   }
