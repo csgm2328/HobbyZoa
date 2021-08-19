@@ -50,6 +50,7 @@
         ></v-calendar>
       </v-sheet>
       <div class="mt-3 d-flex justify-center" >
+
         <v-btn
           v-if="!todaycheck && user_email == request_user"
           @click="open"
@@ -221,25 +222,24 @@ div.pl-1 {
   color: transparent !important;
   background-color: transparent;
   background-image: url('../assets/images/check.png') !important;
-  background-size: 6vh;
+  background-size: 5vh;
   background-position: center center;
   width: 100% !important;
-  height: 10vh !important;
+  height: 6vh !important;
   margin-right: 0px !important;
 }
 
 div.v-event {
+  padding-top: 2vh !important;
   background-color: transparent;
-  height: 10vh !important;
+  height: 7.5vh !important;
   width: 100% !important;
   margin: 0px !important;
 }
 
-/*
+
 .v-event-more {
-  background-color: transparent !important;
-  height: 10vh !important;
-  content: none !important;
-} */
+  width: 90% !important;
+}
 
 </style>
