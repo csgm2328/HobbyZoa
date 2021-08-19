@@ -19,8 +19,8 @@
       </v-alert>
       <v-text-field
         v-model="nickname"
-        label="Nickname"
         outlined
+        :placeholder="accNickname"
         :rules="[required]"
       >
       </v-text-field>
@@ -45,6 +45,7 @@ export default {
       errormessage: false,
     }
   },
+  props: ['accNickname'],
   computed: {
     user() {
       return this.$store.getters.getUser

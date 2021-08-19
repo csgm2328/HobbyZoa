@@ -9,7 +9,7 @@
           인증 이메일이 발송 되었습니다.
         </div>
         <div class="font-weight-light">
-          메일 인증 없이도 사이트를 이용하실 수 있습니다.
+          메일 인증 후 사이트를 이용하실 수 있습니다.
         </div>
         <v-btn
           rounded

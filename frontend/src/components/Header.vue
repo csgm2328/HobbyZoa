@@ -104,7 +104,7 @@
         </v-list>
 
         <!-- setting && Logout btn -->
-        <div v-if="isLogin" class="ma-3 pa-2" style="position: absolute; top: 85vh">
+        <div v-if="isLogin" class="ma-3 pa-2" style="position: absolute; top: 77vh">
           <v-divider class="my-3 me-5"></v-divider>
           <div>
             <v-btn text @click="setting">

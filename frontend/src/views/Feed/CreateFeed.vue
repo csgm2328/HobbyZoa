@@ -60,7 +60,7 @@
             v-model="tagtext"
             filled
             label="tags"
-            placeholder="태그를 입력해주세요."
+            placeholder="#태그 #취미"
           ></v-text-field>
         </v-col>
         
@@ -180,7 +180,7 @@
     },
     computed: {
       tags() {
-        return this.tagtext.trim().split('#').filter((word) => word.length).map(word => word.trim())
+        return this.tagtext.trim().replace(/,/g, '').split('#').filter((word) => word.length).map(word => word.trim())
       }
     }
   }

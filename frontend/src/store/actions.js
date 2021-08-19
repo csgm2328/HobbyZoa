@@ -42,24 +42,22 @@ export default {
       axios.post(AUTH_USER_URL, data)
         .then((response) => {
           const token = response.data['access-token']
-          if (token) {
-            localStorage.setItem('token', token)
-            commit('AUTH_USER', token)
-            axios.defaults.headers.common['access-token'] = token
-          }
+          localStorage.setItem('token', token)
+          commit('AUTH_USER', token)
+          axios.defaults.headers.common['access-token'] = token
           
-
           axios.get('/auth/loginInfo')
-            .then((res) => {
-              commit('FETCH_NICKNAME', res.data.userInfo.nickname)
-              commit('FETCH_EMAIL', res.data.userInfo.email)
-              commit('FETCH_EMAILVERIFIED', res.data.userInfo.emailVerified)
-              resolve()
-            })
-            .catch((err) => {
-              const loginError = 'Login'
-              commit('LOGIN_ERROR', loginError)
-              reject(err)
+          .then((res) => {
+            commit('FETCH_NICKNAME', res.data.userInfo.nickname)
+            commit('FETCH_EMAIL', res.data.userInfo.email)
+            commit('FETCH_EMAILVERIFIED', res.data.userInfo.emailVerified)
+            resolve()
+          })
+          .catch((err) => {
+            const loginError = 'Login'
+            localStorage.removeItem('token')
+            commit('LOGIN_ERROR', loginError)
+            reject(err)
             })
         })
     })
