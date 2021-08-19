@@ -30,6 +30,7 @@ build-front:
         - cd $CI_PROJECT_DIR/frontend
         - npm install
         - npm run build
+        - rm -rf ~/dist
         - cp -rf dist ~/dist
     tags :
         - prd
