@@ -28,7 +28,13 @@
               v-model="endtime"
               :items="times"
               label="End Time"
-            ></v-select>
+            ></v-select>      
+            <div
+              v-if="error"
+              style="color :red;"
+            >
+              {{ error }}
+            </div>
           </div>
           <div>
             <h3>comment</h3>
@@ -90,6 +96,7 @@
         comment: '',
         update: false,
         times: ['0am', '1am', '2am', '3am', '4am', '5am', '6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm', '10pm', '11pm', '12am'],
+        error: null,
       }
     },
     components: {
@@ -226,13 +233,21 @@
             }
           }
         }
-        const form = new FormData()
-        form.append('checkcode', this.hobbydetailcode)
-        form.append('comment', this.comment)
-        form.append('end', end)
-        form.append('start', start)
-        this.$store.dispatch('profileStore/updateCheck', [form, this.hobbydetailcode, this.hobbycode])
-        this.update = false
+
+
+        if (start >= end) {
+          this.error = '시작 시간과 종료 시간을 확인해 주세요'
+        }
+        else {
+          this.error = null
+          const form = new FormData()
+          form.append('checkcode', this.hobbydetailcode)
+          form.append('comment', this.comment)
+          form.append('end', end)
+          form.append('start', start)
+          this.$store.dispatch('profileStore/updateCheck', [form, this.hobbydetailcode, this.hobbycode])
+          this.update = false
+        }
       }
     }
   }

@@ -26,6 +26,12 @@
               :items="times"
               label="End Time"
             ></v-select>
+            <div
+              v-if="error"
+              style="color :red;"
+            >
+              {{ error }}
+            </div>
           </div>
           <div>
             <h3>comment</h3>
@@ -70,10 +76,13 @@
         comment: null,
         request_user: null,
         todo: true,
+        error: null,
       }
     },
     created() {
       this.request_user = localStorage.email
+    },
+    watch: {
     },
     computed: {
     },
@@ -142,15 +151,22 @@
             }
           }
         }
-        const form = new FormData()
-        form.append('email', this.request_user)
-        form.append('comment', this.comment)
-        form.append('end', end)
-        form.append('start', start)
-        form.append('hobbycode', this.hobbycode)
-        this.$store.dispatch('profileStore/createCheck', [form, this.hobbycode])
-          .then(() => {})
-        this.$emit('close')
+
+        if (start >= end) {
+          this.error = '시작 시간과 종료 시간을 확인해 주세요'
+        }
+        else {
+          this.error = null
+          const form = new FormData()
+          form.append('email', this.request_user)
+          form.append('comment', this.comment)
+          form.append('end', end)
+          form.append('start', start)
+          form.append('hobbycode', this.hobbycode)
+          this.$store.dispatch('profileStore/createCheck', [form, this.hobbycode])
+            .then(() => {})
+          this.$emit('close')
+        }
       }
     }
   }
