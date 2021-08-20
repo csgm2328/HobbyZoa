@@ -170,7 +170,6 @@ public class FeedServiceImpl implements FeedService{
 		}
 		else
 			alarmMsg = u.get().getNickname() +"님이 회원님의 피드를 좋아합니다.";
-		System.out.println("여기까지");
 		alarmService.createAlarm(MessageType.LIKE, email, feed.getEmail(), feedcode, alarmMsg);
 		return "좋아요";
 	}
