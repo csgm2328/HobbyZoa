@@ -12,7 +12,7 @@ import com.web.curation.alarm.model.MessageType;
 import com.web.curation.alarm.service.AlarmService;
 import com.web.curation.email.service.EmailTokenService;
 import com.web.curation.profile.service.ProfileService;
-import com.web.curation.user.model.SignupRequest;
+import com.web.curation.user.model.SignUpInfo;
 import com.web.curation.user.model.User;
 import com.web.curation.user.repo.UserRepo;
 
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User save(@Valid SignupRequest userInfo) {
+	public User save(@Valid SignUpInfo userInfo) {
 		//회원가입시 프로필 자동 생성
 		User result = userRepo.save(User.builder()
 				.email(userInfo.getEmail())
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User UpdateUser(@Valid SignupRequest updateInfo) {
+	public User UpdateUser(@Valid SignUpInfo updateInfo) {
 		User user = userRepo.findById(updateInfo.getEmail()).get();
 		// PK인 email 빼고 전부다 변경가능
 		user.setNickname(updateInfo.getNickname());

@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.web.curation.follow.service.FollowService;
 import com.web.curation.profile.model.ProfileImage;
 import com.web.curation.profile.service.ProfileService;
-import com.web.curation.response.BasicResponse;
+import com.web.curation.response.CustomResponse;
 import com.web.curation.user.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@ApiResponses(value = { @ApiResponse(code = 500, message = "Bad Request", response = BasicResponse.class) })
+@ApiResponses(value = { @ApiResponse(code = 500, message = "Bad Request", response = CustomResponse.class) })
 
 @RestController
 @RequestMapping(value = "profile")
@@ -48,9 +48,9 @@ public class ProfileController {
 
 	@GetMapping("{email}")
 	@ApiOperation(value = "프로필 보기", notes = "요청시 게시물 수, 팔로워, 팔로잉 수 업데이트, 코멘트는 계정설정에서 가져옴")
-	public ResponseEntity<BasicResponse> ShowProfile(@PathVariable String email) {
-		ResponseEntity<BasicResponse> response = null;
-		final BasicResponse result = new BasicResponse();
+	public ResponseEntity<CustomResponse> ShowProfile(@PathVariable String email) {
+		ResponseEntity<CustomResponse> response = null;
+		final CustomResponse result = new CustomResponse();
 		result.object = profileService.findProfileById(email);
 		if (result.object != null) {
 			result.status = true;
@@ -77,9 +77,9 @@ public class ProfileController {
 
 	@PutMapping("/image/{email}")
 	@ApiOperation(value = "프로필 이미지 수정", notes = "프로필은 회원가입시 자동 생성 됨, 프로필에서 수정가능한 건 프로필 이미지 뿐")
-	public ResponseEntity<BasicResponse> SaveProfileImage(@PathVariable String email, @RequestBody MultipartFile file) {
-		ResponseEntity<BasicResponse> response = null;
-		final BasicResponse result = new BasicResponse();
+	public ResponseEntity<CustomResponse> SaveProfileImage(@PathVariable String email, @RequestBody MultipartFile file) {
+		ResponseEntity<CustomResponse> response = null;
+		final CustomResponse result = new CustomResponse();
 		System.out.println(email + "님 프로필 수정됨");
 
 		try {
@@ -102,11 +102,11 @@ public class ProfileController {
 
 	@GetMapping("/follow")
 	@ApiOperation(value = "팔로우 기능", notes = "이미 팔로워라면 언팔로우됨")
-	public ResponseEntity<BasicResponse> Follow(
+	public ResponseEntity<CustomResponse> Follow(
 			@RequestParam(required = true) @ApiParam(value = "email") final String from,
 			@RequestParam(required = true) @ApiParam(value = "email") final String to) {
-		ResponseEntity<BasicResponse> response = null;
-		final BasicResponse result = new BasicResponse();
+		ResponseEntity<CustomResponse> response = null;
+		final CustomResponse result = new CustomResponse();
 		if (!userService.findById(from).isPresent() || !userService.findById(to).isPresent() || from.equals(to)) {
 			result.status = false;
 			result.data = "fail: 등록된 유저만 팔로우를 할 수 있습니다. 혹은 올바르지 않은 팔로우 요청입니다";
@@ -125,11 +125,11 @@ public class ProfileController {
 
 	@GetMapping("/checkfollow")
 	@ApiOperation(value = "팔로우 여부 확인", notes = "방문한 사람이 현재 유저를 팔로우하는 중인지 체크")
-	public ResponseEntity<BasicResponse> CheckFollow(
+	public ResponseEntity<CustomResponse> CheckFollow(
 			@RequestParam(required = true) @ApiParam(value = "email") final String from,
 			@RequestParam(required = true) @ApiParam(value = "email") final String to) {
-		ResponseEntity<BasicResponse> response = null;
-		final BasicResponse result = new BasicResponse();
+		ResponseEntity<CustomResponse> response = null;
+		final CustomResponse result = new CustomResponse();
 
 		if (followService.Check(from, to)) {
 			result.status = true;
@@ -144,9 +144,9 @@ public class ProfileController {
 
 	@GetMapping("/followerlist/{email}")
 	@ApiOperation(value = "팔로워 리스트 보기", notes = "입력한 email 유저를 팔로우하는 from_email 리스트")
-	public ResponseEntity<BasicResponse> ShowFollowerList(@PathVariable String email) {
-		ResponseEntity<BasicResponse> response = null;
-		final BasicResponse result = new BasicResponse();
+	public ResponseEntity<CustomResponse> ShowFollowerList(@PathVariable String email) {
+		ResponseEntity<CustomResponse> response = null;
+		final CustomResponse result = new CustomResponse();
 		result.object = followService.ShowFollowerList(email);
 		if (result.object != null) {
 			result.status = true;
@@ -161,9 +161,9 @@ public class ProfileController {
 	}
 	@GetMapping("/followinglist/{email}")
 	@ApiOperation(value = "팔로잉 리스트 보기", notes = "입력한 email 유저가 팔로우하는 to_email 리스트")
-	public ResponseEntity<BasicResponse> ShowFollowingList(@PathVariable String email) {
-		ResponseEntity<BasicResponse> response = null;
-		final BasicResponse result = new BasicResponse();
+	public ResponseEntity<CustomResponse> ShowFollowingList(@PathVariable String email) {
+		ResponseEntity<CustomResponse> response = null;
+		final CustomResponse result = new CustomResponse();
 		result.object = followService.ShowFollowingList(email);
 		if (result.object != null) {
 			result.status = true;

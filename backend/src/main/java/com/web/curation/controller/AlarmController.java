@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.alarm.model.Alarm;
 import com.web.curation.alarm.service.AlarmService;
-import com.web.curation.response.BasicResponse;
+import com.web.curation.response.CustomResponse;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@ApiResponses(value = { @ApiResponse(code = 500, message = "Bad Request", response = BasicResponse.class) })
+@ApiResponses(value = { @ApiResponse(code = 500, message = "Bad Request", response = CustomResponse.class) })
 
 @RestController
 @RequestMapping(value = "alarm")
@@ -31,14 +31,14 @@ public class AlarmController {
 	
 	@GetMapping("/{email}")
 	@ApiOperation(value = "한달 내 생성된 알림 보기", notes = "회원가입, 팔로우, 언팔로우, 좋아요, 스크랩, 댓글, 이메일 인증")
-	public ResponseEntity<BasicResponse> ShowAlarmList(@PathVariable String email) {
+	public ResponseEntity<CustomResponse> ShowAlarmList(@PathVariable String email) {
 		
 		List<Alarm> list = alarmService.findAll(email);
-		ResponseEntity<BasicResponse> response = null;
+		ResponseEntity<CustomResponse> response = null;
 
 		if (!list.isEmpty()) {
 			System.out.println("[ " + email + " ] 님의 알림 목록 요청");
-			final BasicResponse result = new BasicResponse();
+			final CustomResponse result = new CustomResponse();
 			result.status = true;
 			result.data = "success";
 			result.object = list;
@@ -51,11 +51,11 @@ public class AlarmController {
 	}
 	@PutMapping("/{code}")
 	@ApiOperation(value = "알림 확인 처리", notes = "")
-	public ResponseEntity<BasicResponse> checkAlarm(@PathVariable int code) {
-		ResponseEntity<BasicResponse> response = null;
+	public ResponseEntity<CustomResponse> checkAlarm(@PathVariable int code) {
+		ResponseEntity<CustomResponse> response = null;
 		Alarm alarm = alarmService.CheckAlarm(code);
 		if (alarm != null) {
-			final BasicResponse result = new BasicResponse();
+			final CustomResponse result = new CustomResponse();
 			result.status = true;
 			result.data = "success";
 			result.object = null;

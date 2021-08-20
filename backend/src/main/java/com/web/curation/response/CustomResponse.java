@@ -2,7 +2,7 @@ package com.web.curation.response;
 
 import io.swagger.annotations.ApiModelProperty;
 
-public class BasicResponse {
+public class CustomResponse {
 	@ApiModelProperty(value = "status", position = 1)
     public boolean status;
     @ApiModelProperty(value = "data", position = 2)

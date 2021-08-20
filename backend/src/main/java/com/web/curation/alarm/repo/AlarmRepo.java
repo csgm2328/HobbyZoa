@@ -17,8 +17,6 @@ public interface AlarmRepo extends JpaRepository<Alarm, String>{
 
 	List<Alarm> findAllByToemailAndAlarmCheckOrderByCreateDateDesc(String email, boolean alarm_check);
 
-	List<Alarm> findAllByToemailAndAlarmCheckOrderByCreatedDateDesc(String email, boolean alarm_check);
-	
 	Alarm findByAlarmcode(int code);
 
 	int countByToemail(String email);
