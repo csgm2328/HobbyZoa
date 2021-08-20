@@ -34,7 +34,7 @@ import com.web.curation.feed.service.FeedService;
 import com.web.curation.image.model.Image;
 import com.web.curation.reply.model.Reply;
 import com.web.curation.reply.service.ReplyService;
-import com.web.curation.response.BasicResponse;
+import com.web.curation.response.CustomResponse;
 import com.web.curation.tag.model.Feedtags;
 import com.web.curation.tag.model.Tag;
 import com.web.curation.tag.service.TagService;
@@ -43,7 +43,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@ApiResponses(value = { @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
+@ApiResponses(value = { @ApiResponse(code = 500, message = "Failure", response = CustomResponse.class) })
 @CrossOrigin(origins = { "*" })
 @RestController
 @RequestMapping(value = "/feed")
@@ -163,10 +163,10 @@ public class FeedController {
 
 	@GetMapping("checklike/{email}/{feedcode}")
 	@ApiOperation(value = "좋아요 여부 체크", notes = "")
-	public ResponseEntity<BasicResponse> checkLike(@PathVariable("email") String email,
+	public ResponseEntity<CustomResponse> checkLike(@PathVariable("email") String email,
 			@PathVariable("feedcode") Integer feedcode) {
-		ResponseEntity<BasicResponse> response = null;
-		final BasicResponse result = new BasicResponse();
+		ResponseEntity<CustomResponse> response = null;
+		final CustomResponse result = new CustomResponse();
 
 		if (feedService.CheckLike(email, feedcode)) {
 			result.status = true;
@@ -181,9 +181,9 @@ public class FeedController {
 
 	@GetMapping("/likelist/{feedcode}")
 	@ApiOperation(value = "좋아요 누른 유저들 보기", notes = "입력한 email 유저를 팔로우하는 from_email 리스트")
-	public ResponseEntity<BasicResponse> ShowLikeList(@PathVariable("feedcode") Integer feedcode) {
-		ResponseEntity<BasicResponse> response = null;
-		final BasicResponse result = new BasicResponse();
+	public ResponseEntity<CustomResponse> ShowLikeList(@PathVariable("feedcode") Integer feedcode) {
+		ResponseEntity<CustomResponse> response = null;
+		final CustomResponse result = new CustomResponse();
 		result.object = feedService.ShowLikeList(feedcode);
 		if (result.object != null) {
 			result.status = true;
