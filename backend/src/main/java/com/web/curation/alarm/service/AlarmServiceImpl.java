@@ -51,7 +51,7 @@ public class AlarmServiceImpl implements AlarmService {
 	@Override
 	public List<Alarm> findAll(String email) {
 		List<Alarm> total = new ArrayList<Alarm>();
-		List<Alarm> alreadyCheckedList = alarmRepo.findAllByToemailAndAlarmCheckOrderByCheckDateDesc(email, true);
+		List<Alarm> alreadyCheckedList = alarmRepo.findAllByToemailAndAlarmCheckOrderByCreatedDateDesc(email, true);
 		List<Alarm> unCheckedList = alarmRepo.findAllByToemailAndAlarmCheckOrderByCreateDateDesc(email, false);
 		for (Alarm x : unCheckedList)
 			total.add(x);
