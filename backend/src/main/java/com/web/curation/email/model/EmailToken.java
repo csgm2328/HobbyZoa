@@ -28,7 +28,7 @@ import lombok.Setter;
 @EntityListeners(AuditingEntityListener.class)
 public class EmailToken  {
 
-    private static final long EMAIL_TOKEN_EXPIRATION_TIME_VALUE = 5L;	//토큰 만료 시간
+    private static final long EMAIL_TOKEN_EXPIRATION_TIME_VALUE = 15L;	//토큰 만료 시간
 
     @Id
     @GeneratedValue(generator = "uuid2")
