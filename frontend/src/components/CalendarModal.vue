@@ -30,7 +30,7 @@
           <div>
             <h3>comment</h3>
             <v-text-field
-              hint="This field uses counter prop"
+              hint="내용을 입력해주세요"
               label="Regular"
               v-model="comment"
             ></v-text-field>
@@ -39,11 +39,11 @@
         <v-card-actions>
           <v-spacer></v-spacer>
             <v-btn
-              color="green darken-1"
+              color="red"
               text
               @click="$emit('close')"
             >
-              cancle
+              cancel
             </v-btn>
             <v-btn
               color="green darken-1"
