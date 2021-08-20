@@ -35,8 +35,8 @@
             <h5 v-if="!update">{{ comment }}</h5>
             <v-text-field
               v-else
-              hint="This field uses counter prop"
-              label="Regular"
+              hint="내용을 입력해주세요"
+              label="Comment"
               v-model="comment"
             ></v-text-field>
           </div>
