@@ -31,7 +31,7 @@
             <h3>comment</h3>
             <v-text-field
               hint="내용을 입력해주세요"
-              label="Regular"
+              label="Comment"
               v-model="comment"
             ></v-text-field>
           </div>
